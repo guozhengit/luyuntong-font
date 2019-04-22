@@ -1,6 +1,6 @@
 import iView from "iview";
 import axios from "axios";
-import global from "../global";
+import global from "../global/index";
 
 axios.defaults.baseURL = global.apiUrl;
 axios.defaults.headers["Content-Type"] = "application/json;charset=UTF-8";

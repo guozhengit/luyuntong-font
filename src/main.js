@@ -1,12 +1,12 @@
 import Vue from "vue";
 import App from "./App.vue";
-import router from "./router/index";
+import router from "./router/routerIndex";
 import store from "./store/index";
 import iView from "iview";
 import "./style/index.less";
-import axios from "./libs/axios";
-import global from "./libs/global";
-import util from "./libs/util";
+import axios from "./libs/axios/index";
+import global from "./libs/global/index";
+import util from "./libs/util/index";
 
 Vue.use(iView);
 Vue.use(axios);

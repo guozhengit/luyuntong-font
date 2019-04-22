@@ -1,4 +1,4 @@
-import {MENU_INDEX} from "../const";
+import {MENU_INDEX} from "../const/index";
 
 const appMenu = {
     data: [

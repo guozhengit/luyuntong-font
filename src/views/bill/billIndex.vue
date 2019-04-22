@@ -1,16 +1,15 @@
 <template>
   <div>
-    Home
+    Bill
   </div>
 </template>
 
 <script>
 export default {
-  name: "Home",
+  name: "Bill",
   data() {
     return {};
-  },
-  methods: {}
+  }
 };
 </script>
 
