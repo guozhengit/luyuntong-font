@@ -1,0 +1,47 @@
+@charset "UTF-8";
+#loginPage{
+  width: 100%;
+  height: 100%;
+}
+#particles-js{
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 3px);
+}
+.loading{
+  z-index: 1000;
+}
+.login{
+  z-index: 999;
+  display: inline-block;
+  position: relative;
+  width: 400px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,calc(-50% - 20px));
+}
+.ivu-card{
+  background: rgba(255,255,255,0.5);
+}
+.img-captcha{
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 32px;
+  background-color: #42b983;
+  cursor: pointer;
+}
+.img-captcha img{
+  display: inline-block;
+  width: 120px;
+}
+.copyright{
+  z-index: 999;
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+}
