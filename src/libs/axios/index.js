@@ -1,42 +1,30 @@
-import iView from "iview";
 import axios from "axios";
 import global from "../global/index";
 
 axios.defaults.baseURL = global.apiUrl;
+axios.defaults.withCredentials = true;
 axios.defaults.headers["Content-Type"] = "application/json;charset=UTF-8";
 axios.defaults.headers["X-Requested-With"] = "XMLHttpRequest";
 
-axios.interceptors.request.use(
-  config => {
-    return config;
-  },
-  error => {
-    iView.Notice.error({
-      desc: `${error.message}`,
-      duration: 0
-    });
-    return Promise.reject(error);
-  }
-);
-
+// 拦截响应response，并做一些错误处理
 axios.interceptors.response.use(
   response => {
+    let data = response.data;
+    if (data && data.code === "401") {
+      console.log("未登录");
+      location.href = "/login";
+    }
+
     return response;
   },
-  error => {
-    if (error.response) {
-      iView.Notice.error({
-        title: `${error.response.status}`,
-        desc: `${error.response.data.msg}`,
-        duration: 0
-      });
-    } else {
-      iView.Notice.error({
-        desc: `${error.message}`,
-        duration: 0
-      });
+  err => {
+    if (err && err.response) {
+      // err.response.status
+      if (err.response.status === "401") {
+        location.href = "/login";
+      }
     }
-    return Promise.reject(error);
+    return Promise.reject(err);
   }
 );
 

@@ -80,7 +80,7 @@
       ></Page>
     </div>
     <Drawer
-      title="新增用户"
+      title="添加用户"
       v-model="showCreate"
       width="360"
       :mask-closable="false"

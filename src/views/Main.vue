@@ -9,7 +9,14 @@
         :hide-trigger="true"
         v-model="isCollapsed"
       >
-        <div class="admin-logo">LOGO</div>
+        <div class="admin-logo">
+            <div class="font-logo">
+                <span>陆运通</span>
+                <!--<font color="#5f9ea0">陆</font>-->
+                <!--<font color="#ffd700">运</font>-->
+                <!--<font color="#1e90ff">通</font>-->
+            </div>
+        </div>
         <div class="admin-menu">
           <CollapsedMenu
             v-model="isCollapsed"
@@ -38,14 +45,20 @@
               <Icon custom="iconfont icon-setting" size="21"></Icon>
             </div>
             <div class="admin-user">
-              <Dropdown placement="bottom-start">
+              <Dropdown
+                placement="bottom-start"
+                @on-click="handleUserDropDownClick"
+              >
                 <a href="javascript:void(0)">
                   <Avatar
                     class="admin-user-avatar"
                     size="small"
                     src="https://file.iviewui.com/dist/a0e88e83800f138b94d2414621bd9704.png"
                   ></Avatar>
-                  <span class="admin-user-name">夏明凤</span>
+                  <span
+                    class="admin-user-name"
+                    v-text="userInfo.username"
+                  ></span>
                 </a>
                 <DropdownMenu slot="list">
                   <DropdownItem name="ownSpace">个人中心</DropdownItem>
@@ -82,6 +95,13 @@
             <router-view v-if="!$route.meta.keepAlive"></router-view>
           </div>
         </Content>
+        <Footer class="ttms-footer">
+          <div style="text-align: center">
+            Copyright © 2019
+            <a href="http://www.ayit.edu.cn/" target="_blank">安阳工学院</a>.
+            Powered By 陆运通物流管理系统. Version-1.0
+          </div>
+        </Footer>
       </Layout>
     </Layout>
   </div>
@@ -92,6 +112,8 @@ import CollapsedMenu from "@/components/CollapsedMenu.vue";
 import appMenu from "@/libs/menu";
 import { mapState } from "vuex";
 import { mapMutations } from "vuex";
+import minLogo from "@/assets/images/logo-min.jpg";
+import maxLogo from "@/assets/images/logo.jpg";
 
 export default {
   name: "home",
@@ -100,9 +122,14 @@ export default {
   },
   data() {
     return {
+      collapsed: false,
+      minLogo,
+      maxLogo,
+      isFullscreen: false,
       isCollapsed: false,
       menuList: [],
-      fullScreen: false
+      fullScreen: false,
+      userInfo: {}
     };
   },
   computed: {
@@ -135,7 +162,25 @@ export default {
       this.removeOpenedMenu(appMenu.valueOf(name));
     },
     handleFullScreen() {},
-    handleExitFullScreen() {}
+    handleExitFullScreen() {},
+    handleUserDropDownClick(name) {
+      if (name === "logout") {
+        this.handleLogOut();
+      }
+    },
+    handleLogOut() {
+      this.$axios.post("/auth/logout").then(() => {
+        this.$router.push({ path: "login" });
+      });
+    },
+    queryUserInfo() {
+      //TODO 加载用户信息
+      //   this.$axios.post("/auth/logout").then(() => {
+      //   });
+      this.userInfo = {
+        username: `夏明凤${Math.random().toExponential(10)}`
+      };
+    }
   },
   watch: {
     activeMenu(menu) {
@@ -144,6 +189,7 @@ export default {
     }
   },
   mounted() {
+    this.queryUserInfo();
     this.menuList = appMenu.authMenu();
     this.initOpenedMenu();
     /*TODO*/
