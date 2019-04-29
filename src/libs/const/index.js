@@ -8,6 +8,26 @@ export const MENU_INDEX = {
   LOG: "log",
   /*单据*/
   BILL: "bill",
+    /*托运单据*/
+    TYBILL: "tybill",
+    /*发车单据*/
+    FCBILL: "fcbill",
+    /*到车单据*/
+    DCBILL: "dcbill",
+    /*回车单据*/
+    HCBILL: "hcbill",
+    /*收支单据*/
+    SZBILL: "szbill",
+    /*客户结算单据*/
+    KFJSBILL: "kfjsbill",
+    /*司机单据*/
+    SJJSBILL: "sjjsbill",
+
+    SALARY:"salary",
+    YXZC:"yxzc",
+    KHJS:"khjs",
+    YLTJ:"yltj",
+
   /*物流*/
   PHYSICAL: "physical",
 
@@ -40,8 +60,11 @@ export const MENU_INDEX = {
   COST: "cost",
   /*报表管理*/
   REPORT: "report",
+  WLREPORT: "wlReport",
+  TYREPORT: "tyReport",
 
   COMPANY: "company",
+
   FINANCE: "finance"
 };
 

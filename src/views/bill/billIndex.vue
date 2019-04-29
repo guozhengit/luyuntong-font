@@ -15,6 +15,7 @@
                                     class="left-margin"
                                     placeholder="请选择业务员"
                             >
+                                <Option v-for="item in EmployeeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </div>
                     </div>
@@ -56,7 +57,7 @@
                         </div>
                     </div>
                 </FormItem>
-                <FormItem class="box-mechanism buttons-right">
+                <FormItem class="">
                     <ButtonGroup>
                         <Button type="primary" icon="md-search" ghost @click="handleQuery">查询</Button>
                         <Button type="" icon="md-close" ghost @click="handleQuery">重置</Button>
@@ -64,6 +65,7 @@
                 </FormItem>
             </Form>
         </div>
+
         <div class="operation">
             <ButtonGroup>
                 <Button
@@ -252,6 +254,7 @@
 </template>
 
 <script>
+
     export default {
         name: "ArticleList",
         data() {
@@ -302,6 +305,32 @@
                         "sortable": true
                     }
                 ],
+                EmployeeList: [
+                    {
+                        value: 'New York',
+                        label: 'New York'
+                    },
+                    {
+                        value: 'London',
+                        label: 'London'
+                    },
+                    {
+                        value: 'Sydney',
+                        label: 'Sydney'
+                    },
+                    {
+                        value: 'Ottawa',
+                        label: 'Ottawa'
+                    },
+                    {
+                        value: 'Paris',
+                        label: 'Paris'
+                    },
+                    {
+                        value: 'Canberra',
+                        label: 'Canberra'
+                    }
+                ],
                 searchForm: {
                     name: "",
                     code: ""
@@ -343,6 +372,7 @@
             };
         },
         methods: {
+
             handleQuery() {
                 this.$axios
                     .post(
@@ -454,26 +484,9 @@
     };
 </script>
 
-<style lang="less" scoped>
-    .operation {
-        .button {
-            margin-right: 5px;
-        }
-    }
-</style>
+
 <style lang="less">
-    .ivu-table-tip {
-    }
+@import "bill.less";
 </style>
-<style lang="less">
-    .create-drawer-footer {
-        width: 100%;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        border-top: 1px solid #e8e8e8;
-        padding: 10px 16px;
-        text-align: right;
-        background: #fff;
-    }
-</style>
+
+

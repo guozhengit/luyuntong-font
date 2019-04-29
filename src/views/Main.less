@@ -15,183 +15,161 @@
 @border-color: #dcdee2;
 @divider-color: #e8eaec;
 
-.admin-main, .admin-layout{
+.admin-main, .admin-layout {
   height: 100%;
 }
-.admin-layout{
-  .admin-side{
+
+.admin-layout {
+  .admin-side {
     box-shadow: rgba(0, 21, 41, 0.35) 1px 0 1px;
     background-color: @side-background;
-    .admin-logo{
+    .admin-logo {
       background-color: @logo-background;
       height: 64px;
-      .font-logo{
+      .font-logo {
         padding: 1px 5px;
-        text-align:center;
+        text-align: center;
         color: #eff2ed;
-        font-weight:800;
-        font-size:50px;
+        font-weight: 800;
+        font-size: 50px;
       }
     }
-    .admin-menu{
+    .admin-menu {
       height: calc(~"100% - 64px");
       overflow-y: auto;
-      &::-webkit-scrollbar {/*滚动条整体样式*/
-        width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+      &::-webkit-scrollbar { /*滚动条整体样式*/
+        width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
         height: 1px;
       }
-      &::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+      &::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
         border-radius: 10px;
-        -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.2);
+        -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
         background: #535353;
       }
-      &::-webkit-scrollbar-track {/*滚动条里面轨道*/
-        -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.2);
+      &::-webkit-scrollbar-track { /*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
         background: #EDEDED;
       }
     }
   }
-  .admin-header{
+  .admin-header {
     display: flex;
     background-color: #fff;
     padding: 0;
-    .admin-trigger{
+    .admin-trigger {
       cursor: pointer;
-      &:hover{
+      &:hover {
         background-color: @hover-background;
       }
     }
-    .admin-nav{
+    .admin-nav {
       margin: 0 30px;
       display: inline-block;
     }
-    .admin-function{
+    .admin-function {
       display: flex;
-      margin-left:auto;
+      margin-left: auto;
       margin-right: 20px;
-      .admin-function-item{
+      .admin-function-item {
         padding: 0 16px;
         cursor: pointer;
-        &:hover{
+        &:hover {
           background-color: @hover-background;
         }
       }
-      .admin-user{
+      .admin-user {
         padding: 0 16px;
         cursor: pointer;
-        &:hover{
+        &:hover {
           background-color: @hover-background;
         }
-        .admin-user-avatar{
+        .admin-user-avatar {
           margin-right: 10px;
         }
-        .admin-user-name{
+        .admin-user-name {
           font-size: 14px;
           color: #515a6e;
         }
       }
     }
   }
-  .admin-content{
+  .admin-content {
     padding: 5px 5px 5px 10px;
     height: calc(~'100% - 64px ');
-    .admin-content-page{
+    .admin-content-page {
       padding-top: 5px;
       height: calc(~'100% - 32px ');
       overflow-y: auto;
       /*简单的数据表格页面样式*/
-      .box{
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        border: dashed 1px @border-color;
-      }
-      .table-page{
+      .table-page {
         height: 100%;
-        .search{
-          margin-bottom: 15px;
-          padding: 10px 0;
+        .search {
+          margin-bottom: 20px;
+          padding: 5px 0;
           border: dashed 1px @border-color;
-          .search-form{
-            display: flex;
-            .ivu-form-item{
-              margin: 0 20px 0 0;
+          .search-form {
+            position: relative;
+            width: auto;
+            display: inline-block;
+            .ivu-form-item {
+              margin: 0 0 0 0;
+              .select-ground {
+                width: auto;
+                border-collapse: separate;
+                border: 1px solid #dddee1;
+                  .select-name {
+                    border-radius: 4px 0px 0px 4px;
+                    float: left;
+                    width: 100px;
+                    text-align: center;
+                    color: #495060;
+                    font-size: 12px;
+                    background-color: #f8f8f9;
+                    transition: all
+                  }
+                  .select-input {
+                    border-radius: 0 4px 4px 0;
+                    display: inline-block;
+                    width: 180px;
+                    box-sizing: border-box;
+                    vertical-align: middle;
+                    color: #495060;
+                    font-size: 14px;
+                    line-height: normal;
+                  }
+                }
             }
-            .buttons{
+            .buttons {
               margin-left: auto;
             }
-
-            .buttons-right{
-              margin-right: 50px;
+            .button-flot {
+              right: -200% + 10px;
             }
           }
         }
-        .operation{
+        .operation {
           margin-bottom: 15px;
           padding-bottom: 2px;
           border-bottom: solid 1px @border-color;
         }
-        .data-table{
+        .data-table {
           height: calc(~'100% - 175px');
           overflow: hidden;
-          .ivu-table-wrapper{
+          .ivu-table-wrapper {
             height: 100%;
-            .ivu-table-body{
+            .ivu-table-body {
               height: calc(~'100% - 40px');
               overflow-y: auto;
-              overflow-x: auto;
+              overflow-x: hidden;
             }
           }
         }
-        .pagination{
+        .pagination {
           margin-top: 5px;
           text-align: right;
           padding: 10px 15px 5px 0;
         }
-      }
-
-      .select-ground{
-        width: auto;
-        border-collapse: separate;
-        position: relative;
-        font-size: 12px;
-        margin-bottom: 20px;
-        border: 1px solid #dddee1;
-        border-radius: 4px;
-      }
-
-      .select-name{
-        float: left;
-        width: 80px;
-        text-align:center;
-        color: #495060;
-        font-size: 12px;
-        line-height: 32px;
-        height: 32px;
-        padding: 0 10px;
-        cursor: pointer;
-        background-color: #f8f8f9;
-        border-right: 1px solid #dddee1;
-        border-radius: 4px;
-        transition:all
-      }
-
-      .select-input{
-        display: inline-block;
-        width: 150px;
-        box-sizing: border-box;
-        vertical-align: middle;
-        color: #495060;
-        font-size: 14px;
-        line-height: normal;
-      }
-
-      .box-mechanism{
-        position: relative;
-        width: auto;
-        display: inline-block;
-        margin-right: 40px;
       }
 
       /*其他页面样式*/

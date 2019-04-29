@@ -11,10 +11,13 @@
         :rules="loginRules"
         @keydown.enter.native="handleSubmit"
       >
+        <FormItem>
+          <span><font color="#00008b" size="20px">欢迎登陆</font></span>
+        </FormItem>
         <FormItem prop="username">
-          <i-Input v-model="loginForm.username" placeholder="用户名">
+          <i-Input v-model="loginForm.username" placeholder="用户账号">
             <span slot="prepend">
-              <Icon :size="16" type="ios-contact-outline" />
+              <Icon :size="20" type="ios-contact-outline" />
             </span>
           </i-Input>
         </FormItem>
@@ -25,7 +28,7 @@
             placeholder="密码"
           >
             <span slot="prepend">
-              <Icon :size="16" type="ios-lock-outline" />
+              <Icon :size="20" type="ios-lock-outline" />
             </span>
           </i-Input>
         </FormItem>
@@ -38,7 +41,7 @@
             @on-focus="initCaptcha"
           >
             <span slot="prepend">
-              <Icon :size="16" type="ios-lock-outline" />
+              <Icon :size="16" type="iconfont icon-yanzhengma" />
             </span>
           </i-Input>
           <Tooltip
@@ -51,9 +54,21 @@
           </Tooltip>
         </FormItem>
         <FormItem>
-          <Button @click="handleSubmit" type="primary" long :loading="loading"
-            >登录</Button
-          >
+          <div>
+            <Row class="button-login">
+              <i-col span="12" >
+                <Button @click="handleSubmit" style="border-color:#f0f3f7" type="primary" long :loading="loading"
+                >登录</Button
+                >
+              </i-col>
+              <i-col span="12" >
+                <Button @click="handleSubmit" style="border-color:#f0f3f7" type="primary" long :loading="loading"
+                >忘记密码</Button
+                >
+              </i-col>
+            </Row>
+          </div>
+
         </FormItem>
       </Form>
     </div>
@@ -71,7 +86,16 @@ export default {
         password: "",
         captcha: ""
       },
-      loginRules: {},
+      loginRules: {
+
+          userName: [
+              { required: true, message: '请输入用户名', trigger: 'blur' },
+          ],
+          password: [
+              { required: true, message: '请输入密码', trigger: 'blur' },
+              { type: 'string', min: 6, message: '密码长度不能小于六位', trigger: 'blur' }
+          ]
+      },
       captchaImg: "",
       loading: false
     };
@@ -110,7 +134,7 @@ export default {
                 this.$Message.success(result.message);
                 setTimeout(() => {
                   this.$router.push({ path: "/" });
-                }, 500);
+                }, 2000);
               } else {
                 this.setCaptcha();
                 this.$Message.error(result.message);

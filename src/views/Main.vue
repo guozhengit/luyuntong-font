@@ -12,9 +12,6 @@
         <div class="admin-logo">
             <div class="font-logo">
                 <span>陆运通</span>
-                <!--<font color="#5f9ea0">陆</font>-->
-                <!--<font color="#ffd700">运</font>-->
-                <!--<font color="#1e90ff">通</font>-->
             </div>
         </div>
         <div class="admin-menu">
@@ -112,8 +109,6 @@ import CollapsedMenu from "@/components/CollapsedMenu.vue";
 import appMenu from "@/libs/menu";
 import { mapState } from "vuex";
 import { mapMutations } from "vuex";
-import minLogo from "@/assets/images/logo-min.jpg";
-import maxLogo from "@/assets/images/logo.jpg";
 
 export default {
   name: "home",
@@ -123,8 +118,6 @@ export default {
   data() {
     return {
       collapsed: false,
-      minLogo,
-      maxLogo,
       isFullscreen: false,
       isCollapsed: false,
       menuList: [],

@@ -1,368 +1,237 @@
 <template>
-  <div class="table-page">
-    <div class="search">
-      <Form
-              class="search-form"
-              ref="searchForm"
-              :model="searchForm"
-              :label-width="80"
-              inline
-      >
-        <FormItem prop="name" label="用户名称:">
-          <Input
-                  v-model="searchForm.name"
-                  type="text"
-                  placeholder="请输入用户名称"
-                  clearable
-                  style="width: 200px"
-          />
-        </FormItem>
-        <FormItem class="buttons">
-          <ButtonGroup>
-            <Button type="primary" icon="md-search" ghost>查询</Button>
-            <Button icon="md-close">重置</Button>
-          </ButtonGroup>
-        </FormItem>
-      </Form>
-    </div>
-    <div class="operation">
-      <ButtonGroup>
-        <Button
-                type="primary"
-                icon="md-add"
-                ghost
-                class="button"
-                @click="showCreateDrawer"
-        >新增</Button
-        >
-        <Button
-                type="info"
-                icon="md-create"
-                ghost
-                class="button"
-                :disabled="selectedUser.length !== 1"
-                @click="showModifyDrawer"
-        >修改</Button
-        >
-        <Button
-                type="error"
-                icon="ios-trash"
-                ghost
-                class="button"
-                :disabled="!selectedUser.length > 0"
-                @click="handleDeleteUser"
-        >删除</Button
-        >
-        <Button type="primary" icon="ios-refresh" ghost @click="handleQuery"
-        >刷新</Button
-        >
-      </ButtonGroup>
-    </div>
-    <div class="data-table">
-      <Table
-              border
-              :columns="userColumns"
-              :data="userList"
-              @on-selection-change="handleSelect"
-      >
-      </Table>
-    </div>
-    <div class="pagination">
-      <Page
-              :total="totalCount"
-              :current="pageIndex"
-              :page-size="pageSize"
-              show-total
-              show-sizer
-              show-elevator
-              @on-change="handlePageChange"
-              @on-page-size-change="handlePageSizeChange"
-      ></Page>
-    </div>
-    <Drawer
-            title="新增用户"
-            v-model="showCreate"
-            width="360"
-            :mask-closable="false"
-    >
-      <Form
-              ref="createUserForm"
-              :model="formData"
-              :rules="formRules"
-              :label-width="50"
-      >
-        <Row>
-          <i-Col span="24">
-            <FormItem label="名称" prop="name">
-              <Input v-model="formData.name" placeholder="请输入用户名" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="密码" prop="password" placeholder="请输入密码">
-              <Input type="password" v-model="formData.password" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="性别" prop="gender">
-              <RadioGroup v-model="formData.gender">
-                <Radio label="男">男</Radio>
-                <Radio label="女">女</Radio>
-                <Radio label="未知">未知</Radio>
-              </RadioGroup>
-            </FormItem>
-          </i-Col>
-        </Row>
-      </Form>
-      <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelCreateUser"
-        >取消</Button
-        >
-        <Button
-                type="primary"
-                @click="handleCreateUser"
-                :loading="createLoading"
-        >保存</Button
-        >
-      </div>
-    </Drawer>
-    <Drawer
-            title="修改用户"
-            v-model="showModify"
-            width="360"
-            :mask-closable="false"
-    >
-      <Form
-              ref="modifyUserForm"
-              :model="formData"
-              :rules="formRules"
-              :label-width="50"
-      >
-        <Row>
-          <i-Col span="24">
-            <FormItem label="名称" prop="name">
-              <Input v-model="formData.name" placeholder="请输入用户名" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="密码" prop="password" placeholder="请输入密码">
-              <Input type="password" v-model="formData.password" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="性别" prop="gender">
-              <RadioGroup v-model="formData.gender">
-                <Radio label="男">男</Radio>
-                <Radio label="女">女</Radio>
-                <Radio label="未知">未知</Radio>
-              </RadioGroup>
-            </FormItem>
-          </i-Col>
-        </Row>
-      </Form>
-      <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelModifyUser"
-        >取消</Button
-        >
-        <Button
-                type="primary"
-                @click="handleModifyUser"
-                :loading="modifyLoading"
-        >保存</Button
-        >
-      </div>
-    </Drawer>
+  <div class="data-table">
+    <Table :columns="columns11" :data="data10" border height="500"></Table>
   </div>
 </template>
-
 <script>
     export default {
-        name: "ArticleList",
         data() {
             return {
-                userColumns: [
+                columns11: [
                     {
-                        type: "selection",
-                        width: 60,
-                        align: "center"
+                        title: "托运单号",
+                        key: "billCode",
+                        align: "center",
+                        width: 200,
+                        fixed: "left",
+                        filters: [
+                            {
+                                label: "ly",
+                                value: 1
+                            },
+                            {
+                                label: "LYT",
+                                value: 2
+                            }
+                        ],
+                        filterMultiple: false,
+                        filterMethod(value, row) {
+                            if (value === 1) {
+                                return row.name === "ly";
+                            } else if (value === 2) {
+                                return row.name === "LYT";
+                            }
+                        }
                     },
                     {
-                        type: "index",
-                        width: 60,
-                        align: "center"
+                        title: "物流信息",
+                        align: "center",
+                        children: [
+                            {
+                                title: "托运日期",
+                                key: "startDate",
+                                align: "center",
+                                width: 200,
+                                sortable: true
+                            },
+                            {
+                                title: "单据详情",
+                                align: "center",
+                                children: [
+                                    {
+                                        title: "车辆状态",
+                                        key: "canStatus",
+                                        align: "center",
+                                        width: 200
+                                    },
+                                    {
+                                        title: "站点信息",
+                                        align: "center",
+                                        children: [
+                                            {
+                                                title: "始发站点",
+                                                key: "startStation",
+                                                align: "center",
+                                                width: 200
+                                            },
+                                            {
+                                                title: "目的站点",
+                                                key: "targetStation",
+                                                align: "center",
+                                                width: 200
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
-                        title: "用户名",
-                        key: "name"
+                        title: "顾客跟踪",
+                        align: "center",
+                        children: [
+                            {
+                                title: "托运人",
+                                key: "consignMan",
+                                align: "center",
+                                width: 200
+                            },
+                            {
+                                title: "收货人",
+                                key: "receiveMan",
+                                align: "center",
+                                width: 200
+                            }
+                        ]
                     },
                     {
-                        title: "年龄",
-                        key: "age"
+                        title: "货物信息",
+                        align: "center",
+                        children: [
+                            {
+                                title: "货物名称",
+                                key: "goodsName",
+                                align: "center",
+                                width: 200
+                            },
+                            {
+                                title: "货物重量",
+                                key: "goodWeight",
+                                align: "center",
+                                width: 200,
+                                sortable: true
+                            },
+                            {
+                                title: "货物体积",
+                                key: "goodVolume",
+                                align: "center",
+                                width: 200,
+                                sortable: true
+                            },
+                            {
+                                title: "货物数量",
+                                key: "goodNumber",
+                                align: "center",
+                                width: 200,
+                                sortable: true
+                            }
+                        ]
                     },
                     {
-                        title: "性别",
-                        key: "gender"
+                        title: "车辆跟踪",
+                        align: "center",
+                        children: [
+                            {
+                                title: "发车单号",
+                                key: "facheCode",
+                                align: "center",
+                                width: 200
+                            },
+                            {
+                                title: "发车时间",
+                                key: "facheDate",
+                                align: "center",
+                                width: 200
+                            }
+                        ]
                     },
                     {
-                        title: "性别",
-                        key: "phone"
-                    },
-                    {
-                        title: "邮箱",
-                        key: "email"
+                        title: "操作",
+                        key: "opertion",
+                        align: "center",
+                        width: 200,
+                        fixed: "right"
                     }
                 ],
-                searchForm: {
-                    name: ""
-                },
-                userList: [],
-                totalCount: 0,
-                selectedUser: [],
-                pageIndex: 1,
-                pageSize: 10,
-                formData: {
-                    name: "",
-                    password: "123456",
-                    gender: ""
-                },
-                formRules: {
-                    name: [
-                        { required: true, message: "用户名不能为空", trigger: "blur,change" }
-                    ],
-                    password: [
-                        { required: true, message: "密码不能为空", trigger: "blur,change" }
-                    ],
-                    gender: []
-                },
-                showCreate: false,
-                createLoading: false,
-
-                showModify: false,
-                modifyLoading: false
+                data10: []
             };
         },
+        mounted: function() {
+            const data = [];
+            for (let i = 0; i < 30; i++) {
+                data.push({
+                    key: i,
+                    billCode: "LYT" + Math.round(Math.random() * 1000000000),
+                    startDate: "2019-0" + (i % 8) + "-" + Math.round(Math.random() * 30),
+                    canStatus: Math.round(Math.random() * 3),
+                    startStation: "安阳-黄河大道-安工",
+                    targetStation: "北京-朝阳-合生汇",
+                    consignMan: "夏明凤",
+                    receiveMan: "王盼阳",
+                    goodsName: "天地壹号",
+                    goodWeight: Math.round(Math.random() * 100000) + "Kg",
+                    goodVolume: Math.round(Math.random() * 100000) + "L",
+                    goodNumber: Math.round(Math.random() * 30),
+                    facheCode: "LYT" + Math.round(Math.random() * 1234567),
+                    facheDate: "2019-0" + (i % 10) + "-" + Math.round(Math.random() * 30),
+                    opertion: "编辑"
+                });
+            }
+            this.data10 = data;
+            this.nowTimes();
+        },
         methods: {
-            handleQuery() {
-                this.$axios
-                    .post(
-                        `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
-                        this.searchForm
-                    )
-                    .then(res => {
-                        let result = res.data;
-                        this.userList = result.data.content;
-                        this.totalCount = result.data.totalElements;
-                    })
-                    .catch(() => {
-                        this.userList = [];
-                        this.totalCount = 0;
-                    });
+            // 获取当前时间函数
+            timeFormate(timeStamp) {
+                let year = new Date(timeStamp).getFullYear();
+                let month =
+                    new Date(timeStamp).getMonth() + 1 < 10
+                        ? "0" + (new Date(timeStamp).getMonth() + 1)
+                        : new Date(timeStamp).getMonth() + 1;
+                let date =
+                    new Date(timeStamp).getDate() < 10
+                        ? "0" + new Date(timeStamp).getDate()
+                        : new Date(timeStamp).getDate();
+                let hh =
+                    new Date(timeStamp).getHours() < 10
+                        ? "0" + new Date(timeStamp).getHours()
+                        : new Date(timeStamp).getHours();
+                let mm =
+                    new Date(timeStamp).getMinutes() < 10
+                        ? "0" + new Date(timeStamp).getMinutes()
+                        : new Date(timeStamp).getMinutes();
+                // let ss =new Date(timeStamp).getSeconds() < 10? "0" + new Date(timeStamp).getSeconds(): new Date(timeStamp).getSeconds();
+                // return year + "年" + month + "月" + date +"日"+" "+hh+":"+mm ;
+                this.nowTime =
+                    year + "年" + month + "月" + date + "日" + " " + hh + ":" + mm;
+                // console.log(this.nowTime);
             },
-            handlePageChange(index) {
-                this.pageIndex = userIndex;
-                this.handleQuery();
-            },
-            handlePageSizeChange(size) {
-                this.pageSize = size;
-                this.handleQuery();
-            },
-            handleSelect(selection, row) {
-                this.selectedUser = selection;
-                console.log(selection, row);
-            },
-            showCreateDrawer() {
-                this.showCreate = true;
-            },
-            handleCancelCreateUser() {
-                this.showCreate = false;
-                this.$refs["createUserForm"].resetFields();
-            },
-            handleCreateUser() {
-                this.$refs["createUserForm"].validate(valid => {
-                    if (valid) {
-                        this.createLoading = true;
-                        this.$axios
-                            .post("/users", this.formData)
-                            .then(() => {
-                                this.createLoading = false;
-                                this.showCreate = false;
-                                this.$Message.success("保存用户成功");
-                                this.$refs["createUserForm"].resetFields();
-                                this.handleQuery();
-                            })
-                            .catch(() => {
-                                this.createLoading = false;
-                                this.$Message.success("保存用户失败");
-                            });
-                    }
-                });
-            },
-
-            showModifyDrawer() {
-                this.formData = {
-                    name: this.selectedUser[0].name,
-                    password: this.selectedUser[0].password,
-                    gender: this.selectedUser[0].gender
-                };
-                this.showModify = true;
-            },
-            handleCancelModifyUser() {
-                this.showModify = false;
-                this.$refs["modifyUserForm"].resetFields();
-            },
-            handleModifyUser() {
-                this.$refs["modifyUserForm"].validate(valid => {
-                    if (valid) {
-                        this.modifyLoading = true;
-                        this.$axios
-                            .put(`/users/${this.selectedUser[0].id}`, this.formData)
-                            .then(() => {
-                                this.modifyLoading = false;
-                                this.showModify = false;
-                                this.$Message.success("保存用户成功");
-                                this.$refs["modifyUserForm"].resetFields();
-                                this.handleQuery();
-                            })
-                            .catch(() => {
-                                this.createLoading = false;
-                                this.$Message.success("保存用户失败");
-                            });
-                    }
-                });
-            },
-            handleDeleteUser() {
-                let ids = this.selectedUser.map(item => {
-                    return item.id;
-                });
-                console.log(ids);
+            // 定时器函数
+            nowTimes() {
+                this.timeFormate(new Date());
+                setInterval(this.nowTimes, 30 * 1000);
             }
         },
-        mounted() {
-            this.handleQuery();
+        randomNumber() {
+            const now = new Date();
+            let month = now.getMonth() + 1;
+            let day = now.getDate();
+            let hour = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            month = this.setTimeDateFmt(month);
+            hour = this.setTimeDateFmt(hour);
+            minutes = this.setTimeDateFmt(minutes);
+            seconds = this.setTimeDateFmt(seconds);
+            return (
+                now.getFullYear().toString() +
+                month.toString() +
+                day +
+                hour +
+                minutes +
+                seconds +
+                Math.round(Math.random() * 23 + 100).toString()
+            );
         }
     };
 </script>
-
-<style lang="less" scoped>
-  .operation {
-    .button {
-      margin-right: 5px;
-    }
-  }
-</style>
-<style lang="less">
-  .ivu-table-tip {
-    overflow-x: hidden !important;
-  }
-</style>
-<style lang="less">
-  .create-drawer-footer {
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    border-top: 1px solid #e8e8e8;
-    padding: 10px 16px;
-    text-align: right;
-    background: #fff;
-  }
-</style>
