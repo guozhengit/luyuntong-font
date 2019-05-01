@@ -39,7 +39,6 @@
             <span class="select-name">性别</span>
             <div class="select-input">
               <Select
-
                       v-model="searchForm.gender"
                       placeholder="请选择性别">
                 <Option v-for="item in types" :value="item.value" :key="item.value">{{ item.label }}
@@ -48,8 +47,8 @@
             </div>
           </div>
         </FormItem>
-        <FormItem>
-          <ButtonGroup class="button-flot">
+        <FormItem style="float: right">
+          <ButtonGroup >
             <Button type="primary" icon="md-search" ghost @click="handleQuery"
             >查询
             </Button
@@ -329,6 +328,22 @@
                 selectedUser: [],
                 pageIndex: 1,
                 pageSize: 10,
+
+                // @Override
+                // public String toString() {
+                //     final StringBuffer sb = new StringBuffer("Employee{");
+                //     sb.append("code='").append(code).append('\'');
+                //     sb.append(", birthday='").append(birthday).append('\'');
+                //     sb.append(", age='").append(age).append('\'');
+                //     sb.append(", position='").append(position).append('\'');
+                //     sb.append(", gender='").append(gender).append('\'');
+                //     sb.append(", salary=").append(salary);
+                //     sb.append(", bonus=").append(bonus);
+                //     sb.append(", stationCode='").append(stationCode).append('\'');
+                //     sb.append(", department=").append(department);
+                //     sb.append('}');
+                //     return sb.toString();
+                // }
                 formData: {
                     name: "",
                     password: "123456",

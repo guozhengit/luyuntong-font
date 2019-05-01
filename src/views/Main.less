@@ -100,22 +100,24 @@
     .admin-content-page {
       padding-top: 5px;
       height: calc(~'100% - 32px ');
-      overflow-y: auto;
+      overflow-y: hidden;
       /*简单的数据表格页面样式*/
       .table-page {
+        overflow-y: hidden;
+        //overflow-x: scroll;
         height: 100%;
         .search {
-          margin-bottom: 20px;
+          margin-bottom: 2px;
           padding: 5px 0;
           border: dashed 1px @border-color;
           .search-form {
             position: relative;
-            width: auto;
+            width: 100%;
             display: inline-block;
             .ivu-form-item {
               margin: 0 0 0 0;
               .select-ground {
-                width: auto;
+                width: 262px;
                 border-collapse: separate;
                 border: 1px solid #dddee1;
                   .select-name {
@@ -131,7 +133,7 @@
                   .select-input {
                     border-radius: 0 4px 4px 0;
                     display: inline-block;
-                    width: 180px;
+                    width: 160px;
                     box-sizing: border-box;
                     vertical-align: middle;
                     color: #495060;
@@ -160,7 +162,7 @@
             height: 100%;
             .ivu-table-body {
               height: calc(~'100% - 40px');
-              overflow-y: auto;
+              overflow-y: scroll;
               overflow-x: hidden;
             }
           }

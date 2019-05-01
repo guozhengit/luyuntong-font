@@ -1,5 +1,5 @@
 <template>
-    <div class="table-page" style="overflow-y: hidden">
+    <div class="table-page">
         <div class="search">
             <Form
                     class="search-form"
@@ -23,7 +23,7 @@
 
                 <FormItem prop="code">
                     <div class="ivu-form-item select-ground">
-                        <span class="select-name">用户名</span>
+                        <span class="select-name">用户账号</span>
                         <div class="select-input">
                             <Input
                                     v-model="searchForm.code"
@@ -47,8 +47,8 @@
                         </div>
                     </div>
                 </FormItem>
-                <FormItem>
-                    <ButtonGroup class="button-flot">
+                <FormItem style="float: right">
+                    <ButtonGroup>
                         <Button type="primary" icon="md-search" ghost @click="handleQuery"
                         >查询
                         </Button
@@ -60,196 +60,196 @@
                     </ButtonGroup>
                 </FormItem>
             </Form>
-    </div>
-    <div class="operation">
-        <ButtonGroup>
-            <Button
-                    type="primary"
-                    icon="md-add"
-                    ghost
-                    class="button"
-                    @click="showCreateDrawer"
-            >新增
-            </Button>
-            <Button
-                    type="info"
-                    icon="md-create"
-                    ghost
-                    class="button"
-                    :disabled="selectedUser.length !== 1"
-                    @click="showModifyDrawer"
-            >修改
-            </Button>
-            <Button
-                    type="error"
-                    icon="ios-trash"
-                    ghost
-                    class="button"
-                    :disabled="!selectedUser.length > 0"
-                    @click="handleDeleteUser"
-            >删除
-            </Button>
-            <Button type="primary" icon="ios-refresh" ghost @click="handleQuery"
-            >刷新
-            </Button>
-        </ButtonGroup>
-    </div>
-    <div class="data-table">
-        <Table
-                border
-                :columns="userColumns"
-                :data="userList"
-                @on-selection-change="handleSelect"
-        >
-        </Table>
-    </div>
-    <!--<br>-->
+        </div>
+        <div class="operation">
+            <ButtonGroup>
+                <Button
+                        type="primary"
+                        icon="md-add"
+                        ghost
+                        class="button"
+                        @click="showCreateDrawer"
+                >新增
+                </Button>
+                <Button
+                        type="info"
+                        icon="md-create"
+                        ghost
+                        class="button"
+                        :disabled="selectedUser.length !== 1"
+                        @click="showModifyDrawer"
+                >修改
+                </Button>
+                <Button
+                        type="error"
+                        icon="ios-trash"
+                        ghost
+                        class="button"
+                        :disabled="!selectedUser.length > 0"
+                        @click="handleDeleteUser"
+                >删除
+                </Button>
+                <Button type="primary" icon="ios-refresh" ghost @click="handleQuery"
+                >刷新
+                </Button>
+            </ButtonGroup>
+        </div>
+        <div class="data-table">
+            <Table
+                    border
+                    :columns="userColumns"
+                    :data="userList"
+                    @on-selection-change="handleSelect"
+            >
+            </Table>
+        </div>
+        <!--<br>-->
 
-    <div class="pagination">
-        <Page
-                :total="totalCount"
-                :current="pageIndex"
-                :page-size="pageSize"
-                show-total
-                show-sizer
-                show-elevator
-                @on-change="handlePageChange"
-                @on-page-size-change="handlePageSizeChange"
-        >
-        </Page>
-    </div>
-    <Drawer
-            title="添加用户"
-            v-model="showCreate"
-            width="360"
-            :mask-closable="false"
-    >
-        <Form
-                ref="createUserForm"
-                :model="formData"
-                :rules="formRules"
-                :label-width="80"
-        >
-            <Row>
-                <i-Col span="24">
-                    <FormItem label="用户名" prop="name">
-                        <Input v-model="formData.name" placeholder="请输入用户名"/>
-                    </FormItem>
-                </i-Col>
-                <i-Col span="24">
-                    <FormItem label="密码" prop="password" placeholder="请输入密码">
-                        <Input type="password" v-model="formData.password"/>
-                    </FormItem>
-                </i-Col>
-                <i-Col span="24">
-                    <FormItem label="用户编号" prop="code">
-                        <Input v-model="formData.code" placeholder="请输入用户编号"/>
-                    </FormItem>
-                </i-Col>
-                <i-Col span="24">
-                    <FormItem label="生日" prop="birthday">
-                        <Input placeholder="请输入生日" v-model="formData.birthday"/>
-                    </FormItem>
-                </i-Col>
-                <i-Col span="24">
-                    <FormItem label="电话" prop="phone">
-                        <Input v-model="formData.phone" placeholder="请输入电话"/>
-                    </FormItem>
-                </i-Col>
-                <i-Col span="24">
-                    <FormItem label="邮箱" prop="email">
-                        <Input v-model="formData.email" placeholder="请输入邮箱"/>
-                    </FormItem>
-                </i-Col>
-                <i-Col span="24">
-                    <FormItem label="性别" prop="gender">
-                        <RadioGroup v-model="formData.gender">
-                            <Radio label="男">1</Radio>
-                            <Radio label="女">2</Radio>
-                            <Radio label="未知">3</Radio>
-                        </RadioGroup>
-                    </FormItem>
-                </i-Col>
-            </Row>
-        </Form>
-        <div class="create-drawer-footer">
-            <Button style="margin-right: 8px" @click="handleCancelCreateUser"
-            >取消
-            </Button>
-            <Button
-                    type="primary"
-                    @click="handleCreateUser"
-                    :loading="createLoading"
-            >保存
-            </Button>
+        <div class="pagination">
+            <Page
+                    :total="totalCount"
+                    :current="pageIndex"
+                    :page-size="pageSize"
+                    show-total
+                    show-sizer
+                    show-elevator
+                    @on-change="handlePageChange"
+                    @on-page-size-change="handlePageSizeChange"
+            >
+            </Page>
         </div>
-    </Drawer>
-    <Drawer
-            title="修改用户"
-            v-model="showModify"
-            width="360"
-            :mask-closable="false"
-    >
-        <Form
-                ref="modifyUserForm"
-                :model="formData"
-                :rules="formRules"
-                :label-width="80"
+        <Drawer
+                title="添加用户"
+                v-model="showCreate"
+                width="360"
+                :mask-closable="false"
         >
-            <Row>
-                <i-Col span="24">
-                    <FormItem label="用户名" prop="name">
-                        <Input v-model="formData.name" placeholder="请输入用户名"/>
-                    </FormItem>
-                </i-Col>
-                <i-Col span="24">
-                    <FormItem label="用户编号" prop="name">
-                        <Input v-model="formData.code" placeholder="请输入用户编号"/>
-                    </FormItem>
-                </i-Col>
-                <i-Col span="24">
-                    <FormItem label="密码" prop="password" placeholder="请输入密码">
-                        <Input type="password" v-model="formData.password"/>
-                    </FormItem>
-                </i-Col>
-                <i-Col span="24">
-                    <FormItem label="生日" prop="birthday">
-                        <Input placeholder="请输入生日" v-model="formData.birthday"/>
-                    </FormItem>
-                </i-Col>
-                <i-Col span="24">
-                    <FormItem label="电话" prop="phone">
-                        <Input v-model="formData.phone" placeholder="请输入电话"/>
-                    </FormItem>
-                </i-Col>
-                <i-Col span="24">
-                    <FormItem label="邮箱" prop="email">
-                        <Input v-model="formData.email" placeholder="请输入邮箱"/>
-                    </FormItem>
-                </i-Col>
-                <i-Col span="24">
-                    <FormItem label="性别" prop="gender">
-                        <RadioGroup v-model="formData.gender">
-                            <Radio label="男">男</Radio>
-                            <Radio label="女">女</Radio>
-                            <Radio label="其他">其他</Radio>
-                        </RadioGroup>
-                    </FormItem>
-                </i-Col>
-            </Row>
-        </Form>
-        <div class="create-drawer-footer">
-            <Button style="margin-right: 8px" @click="handleCancelModifyUser"
-            >取消
-            </Button>
-            <Button
-                    type="primary"
-                    @click="handleModifyUser"
-                    :loading="modifyLoading"
-            >保存
-            </Button>
-        </div>
-    </Drawer>
+            <Form
+                    ref="createUserForm"
+                    :model="formData"
+                    :rules="formRules"
+                    :label-width="80"
+            >
+                <Row>
+                    <i-Col span="24">
+                        <FormItem label="用户名" prop="name">
+                            <Input v-model="formData.name" placeholder="请输入用户名"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="24">
+                        <FormItem label="密码" prop="password" placeholder="请输入密码">
+                            <Input type="password" v-model="formData.password"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="24">
+                        <FormItem label="用户编号" prop="code">
+                            <Input v-model="formData.code" placeholder="请输入用户编号"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="24">
+                        <FormItem label="生日" prop="birthday">
+                            <Input placeholder="请输入生日" v-model="formData.birthday"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="24">
+                        <FormItem label="电话" prop="phone">
+                            <Input v-model="formData.phone" placeholder="请输入电话"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="24">
+                        <FormItem label="邮箱" prop="email">
+                            <Input v-model="formData.email" placeholder="请输入邮箱"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="24">
+                        <FormItem label="性别" prop="gender">
+                            <RadioGroup v-model="formData.gender">
+                                <Radio label="男">1</Radio>
+                                <Radio label="女">2</Radio>
+                                <Radio label="未知">3</Radio>
+                            </RadioGroup>
+                        </FormItem>
+                    </i-Col>
+                </Row>
+            </Form>
+            <div class="create-drawer-footer">
+                <Button style="margin-right: 8px" @click="handleCancelCreateUser"
+                >取消
+                </Button>
+                <Button
+                        type="primary"
+                        @click="handleCreateUser"
+                        :loading="createLoading"
+                >保存
+                </Button>
+            </div>
+        </Drawer>
+        <Drawer
+                title="修改用户"
+                v-model="showModify"
+                width="360"
+                :mask-closable="false"
+        >
+            <Form
+                    ref="modifyUserForm"
+                    :model="formData"
+                    :rules="formRules"
+                    :label-width="80"
+            >
+                <Row>
+                    <i-Col span="24">
+                        <FormItem label="用户名" prop="name">
+                            <Input v-model="formData.name" placeholder="请输入用户名"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="24">
+                        <FormItem label="用户编号" prop="name">
+                            <Input v-model="formData.code" placeholder="请输入用户编号"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="24">
+                        <FormItem label="密码" prop="password" placeholder="请输入密码">
+                            <Input type="password" v-model="formData.password"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="24">
+                        <FormItem label="生日" prop="birthday">
+                            <Input placeholder="请输入生日" v-model="formData.birthday"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="24">
+                        <FormItem label="电话" prop="phone">
+                            <Input v-model="formData.phone" placeholder="请输入电话"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="24">
+                        <FormItem label="邮箱" prop="email">
+                            <Input v-model="formData.email" placeholder="请输入邮箱"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="24">
+                        <FormItem label="性别" prop="gender">
+                            <RadioGroup v-model="formData.gender">
+                                <Radio label="男">男</Radio>
+                                <Radio label="女">女</Radio>
+                                <Radio label="其他">其他</Radio>
+                            </RadioGroup>
+                        </FormItem>
+                    </i-Col>
+                </Row>
+            </Form>
+            <div class="create-drawer-footer">
+                <Button style="margin-right: 8px" @click="handleCancelModifyUser"
+                >取消
+                </Button>
+                <Button
+                        type="primary"
+                        @click="handleModifyUser"
+                        :loading="modifyLoading"
+                >保存
+                </Button>
+            </div>
+        </Drawer>
     </div>
 </template>
 

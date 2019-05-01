@@ -1,32 +1,55 @@
 <template>
-    <div class="table-page" style="overflow-y: hidden">
+    <div class="table-page" style="overflow-y:hidden">
         <div class="search">
             <Form
                     class="search-form"
-                    ref="searchForm"
-                    :model="searchForm"
-                    :label-width="5"
+                    ref="searchVehicleForm"
+                    :model="searchVehicleForm"
+                    :label-width="10"
                     inline
             >
-                <FormItem prop="name">
+                <FormItem prop="code">
                     <div class="ivu-form-item select-ground">
-                        <span class="select-name">用户名</span>
+                        <span class="select-name">车牌号</span>
                         <div class="select-input">
                             <Input
-                                    v-model="searchForm.name"
+                                    v-model="searchVehicleForm.code"
                                     type="text"
-                                    placeholder="请输入用户名称"
+                                    placeholder="请输入车牌号"
                             />
                         </div>
                     </div>
                 </FormItem>
-
+                <FormItem prop="useAge">
+                    <div class="ivu-form-item select-ground">
+                        <span class="select-name">车辆类型</span>
+                        <div class="select-input">
+                            <Input
+                                    v-model="searchVehicleForm.type"
+                                    type="text"
+                                    placeholder="请输入车辆类型"
+                            />
+                        </div>
+                    </div>
+                </FormItem>
+                <FormItem prop="useAge">
+                    <div class="ivu-form-item select-ground">
+                        <span class="select-name">车龄</span>
+                        <div class="select-input">
+                            <Input
+                                    v-model="searchVehicleForm.useAge"
+                                    type="text"
+                                    placeholder="请输入使用年限"
+                            />
+                        </div>
+                    </div>
+                </FormItem>
                 <FormItem prop="code">
                     <div class="ivu-form-item select-ground">
                         <span class="select-name">用户名</span>
                         <div class="select-input">
                             <Input
-                                    v-model="searchForm.code"
+                                    v-model="searchVehicleForm.code"
                                     type="text"
                                     placeholder="请输入用户账号"
                                     clearable
@@ -34,22 +57,8 @@
                         </div>
                     </div>
                 </FormItem>
-                <FormItem prop="gender">
-                    <div class="ivu-form-item select-ground">
-                        <span class="select-name">性别</span>
-                        <div class="select-input">
-                            <Select
-
-                                    v-model="searchForm.gender"
-                                    placeholder="请选择性别">
-                                <Option v-for="item in types" :value="item.value" :key="item.value">{{ item.label }}
-                                </Option>
-                            </Select>
-                        </div>
-                    </div>
-                </FormItem>
-                <FormItem>
-                    <ButtonGroup class="button-flot">
+                <FormItem style="float: right">
+                    <ButtonGroup>
                         <Button type="primary" icon="md-search" ghost @click="handleQuery"
                         >查询
                         </Button
@@ -77,7 +86,7 @@
                         icon="md-create"
                         ghost
                         class="button"
-                        :disabled="selectedUser.length !== 1"
+                        :disabled="selectedVehicle.length !== 1"
                         @click="showModifyDrawer"
                 >修改
                 </Button>
@@ -86,7 +95,7 @@
                         icon="ios-trash"
                         ghost
                         class="button"
-                        :disabled="!selectedUser.length > 0"
+                        :disabled="!selectedVehicle.length > 0"
                         @click="handleDeleteUser"
                 >删除
                 </Button>
@@ -98,8 +107,8 @@
         <div class="data-table">
             <Table
                     border
-                    :columns="userColumns"
-                    :data="userList"
+                    :columns="vehicleCloumns"
+                    :data="vehicleList"
                     @on-selection-change="handleSelect"
             >
             </Table>
@@ -120,55 +129,104 @@
             </Page>
         </div>
         <Drawer
-                title="添加用户"
+                title="添加车辆信息"
                 v-model="showCreate"
-                width="360"
+                width="800"
                 :mask-closable="false"
         >
             <Form
                     ref="createUserForm"
-                    :model="formData"
+                    :model="vehicleFormData"
                     :rules="formRules"
-                    :label-width="80"
+                    :label-width="100"
             >
                 <Row>
-                    <i-Col span="24">
-                        <FormItem label="用户名" prop="name">
-                            <Input v-model="formData.name" placeholder="请输入用户名"/>
+                    <i-Col span="12">
+                        <FormItem label="车牌号" prop="code">
+                            <Input v-model="vehicleFormData.code" placeholder="请输入车牌号"/>
                         </FormItem>
                     </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="密码" prop="password" placeholder="请输入密码">
-                            <Input type="password" v-model="formData.password"/>
+                    <i-Col span="12">
+                        <FormItem label="保险单" prop="insuranceCard">
+                            <Input v-model="vehicleFormData.insuranceCard" placeholder="请输入保险单号"/>
                         </FormItem>
                     </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="用户编号" prop="code">
-                            <Input v-model="formData.code" placeholder="请输入用户编号"/>
+                    <i-Col span="12">
+                        <FormItem label="所属站点" prop="stationCode">
+                            <Input v-model="vehicleFormData.stationCode" placeholder="请选择站点信息"/>
                         </FormItem>
                     </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="生日" prop="birthday">
-                            <Input placeholder="请输入生日" v-model="formData.birthday"/>
+                    <i-Col span="12">
+                        <FormItem label="所属站点" prop="stationCode">
+                            <Input v-model="vehicleFormData.stationCode" placeholder="请选择站点信息"/>
                         </FormItem>
                     </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="电话" prop="phone">
-                            <Input v-model="formData.phone" placeholder="请输入电话"/>
+                    <i-Col span="12">
+                        <FormItem label="所属站点" prop="stationCode">
+                            <Input v-model="vehicleFormData.stationCode" placeholder="请选择站点信息"/>
                         </FormItem>
                     </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="邮箱" prop="email">
-                            <Input v-model="formData.email" placeholder="请输入邮箱"/>
+
+                    <i-Col span="12">
+                        <FormItem label="所属站点" prop="stationCode">
+                            <Input v-model="vehicleFormData.useAge" placeholder="请选择站点信息"/>
                         </FormItem>
                     </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="性别" prop="gender">
-                            <RadioGroup v-model="formData.gender">
-                                <Radio label="男">1</Radio>
-                                <Radio label="女">2</Radio>
-                                <Radio label="未知">3</Radio>
-                            </RadioGroup>
+                    <i-Col span="12">
+                        <FormItem label="所属站点" prop="stationCode">
+                            <Input v-model="vehicleFormData.type" placeholder="请选择站点信息"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="所属单位" prop="owner">
+                            <Input v-model="vehicleFormData.owner" placeholder="请选择所属单位"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="车辆型号" prop="model">
+                            <Input v-model="vehicleFormData.model" placeholder="请输入选择车辆型号"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="发动机编号" prop="engineNo">
+                            <Input v-model="vehicleFormData.engineNo" placeholder="请输入发动机编号"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="车架编号" prop="frameNo">
+                            <Input v-model="vehicleFormData.frameNo" placeholder="请输入车架编号"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="车身长度" prop="length">
+                            <Input v-model="vehicleFormData.length" placeholder="请输入车长"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="车身宽度" prop="width">
+                            <Input v-model="vehicleFormData.width" placeholder="请输入车宽"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="车身高度" prop="high">
+                            <Input v-model="vehicleFormData.high" placeholder="请输入车高"/>
+                        </FormItem>
+                    </i-Col>
+
+
+                    <i-Col span="12">
+                        <FormItem label="限高" prop="allowCarryHigh">
+                            <Input v-model="vehicleFormData.engineNo" placeholder="请输入限高"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="准载体积" prop="allowCarryVolume">
+                            <Input v-model="vehicleFormData.frameNo" placeholder="请输入准载体积"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="载重量" prop="allowCarryWeight">
+                            <Input v-model="vehicleFormData.allowCarryWeight" placeholder="请输入载重量"/>
                         </FormItem>
                     </i-Col>
                 </Row>
@@ -188,53 +246,100 @@
         <Drawer
                 title="修改用户"
                 v-model="showModify"
-                width="360"
+                width="600"
                 :mask-closable="false"
         >
             <Form
                     ref="modifyUserForm"
-                    :model="formData"
+                    :model="vehicleFormData"
                     :rules="formRules"
-                    :label-width="80"
+                    :label-width="100"
             >
                 <Row>
-                    <i-Col span="24">
-                        <FormItem label="用户名" prop="name">
-                            <Input v-model="formData.name" placeholder="请输入用户名"/>
+                    <i-Col span="12">
+                        <FormItem label="车牌号" prop="code">
+                            <Input v-model="vehicleFormData.code" placeholder="请输入车牌号"/>
                         </FormItem>
                     </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="用户编号" prop="name">
-                            <Input v-model="formData.code" placeholder="请输入用户编号"/>
+                    <i-Col span="12">
+                        <FormItem label="保险单" prop="insuranceCard">
+                            <Input v-model="vehicleFormData.insuranceCard" placeholder="请输入保险单号"/>
                         </FormItem>
                     </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="密码" prop="password" placeholder="请输入密码">
-                            <Input type="password" v-model="formData.password"/>
+                    <i-Col span="12">
+                        <FormItem label="所属站点" prop="stationCode">
+                            <Input v-model="vehicleFormData.stationCode" placeholder="请选择站点信息"/>
                         </FormItem>
                     </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="生日" prop="birthday">
-                            <Input placeholder="请输入生日" v-model="formData.birthday"/>
+                    <i-Col span="12">
+                        <FormItem label="所属站点" prop="stationCode">
+                            <Input v-model="vehicleFormData.stationCode" placeholder="请选择站点信息"/>
                         </FormItem>
                     </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="电话" prop="phone">
-                            <Input v-model="formData.phone" placeholder="请输入电话"/>
+                    <i-Col span="12">
+                        <FormItem label="所属站点" prop="stationCode">
+                            <Input v-model="vehicleFormData.stationCode" placeholder="请选择站点信息"/>
                         </FormItem>
                     </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="邮箱" prop="email">
-                            <Input v-model="formData.email" placeholder="请输入邮箱"/>
+
+                    <i-Col span="12">
+                        <FormItem label="所属站点" prop="stationCode">
+                            <Input v-model="vehicleFormData.useAge" placeholder="请选择站点信息"/>
                         </FormItem>
                     </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="性别" prop="gender">
-                            <RadioGroup v-model="formData.gender">
-                                <Radio label="男">男</Radio>
-                                <Radio label="女">女</Radio>
-                                <Radio label="其他">其他</Radio>
-                            </RadioGroup>
+                    <i-Col span="12">
+                        <FormItem label="所属站点" prop="stationCode">
+                            <Input v-model="vehicleFormData.type" placeholder="请选择站点信息"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="所属单位" prop="owner">
+                            <Input v-model="vehicleFormData.owner" placeholder="请选择所属单位"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="车辆型号" prop="model">
+                            <Input v-model="vehicleFormData.model" placeholder="请输入选择车辆型号"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="发动机编号" prop="engineNo">
+                            <Input v-model="vehicleFormData.engineNo" placeholder="请输入发动机编号"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="车架编号" prop="frameNo">
+                            <Input v-model="vehicleFormData.frameNo" placeholder="请输入车架编号"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="车身长度" prop="length">
+                            <Input v-model="vehicleFormData.length" placeholder="请输入车长"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="车身宽度" prop="width">
+                            <Input v-model="vehicleFormData.width" placeholder="请输入车宽"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="车身高度" prop="high">
+                            <Input v-model="vehicleFormData.high" placeholder="请输入车高"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="限高" prop="allowCarryHigh">
+                            <Input v-model="vehicleFormData.engineNo" placeholder="请输入限高"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="准载体积" prop="allowCarryVolume">
+                            <Input v-model="vehicleFormData.frameNo" placeholder="请输入准载体积"/>
+                        </FormItem>
+                    </i-Col>
+                    <i-Col span="12">
+                        <FormItem label="载重量" prop="allowCarryWeight">
+                            <Input v-model="vehicleFormData.allowCarryWeight" placeholder="请输入载重量"/>
                         </FormItem>
                     </i-Col>
                 </Row>
@@ -259,21 +364,7 @@
         name: "ArticleList",
         data() {
             return {
-                types: [
-                    {
-                        value: '1',
-                        label: '男'
-                    },
-                    {
-                        value: '2',
-                        label: '女'
-                    },
-                    {
-                        value: '3',
-                        label: '其他'
-                    },
-                ],
-                userColumns: [
+                vehicleCloumns: [
                     {
                         type: "selection",
                         width: 60,
@@ -286,8 +377,8 @@
                         align: "center"
                     },
                     {
-                        title: "用户名",
-                        key: "name",
+                        title: "车牌号",
+                        key: "code",
                         width: 200,
                         align: "center",
                         sortable: true
@@ -300,58 +391,103 @@
                     },
                     {
                         width: 120,
-                        title: "性别",
-                        key: "gender",
+                        title: "车辆归属",
+                        key: "owner",
                         align: "center",
                         sortable: true
                     },
                     {
-                        width: 400,
-                        title: "电话",
-                        key: "phone",
+                        width: 120,
+                        title: "车辆限高",
+                        key: "allowCarryWeight",
                         align: "center",
                         sortable: true
                     },
                     {
-                        title: "邮箱",
-                        key: "email",
+                        width: 120,
+                        title: "准载重量",
+                        key: "allowCarryHigh",
+                        align: "center",
+                        sortable: true
+                    },
+                    {
+                        width: 120,
+                        title: "准载体积",
+                        key: "allowCarryVolume",
+                        align: "center",
+                    },
+                    {
+                        title: "发动机型号",
+                        key: "engineNo",
+                        align: "center",
+                        sortable: true
+                    },
+                    {
+                        title: "保险单号",
+                        key: "insuranceCard",
                         align: "center",
                         sortable: true
                     }
                 ],
-                searchForm: {
-                    name: "",
+                searchVehicleForm: {
                     code: "",
-                    gender: "",
+                    owner: "",
+                    stationCode: "",
+                    type: "",
+                    model: "",
+                    length: "",
+                    high: "",
+                    width: "",
+                    allowCarryVolume: "",
+                    allowCarryWeight: "",
+                    allowCarryHigh: "",
+                    useAge: "",
+                    frameNo: "",
+                    engineNo: "",
+                    insuranceCard: "",
+                    DetailGoodCode: "",
                 },
-                userList: [],
+                vehicleList: [],
                 totalCount: 0,
-                selectedUser: [],
+                selectedVehicle: [],
                 pageIndex: 1,
                 pageSize: 10,
-                formData: {
-                    name: "",
-                    password: "123456",
-                    gender: "",
-                    age: "",
-                    phone: "",
+
+                vehicleFormData: {
                     code: "",
-                    birthday: "",
-                    email: ""
+                    owner: "陆运通",
+                    stationCode: "",
+                    type: "",
+                    model: "",
+                    length: "",
+                    high: "",
+                    width: "",
+                    allowCarryVolume: "",
+                    allowCarryWeight: "",
+                    allowCarryHigh: "",
+                    useAge: "",
+                    frameNo: "",
+                    engineNo: "",
+                    insuranceCard: "",
+                    DetailGoodCode: "",
                 },
                 formRules: {
-                    name: [
-                        {required: true, message: "用户名不能为空", trigger: "blur,change"}
-                    ],
-                    password: [
-                        {required: true, message: "密码不能为空", trigger: "blur,change"}
-                    ],
-                    gender: [],
-                    phone: [],
-                    age: [],
-                    code: [],
-                    email: [],
-                    birthday: []
+                    code: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    owner: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    stationCode: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    type: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    model: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    length: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    high: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    width: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    allowCarryVolume: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    allowCarryWeight: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    allowCarryHigh: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    useAge: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    frameNo: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    engineNo: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    insuranceCard: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
+                    DetailGoodCode: [{required: true, message: "车牌号不能为空", trigger: "blur,change"}],
                 },
                 showCreate: false,
                 createLoading: false,
@@ -368,15 +504,15 @@
                 this.$axios
                     .post(
                         `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
-                        this.searchForm
+                        this.searchVehicleForm
                     )
                     .then(res => {
                         let result = res.data;
-                        this.userList = result.data.content;
+                        this.vehicleList = result.data.content;
                         this.totalCount = result.data.totalElements;
                     })
                     .catch(() => {
-                        this.userList = [];
+                        this.vehicleList = [];
                         this.totalCount = 0;
                     });
             },
@@ -389,7 +525,7 @@
                 this.handleQuery();
             },
             handleSelect(selection, row) {
-                this.selectedUser = selection;
+                this.selectedVehicle = selection;
                 console.log(selection, row);
             },
             showCreateDrawer() {
@@ -401,7 +537,7 @@
             },
 
             handleDeleteUser() {
-                let ids = this.selectedUser.map(item => {
+                let ids = this.selectedVehicle.map(item => {
                     return item.id;
                 });
                 console.log(ids);
@@ -422,7 +558,7 @@
                     if (valid) {
                         this.createLoading = true;
                         this.$axios
-                            .post("/users", this.formData)
+                            .post("/users", this.vehicleFormData)
                             .then(() => {
                                 this.createLoading = false;
                                 this.showCreate = false;
@@ -438,13 +574,13 @@
                 });
             },
             showModifyDrawer() {
-                this.formData = {
-                    name: this.selectedUser[0].name,
-                    password: this.selectedUser[0].password,
-                    gender: this.selectedUser[0].gender,
-                    code: this.selectedUser[0].code,
-                    phone: this.selectedUser[0].phone,
-                    birthDay: this.selectedUser[0].birthDay
+                this.vehicleFormData = {
+                    name: this.selectedVehicle[0].name,
+                    password: this.selectedVehicle[0].password,
+                    gender: this.selectedVehicle[0].gender,
+                    code: this.selectedVehicle[0].code,
+                    phone: this.selectedVehicle[0].phone,
+                    birthDay: this.selectedVehicle[0].birthDay
                 };
                 this.showModify = true;
             },
@@ -457,7 +593,7 @@
                     if (valid) {
                         this.modifyLoading = true;
                         this.$axios
-                            .put(`/users/${this.selectedUser[0].id}`, this.formData)
+                            .put(`/users/${this.selectedVehicle[0].id}`, this.vehicleFormData)
                             .then(() => {
                                 this.modifyLoading = false;
                                 this.showModify = false;
@@ -490,7 +626,6 @@
     .ivu-table-tip {
     }
 </style>
-
 <style lang="less">
     .create-drawer-footer {
         width: 100%;

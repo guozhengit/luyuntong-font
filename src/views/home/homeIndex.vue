@@ -4,7 +4,7 @@
       <label class="left"><h1>年度统计报表</h1></label>
       <tr/>
       <Card shadow>
-        <example style="height: 500px;"/>
+        <example style="height: 500px;width: 100%"/>
       </Card>
     </Row>
   </div>
