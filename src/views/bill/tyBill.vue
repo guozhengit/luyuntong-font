@@ -1,492 +1,1091 @@
 <template>
-    <div class="table-page">
-        <div class="box">
-            <Form
-                    class="box search-form"
-                    ref="searchForm"
-                    :model="searchForm"
-            >
-                <FormItem prop="salesMan" class="box-mechanism">
-                    <div class="select-ground">
-                        <span class="select-name">业务员</span>
-                        <div class="select-input">
-                            <Select
-                                    v-model="searchForm.salesMan"
-                                    class="left-margin"
-                                    placeholder="请选择业务员"
-                            >
-                                <Option v-for="item in EmployeeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                            </Select>
-                        </div>
-                    </div>
-                </FormItem>
-                <FormItem prop="code" class="box-mechanism">
-                    <div class="select-ground">
-                        <span class="select-name">托运单号</span>
-                        <div class="select-input"><Input
-                                v-model="searchForm.code"
-                                type="text"
-                                placeholder="请输入托运单号"
-                        />
-                        </div>
-                    </div>
-                </FormItem>
-                <FormItem prop="date" class="box-mechanism">
-                    <div class="select-ground">
-                        <span class="select-name">托运日期</span>
-                        <div class="select-input">
-                            <DatePicker
-                                    v-model="searchForm.date"
-                                    type="date"
-                                    placeholder="请选择托运日期"
-                                    clearable
-                            />
-                        </div>
-                    </div>
-                </FormItem>
-                <FormItem prop="gatherType" class="box-mechanism">
-                    <div class="select-ground">
-                        <span class="select-name">收款类型</span>
-                        <div class="select-input">
-                            <Select
-                                    v-model="searchForm.gatherType"
-                                    class="left-margin"
-                                    placeholder="请选择收款类型"
-                            >
-                            </Select>
-                        </div>
-                    </div>
-                </FormItem>
-                <FormItem class="">
-                    <ButtonGroup>
-                        <Button type="primary" icon="md-search" ghost @click="handleQuery">查询</Button>
-                        <Button type="" icon="md-close" ghost @click="handleQuery">重置</Button>
-                    </ButtonGroup>
-                </FormItem>
-            </Form>
-        </div>
-
-        <div class="operation">
-            <ButtonGroup>
-                <Button
-                        type="primary" icon="md-add" ghost class="button" @click="showCreateDrawer"
-                >新增
-                </Button
-                >
-                <Button
-                        type="info" icon="md-create" ghost class="button" :disabled="selectedUser.length !== 1"
-                        @click="showModifyDrawer"
-                >修改
-                </Button
-                >
-                <Button
-                        type="error" icon="ios-trash" ghost class="button" :disabled="!selectedUser.length > 0"
-                        @click="handleDeleteUser"
-                >删除
-                </Button
-                >
-                <Button type="primary" icon="ios-refresh" ghost @click="handleQuery"
-                >刷新
-                </Button
-                >
-            </ButtonGroup>
-        </div>
-        <div class="data-table">
-            <Table
-                    border :columns="userColumns" :data="userList" @on-selection-change="handleSelect"
-            >
-            </Table>
-        </div>
-        <!--<br>-->
-
-
-        <div class="pagination">
-
-            <Page
-                    :total="totalCount"
-                    :current="pageIndex"
-                    :page-size="pageSize"
-                    show-total
-                    show-sizer
-                    show-elevator
-                    @on-change="handlePageChange"
-                    @on-page-size-change="handlePageSizeChange"
-            >
-            </Page>
-        </div>
-        <Drawer
-                title="新增用户"
-                v-model="showCreate"
-                width="360"
-                :mask-closable="false"
-        >
-            <Form
-                    ref="createUserForm"
-                    :model="formData"
-                    :rules="formRules"
-                    :label-width="80"
-            >
-                <Row>
-                    <i-Col span="24">
-                        <FormItem label="用户名" prop="name">
-                            <Input v-model="formData.name" placeholder="请输入用户名"/>
-                        </FormItem>
-                    </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="密码" prop="password" placeholder="请输入密码">
-                            <Input type="password" v-model="formData.password"/>
-                        </FormItem>
-                    </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="用户编号" prop="code">
-                            <Input v-model="formData.code" placeholder="请输入用户编号"/>
-                        </FormItem>
-                    </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="生日" prop="birthday">
-                            <Input placeholder="请输入生日" v-model="formData.birthday"/>
-                        </FormItem>
-                    </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="电话" prop="phone">
-                            <Input v-model="formData.phone" placeholder="请输入电话"/>
-                        </FormItem>
-                    </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="邮箱" prop="email">
-                            <Input v-model="formData.email" placeholder="请输入邮箱"/>
-                        </FormItem>
-                    </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="性别" prop="gender">
-                            <RadioGroup v-model="formData.gender">
-                                <Radio label="男">男</Radio>
-                                <Radio label="女">女</Radio>
-                                <Radio label="未知">未知</Radio>
-                            </RadioGroup>
-                        </FormItem>
-                    </i-Col>
-                </Row>
-            </Form>
-            <div class="create-drawer-footer">
-                <Button style="margin-right: 8px" @click="handleCancelCreateUser"
-                >取消
-                </Button
-                >
-                <Button
-                        type="primary"
-                        @click="handleCreateUser"
-                        :loading="createLoading"
-                >保存
-                </Button
-                >
+  <div class="table-page">
+    <div class="search">
+      <Form
+        class="search-form"
+        ref="searchForm"
+        :model="searchForm"
+        :label-width="5"
+        inline
+      >
+        <!--
+        1.	用户 （用户编号，用户名，性别，年龄，职务）；
+        2.	职员 （工号，姓名，职位）；
+        3.	部门 （部门编号，名称）；
+        4.	车辆 （车牌号，车容量，车高，保险号，使用年限，类型）；
+        5.	司机 （工号，姓名，年龄，电话）；
+        6.	路线 （编号，起始点，终点）；
+        7.	站点 （站点编号、所属省份、站点电话）；
+        8.	托运单 （托运单号，发货人，货物数量，货物种类，运费，创建时间）
+        9.	发车单 （发车单号，出发点，目的地，发车日期）；
+        10.	回车单 （回车单号，）
+        11.	客户结算单 （结算单号，付款人，收款人，应收金额，已收金额，优惠金额）
+        12.	司机结算单 （结算单号，付款人，收款人，应收金额，已收金额，优惠金额）
+        1.	用户 （用户编号，用户名，性别，年龄，职务）；
+        2.	职员 （工号，姓名，职位）；
+        3.	部门 （部门编号，名称）；
+        4.	车辆 （车牌号，车容量，车高，保险号，使用年限，类型）；
+        5.	司机 （工号，姓名，年龄，电话）；
+        6.	路线 （编号，起始点，终点）；
+        7.	站点 （站点编号、所属省份、站点电话）；
+        8.	托运单 （托运单号，发货人，货物数量，货物种类，运费，创建时间）
+        9.	发车单 （发车单号，出发点，目的地，发车日期）；
+        10.	回车单 （回车单号，）
+        11.	客户结算单 （结算单号，付款人，收款人，应收金额，已收金额，优惠金额）
+        12.	司机结算单 （结算单号，付款人，收款人，应收金额，已收金额，优惠金额
+        -->
+        <FormItem prop="code">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name">单据编号</span>
+            <div class="select-input">
+              <Input
+                v-model="searchForm.code"
+                type="text"
+                placeholder="请输入单据编号"
+              />
             </div>
-        </Drawer>
-        <Drawer
-                title="修改用户"
-                v-model="showModify"
-                width="360"
-                :mask-closable="false"
-        >
-            <Form
-                    ref="modifyUserForm"
-                    :model="formData"
-                    :rules="formRules"
-                    :label-width="80"
-            >
-                <Row>
-                    <i-Col span="24">
-                        <FormItem label="y用户名" prop="name">
-                            <Input v-model="formData.name" placeholder="请输入用户名"/>
-                        </FormItem>
-                    </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="用户编号" prop="name">
-                            <Input v-model="formData.code" placeholder="请输入用户编号"/>
-                        </FormItem>
-                    </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="密码" prop="password" placeholder="请输入密码">
-                            <Input type="password" v-model="formData.password"/>
-                        </FormItem>
-                    </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="生日" prop="birthday">
-                            <Input placeholder="请输入生日" v-model="formData.birthday"/>
-                        </FormItem>
-                    </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="电话" prop="phone">
-                            <Input v-model="formData.phone" placeholder="请输入电话"/>
-                        </FormItem>
-                    </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="邮箱" prop="email">
-                            <Input v-model="formData.email" placeholder="请输入邮箱"/>
-                        </FormItem>
-                    </i-Col>
-                    <i-Col span="24">
-                        <FormItem label="性别" prop="gender">
-                            <RadioGroup v-model="formData.gender">
-                                <Radio label="男">男</Radio>
-                                <Radio label="女">女</Radio>
-                                <Radio label="其他">其他</Radio>
-                            </RadioGroup>
-                        </FormItem>
-                    </i-Col>
-                </Row>
-            </Form>
-            <div class="create-drawer-footer">
-                <Button style="margin-right: 8px" @click="handleCancelModifyUser"
-                >取消
-                </Button
-                >
-                <Button
-                        type="primary"
-                        @click="handleModifyUser"
-                        :loading="modifyLoading"
-                >保存
-                </Button
-                >
+          </div>
+        </FormItem>
+
+        <FormItem prop="conSignMan">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name">业务员</span>
+            <div class="select-input">
+              <Input
+                v-model="searchForm.conSignMan"
+                type="text"
+                placeholder="请输入业务员"
+              />
             </div>
-        </Drawer>
+          </div>
+        </FormItem>
+
+        <FormItem prop="customerName">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name">客户名称</span>
+            <div class="select-input">
+              <Input
+                v-model="searchForm.customerName"
+                type="text"
+                placeholder="请输入客户名称"
+              />
+            </div>
+          </div>
+        </FormItem>
+
+        <FormItem prop="startDate">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name">托运日期</span>
+            <div class="select-input">
+              <Input
+                v-model="searchForm.startDate"
+                type="text"
+                placeholder="请输入托运日期"
+              />
+            </div>
+          </div>
+        </FormItem>
+
+        <FormItem prop="receiveMan">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name">接收人</span>
+            <div class="select-input">
+              <Input
+                v-model="searchForm.receiveMan"
+                type="text"
+                placeholder="请输入接收人信息"
+              />
+            </div>
+          </div>
+        </FormItem>
+
+        <FormItem prop="receiveDate">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name">接收时间</span>
+            <div class="select-input">
+              <Input
+                v-model="searchForm.receiveDate"
+                type="text"
+                placeholder="请输入接收时间"
+              />
+            </div>
+          </div>
+        </FormItem>
+
+        <FormItem prop="conSignMan">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name">托运人</span>
+            <div class="select-input">
+              <Input
+                v-model="searchForm.conSignMan"
+                type="text"
+                placeholder="请输入托运人"
+              />
+            </div>
+          </div>
+        </FormItem>
+
+        <FormItem prop="startDate">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name">托运时间</span>
+            <div class="select-input">
+              <Input
+                v-model="searchForm.startDate"
+                type="text"
+                placeholder="请输入托运时间"
+              />
+            </div>
+          </div>
+        </FormItem>
+        <FormItem prop="gender">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name">支付方式</span>
+            <div class="select-input">
+              <Select
+                v-model="searchForm.paymentType"
+                placeholder="请选择支付方式"
+              >
+                <Option
+                  v-for="item in types"
+                  :value="item.value"
+                  :key="item.value"
+                  >{{ item.label }}
+                </Option>
+              </Select>
+            </div>
+          </div>
+        </FormItem>
+        <FormItem prop="gatherType">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name">运输方式</span>
+            <div class="select-input">
+              <Select
+                v-model="searchForm.gatherType"
+                placeholder="请选择运输方式"
+              >
+                <Option
+                  v-for="item in types"
+                  :value="item.value"
+                  :key="item.value"
+                  >{{ item.label }}
+                </Option>
+              </Select>
+            </div>
+          </div>
+        </FormItem>
+        <FormItem prop="arriveVehicleStatus">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name">发车状态</span>
+            <div class="select-input">
+              <Select
+                v-model="searchForm.arriveVehicleStatus"
+                placeholder="请选择车辆状态"
+              >
+                <Option
+                  v-for="item in types"
+                  :value="item.value"
+                  :key="item.value"
+                  >{{ item.label }}
+                </Option>
+              </Select>
+            </div>
+          </div>
+        </FormItem>
+        <FormItem style="float: right">
+          <ButtonGroup>
+            <Button type="primary" icon="md-search" ghost @click="handleQuery"
+              >查询
+            </Button>
+            <Button
+              type="primary"
+              style="color:#e82626"
+              icon="md-close"
+              ghost
+              @click="handleQuery"
+              >重置
+            </Button>
+          </ButtonGroup>
+        </FormItem>
+      </Form>
     </div>
+    <div class="operation">
+      <ButtonGroup>
+        <Button
+          type="primary"
+          icon="md-add"
+          ghost
+          class="button"
+          @click="showCreateDrawer"
+          >新增
+        </Button>
+        <Button
+          type="info"
+          icon="md-create"
+          ghost
+          class="button"
+          :disabled="selectBill.length !== 1"
+          @click="showModifyDrawer"
+          >修改
+        </Button>
+        <Button
+          type="error"
+          icon="ios-trash"
+          ghost
+          class="button"
+          :disabled="!selectBill.length > 0"
+          @click="handleDeleteUser"
+          >删除
+        </Button>
+        <Button type="primary" icon="ios-refresh" ghost @click="handleQuery"
+          >刷新
+        </Button>
+      </ButtonGroup>
+    </div>
+    <div class="data-table" style="overflow-x:scroll ">
+      <Table
+        border
+        :columns="userColumns"
+        :data="tyBillList"
+        @on-selection-change="handleSelect"
+      >
+      </Table>
+    </div>
+    <!--<br>-->
+
+    <div class="pagination">
+      <Page
+        :total="totalCount"
+        :current="pageIndex"
+        :page-size="pageSize"
+        show-total
+        show-sizer
+        show-elevator
+        @on-change="handlePageChange"
+        @on-page-size-change="handlePageSizeChange"
+      >
+      </Page>
+    </div>
+    <Drawer
+      title="添加司机信息"
+      v-model="showCreate"
+      width="360"
+      :mask-closable="false"
+    >
+      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="80">
+        <Row>
+          <i-Col span="24">
+            <FormItem label="司机姓名" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入用户名" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="司机编号" prop="name">
+              <Input v-model="BillFormData.code" placeholder="请输入用户编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="身份证" prop="name">
+              <Input v-model="BillFormData.idCard" placeholder="请输入身份证" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="司机编号" prop="name">
+              <Input v-model="BillFormData.code" placeholder="请输入用户编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="生日" prop="birthday">
+              <Input placeholder="请输入生日" v-model="BillFormData.birthday" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="电话" prop="phone">
+              <Input v-model="BillFormData.phone" placeholder="请输入电话" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="地址" prop="email">
+              <Input v-model="BillFormData.address" placeholder="请输入邮箱" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="性别" prop="gender">
+              <RadioGroup v-model="BillFormData.gender">
+                <Radio label="男">男</Radio>
+                <Radio label="女">女</Radio>
+              </RadioGroup>
+            </FormItem>
+          </i-Col>
+        </Row>
+      </Form>
+      <div class="create-drawer-footer">
+        <Button style="margin-right: 8px" @click="handleCancelCreateUser"
+          >取消
+        </Button>
+        <Button
+          type="primary"
+          @click="handleCreateUser"
+          :loading="createLoading"
+          >保存
+        </Button>
+      </div>
+    </Drawer>
+    <Drawer
+      title="修改司机信息"
+      v-model="showModify"
+      width="360"
+      :mask-closable="false"
+    >
+      <Form
+        ref="modifyDriverForm"
+        :model="BillFormData"
+        :rules="formRules"
+        :label-width="80"
+      >
+        <Row>
+          <i-Col span="24">
+            <FormItem label="司机姓名" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入用户名" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="司机编号" prop="name">
+              <Input v-model="BillFormData.code" placeholder="请输入用户编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="身份证" prop="name">
+              <Input v-model="BillFormData.idCard" placeholder="请输入身份证" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="司机编号" prop="name">
+              <Input v-model="BillFormData.code" placeholder="请输入用户编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="生日" prop="birthday">
+              <Input placeholder="请输入生日" v-model="BillFormData.birthday" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="电话" prop="phone">
+              <Input v-model="BillFormData.phone" placeholder="请输入电话" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="地址" prop="email">
+              <Input v-model="BillFormData.address" placeholder="请输入邮箱" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="性别" prop="gender">
+              <RadioGroup v-model="BillFormData.gender">
+                <Radio label="男">男</Radio>
+                <Radio label="女">女</Radio>
+              </RadioGroup>
+            </FormItem>
+          </i-Col>
+        </Row>
+      </Form>
+      <div class="create-drawer-footer">
+        <Button style="margin-right: 8px" @click="handleCancelModifyUser"
+          >取消
+        </Button>
+        <Button
+          type="primary"
+          @click="handleModifyUser"
+          :loading="modifyLoading"
+          >保存
+        </Button>
+      </div>
+    </Drawer>
+  </div>
 </template>
 
 <script>
-
-    export default {
-        name: "ArticleList",
-        data() {
-            return {
-                userColumns: [
-                    {
-                        type: "selection",
-                        width: 60,
-                        align: "center"
-                    },
-                    {
-                        title: "序号",
-                        type: "index",
-                        width: 80,
-                        align: "center"
-                    },
-                    {
-                        title: "用户名",
-                        key: "name",
-                        width: 200,
-                        align: "center",
-                        "sortable": true
-                    },
-                    {
-                        width: 200,
-                        title: "用户编号",
-                        key: "code",
-                        align: "center"
-                    },
-                    {
-                        width: 120,
-                        title: "性别",
-                        key: "gender",
-                        align: "center",
-                        "sortable": true
-                    },
-                    {
-                        width: 400,
-                        title: "电话",
-                        key: "phone",
-                        align: "center",
-                        "sortable": true
-                    },
-                    {
-                        title: "邮箱",
-                        key: "email",
-                        align: "center",
-                        "sortable": true
-                    }
-                ],
-                EmployeeList: [
-                    {
-                        value: 'New York',
-                        label: 'New York'
-                    },
-                    {
-                        value: 'London',
-                        label: 'London'
-                    },
-                    {
-                        value: 'Sydney',
-                        label: 'Sydney'
-                    },
-                    {
-                        value: 'Ottawa',
-                        label: 'Ottawa'
-                    },
-                    {
-                        value: 'Paris',
-                        label: 'Paris'
-                    },
-                    {
-                        value: 'Canberra',
-                        label: 'Canberra'
-                    }
-                ],
-                searchForm: {
-                    name: "",
-                    code: ""
-                },
-                userList: [],
-                totalCount: 0,
-                selectedUser: [],
-                pageIndex: 1,
-                pageSize: 10,
-                formData: {
-                    name: "",
-                    password: "123456",
-                    gender: "",
-                    age: "",
-                    phone: "",
-                    code: "",
-                    birthday: "",
-                    email: ""
-                },
-                formRules: {
-                    name: [
-                        {required: true, message: "用户名不能为空", trigger: "blur,change"}
-                    ],
-                    password: [
-                        {required: true, message: "密码不能为空", trigger: "blur,change"}
-                    ],
-                    gender: [],
-                    phone: [],
-                    age: [],
-                    code: [],
-                    email: [],
-                    birthday: []
-                },
-                showCreate: false,
-                createLoading: false,
-
-                showModify: false,
-                modifyLoading: false
-            };
+export default {
+  name: "ArticleList",
+  data: function() {
+    return {
+      userColumns: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
         },
-        methods: {
-
-            handleQuery() {
-                this.$axios
-                    .post(
-                        `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
-                        this.searchForm
-                    )
-                    .then(res => {
-                        let result = res.data;
-                        this.userList = result.data.content;
-                        this.totalCount = result.data.totalElements;
-                    })
-                    .catch(() => {
-                        this.userList = [];
-                        this.totalCount = 0;
-                    });
-            },
-            handlePageChange(billIndex) {
-                this.pageIndex = billIndex;
-                this.handleQuery();
-            },
-            handlePageSizeChange(size) {
-                this.pageSize = size;
-                this.handleQuery();
-            },
-            handleSelect(selection, row) {
-                this.selectedUser = selection;
-                console.log(selection, row);
-            },
-            showCreateDrawer() {
-                this.showCreate = true;
-            },
-            handleCancelCreateUser() {
-                this.showCreate = false;
-                this.$refs["createUserForm"].resetFields();
-            },
-
-            handleDeleteUser() {
-                let ids = this.selectedUser.map(item => {
-                    return item.id;
-                });
-                this.$axios.post('/users', ids).then(() => {
-                    this.createLoading = false;
-                    this.showCreate = false;
-                    /*删除成功，回调查询接口*/
-
-                })
-
-                console.log(ids);
-            },
-            handleCreateUser() {
-                this.$refs["createUserForm"].validate(valid => {
-                    if (valid) {
-                        this.createLoading = true;
-                        this.$axios
-                            .post("/users", this.formData)
-                            .then(() => {
-                                this.createLoading = false;
-                                this.showCreate = false;
-                                this.$Message.success("保存用户成功");
-                                this.$refs["createUserForm"].resetFields();
-                                this.handleQuery();
-                            })
-                            .catch(() => {
-                                this.createLoading = false;
-                                this.$Message.success("保存用户失败");
-                            });
-                    }
-                });
-            },
-            showModifyDrawer() {
-                this.formData = {
-                    name: this.selectedUser[0].name,
-                    password: this.selectedUser[0].password,
-                    gender: this.selectedUser[0].gender,
-                    code: this.selectedUser[0].code,
-                    phone: this.selectedUser[0].phone,
-                    birthDay: this.selectedUser[0].birthDay
-                };
-                this.showModify = true;
-            },
-            handleCancelModifyUser() {
-                this.showModify = false;
-                this.$refs["modifyUserForm"].resetFields();
-            },
-            handleModifyUser() {
-                this.$refs["modifyUserForm"].validate(valid => {
-                    if (valid) {
-                        this.modifyLoading = true;
-                        this.$axios
-                            .put(`/users/${this.selectedUser[0].id}`, this.formData)
-                            .then(() => {
-                                this.modifyLoading = false;
-                                this.showModify = false;
-                                this.$Message.success("保存用户成功");
-                                this.$refs["modifyUserForm"].resetFields();
-                                this.handleQuery();
-                            })
-                            .catch(() => {
-                                this.createLoading = false;
-                                this.$Message.success("保存用户失败");
-                            });
-                    }
-                });
-            }
+        {
+          title: "序号",
+          type: "index",
+          width: 80,
+          align: "center"
         },
-        mounted() {
-            this.handleQuery();
+        {
+          title: "司机姓名",
+          type: "name",
+          align: "center"
+        },
+        {
+          title: "身份证",
+          key: "idCard",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "籍贯",
+          key: "nativePlace",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "站点编号",
+          key: "stationCode",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "地址",
+          key: "address",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "驾驶证",
+          key: "driveLicence",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "车辆运营证",
+          key: "runLicence",
+          align: "center"
+        },
+        {
+          title: "性别",
+          key: "gender",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "电话",
+          key: "phone",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "车辆编号",
+          key: "vehicleCode",
+          align: "center",
+          sortable: true
         }
+      ],
+      searchForm: {
+        /*单据编号*/
+        code: "",
+        /*单据类型*/
+        type:
+          "1:托运单；2:发车单；3：到车单；4回车单；5收支费用单；6客户结算单；7司机结算单",
+        /*服务站点*/
+        salesStation: "",
+        /*顾客姓名*/
+        customerName: "",
+        /*收款类型*/
+        gatherType: "",
+        /*托运人*/
+        conSignMan: "",
+        /*托运人电话*/
+        conSignPhone: "",
+        /*始发地址*/
+        startAddress: "",
+        /*始发所在区域*/
+        startRegion: "",
+        /*始发邮编*/
+        startPostCode: "",
+        /*始发日期*/
+        startDate: "",
+        /*始发站点*/
+        startStation: "",
+        /*接货人*/
+        receiveMan: "",
+        /*接货人电话*/
+        receivePhone: "",
+        /*接货人地址*/
+        receiveAddress: "",
+        /*接货日期*/
+        receiveDate: "",
+        /*目标站点*/
+        targetStation: "",
+        /*目标区域*/
+        targetRegion: "",
+        /*服务类型*/
+        serviceType: "",
+        /*运输方式*/
+        transportationType: "",
+        /*其他费用*/
+        otherCost: "",
+        /*物流费用*/
+        logisCost: "",
+        /*运输费用*/
+        transportCost: "",
+        /*付款类型*/
+        paymentType: "",
+        /*应付金额*/
+        accountPayable: "",
+        /*实付金额*/
+        realityPayable: "",
+        /*未付金额*/
+        unReceivedPayable: "",
+        /*折让金额*/
+        allowancePayable: "",
+        /*发车状态*/
+        arriveVehicleStatus: "",
+        /*车到站状态*/
+        departVehicleStatus: "",
+        /*车牌号*/
+        vehicleCode: "",
+        /*车辆类型*/
+        vehicleType: "",
+        /*司机姓名*/
+        driverName: "",
+        /*司机姓名*/
+        driverPhone: "",
+        /*收入金额*/
+        incomePayable: "",
+        /*支出金额*/
+        expendPayable: "",
+        /*收支合计*/
+        paymentsTotal: "",
+        /*收支日期*/
+        paymentsDate: ""
+      },
+      tyBillList: [],
+      totalCount: 0,
+      selectBill: [],
+      pageIndex: 1,
+      pageSize: 10,
+
+      BillFormData: {
+        /*单据编号*/
+        code: "",
+        /*单据类型*/
+        type:
+          "1:托运单；2:发车单；3：到车单；4回车单；5收支费用单；6客户结算单；7司机结算单",
+        /*服务站点*/
+        salesStation: "",
+        /*顾客姓名*/
+        customerName: "",
+        /*收款类型*/
+        gatherType: "",
+        /*托运人*/
+        conSignMan: "",
+        /*托运人电话*/
+        conSignPhone: "",
+        /*始发地址*/
+        startAddress: "",
+        /*始发所在区域*/
+        startRegion: "",
+        /*始发邮编*/
+        startPostCode: "",
+        /*始发日期*/
+        startDate: "",
+        /*始发站点*/
+        startStation: "",
+        /*接货人*/
+        receiveMan: "",
+        /*接货人电话*/
+        receivePhone: "",
+        /*接货人地址*/
+        receiveAddress: "",
+        /*接货日期*/
+        receiveDate: "",
+        /*目标站点*/
+        targetStation: "",
+        /*目标区域*/
+        targetRegion: "",
+        /*服务类型*/
+        serviceType: "",
+        /*运输方式*/
+        transportationType: "",
+        /*其他费用*/
+        otherCost: "",
+        /*物流费用*/
+        logisCost: "",
+        /*运输费用*/
+        transportCost: "",
+        /*付款类型*/
+        paymentType: "",
+        /*应付金额*/
+        accountPayable: "",
+        /*实付金额*/
+        realityPayable: "",
+        /*未付金额*/
+        unReceivedPayable: "",
+        /*折让金额*/
+        allowancePayable: "",
+        /*发车状态*/
+        arriveVehicleStatus: "",
+        /*车到站状态*/
+        departVehicleStatus: "",
+        /*车牌号*/
+        vehicleCode: "",
+        /*车辆类型*/
+        vehicleType: "",
+        /*司机姓名*/
+        driverName: "",
+        /*司机姓名*/
+        driverPhone: "",
+        /*收入金额*/
+        incomePayable: "",
+        /*支出金额*/
+        expendPayable: "",
+        /*收支合计*/
+        paymentsTotal: "",
+        /*收支日期*/
+        paymentsDate: "",
+        /**/
+        customer: {},
+        detailGoods: [],
+        detailPayments: []
+      },
+      formRules: {
+        /*单据编号*/
+        code: [
+          {
+            required: true,
+            message: "单据编号不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*单据类型*/
+        type:
+          "1:托运单；2:发车单；3：到车单；4回车单；5收支费用单；6客户结算单；7司机结算单",
+        /*服务站点*/
+        salesStation: [
+          {
+            required: true,
+            message: "单据类型不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*顾客姓名*/
+        customerName: [
+          {
+            required: true,
+            message: "顾客姓名不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*收款类型*/
+        gatherType: [
+          {
+            required: true,
+            message: "收款类型不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*托运人*/
+        conSignMan: [
+          { required: true, message: "托运人不能为空", trigger: "blur,change" }
+        ],
+        /*托运人电话*/
+        conSignPhone: [
+          {
+            required: true,
+            message: "托运人电话不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*始发地址*/
+        startAddress: [
+          {
+            required: true,
+            message: "始发地址不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*始发所在区域*/
+        startRegion: [
+          {
+            required: true,
+            message: "始发所在区域不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*始发邮编*/
+        startPostCode: [
+          {
+            required: true,
+            message: "始发邮编不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*始发日期*/
+        startDate: [
+          {
+            required: true,
+            message: "始发日期不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*始发站点*/
+        startStation: [
+          {
+            required: true,
+            message: "始发站点不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*接货人*/
+        receiveMan: [
+          { required: true, message: "接货人不能为空", trigger: "blur,change" }
+        ],
+        /*接货人电话*/
+        receivePhone: [
+          {
+            required: true,
+            message: "接货人电话不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*接货人地址*/
+        receiveAddress: [
+          {
+            required: true,
+            message: "接货人地址不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*接货日期*/
+        receiveDate: [
+          {
+            required: true,
+            message: "接货日期不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*目标站点*/
+        targetStation: [
+          {
+            required: true,
+            message: "目标站点不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*目标区域*/
+        targetRegion: [
+          {
+            required: true,
+            message: "目标区域不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*服务类型*/
+        serviceType: [
+          {
+            required: true,
+            message: "服务类型不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*运输方式*/
+        transportationType: [
+          {
+            required: true,
+            message: "运输方式不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*其他费用*/
+        otherCost: [
+          {
+            required: true,
+            message: "其他费用不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*物流费用*/
+        logisCost: [
+          {
+            required: true,
+            message: "物流费用不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*运输费用*/
+        transportCost: [
+          {
+            required: true,
+            message: "运输费用不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*付款类型*/
+        paymentType: [
+          {
+            required: true,
+            message: "付款类型不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*应付金额*/
+        accountPayable: [
+          {
+            required: true,
+            message: "应付金额不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*实付金额*/
+        realityPayable: [
+          {
+            required: true,
+            message: "实付金额不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*未付金额*/
+        unReceivedPayable: [
+          {
+            required: true,
+            message: "未付金额不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*折让金额*/
+        allowancePayable: [
+          {
+            required: true,
+            message: "折让金额不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*发车状态*/
+        arriveVehicleStatus: [
+          {
+            required: true,
+            message: "发车状态不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*车到站状态*/
+        departVehicleStatus: [
+          {
+            required: true,
+            message: "车到站状态不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*车牌号*/
+        vehicleCode: [
+          { required: true, message: "车牌号不能为空", trigger: "blur,change" }
+        ],
+        /*车辆类型*/
+        vehicleType: [
+          {
+            required: true,
+            message: "车辆类型不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*司机姓名*/
+        driverName: [
+          {
+            required: true,
+            message: "司机姓名不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*司机电话*/
+        driverPhone: [
+          {
+            required: true,
+            message: "司机电话不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*收入金额*/
+        incomePayable: [
+          {
+            required: true,
+            message: "收入金额不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*支出金额*/
+        expendPayable: [
+          {
+            required: true,
+            message: "支出金额不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*收支合计*/
+        paymentsTotal: [
+          {
+            required: true,
+            message: "收支合计不能为空",
+            trigger: "blur,change"
+          }
+        ],
+        /*收支日期*/
+        paymentsDate: [
+          {
+            required: true,
+            message: "收支日期不能为空",
+            trigger: "blur,change"
+          }
+        ]
+      },
+      showCreate: false,
+      createLoading: false,
+
+      showModify: false,
+      modifyLoading: false,
+
+      showDelete: false,
+      deleteLoading: false
     };
+  },
+  methods: {
+    handleQuery() {
+      this.$axios
+        .post(
+          `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
+          this.searchForm
+        )
+        .then(res => {
+          let result = res.data;
+          this.tyBillList = result.data.content;
+          this.totalCount = result.data.totalElements;
+        })
+        .catch(() => {
+          this.tyBillList = [];
+          this.totalCount = 0;
+        });
+    },
+    handlePageChange(userIndex) {
+      this.pageIndex = userIndex;
+      this.handleQuery();
+    },
+    handlePageSizeChange(size) {
+      this.pageSize = size;
+      this.handleQuery();
+    },
+    handleSelect(selection, row) {
+      this.selectBill = selection;
+      console.log(selection, row);
+    },
+    showCreateDrawer() {
+      this.showCreate = true;
+    },
+    handleCancelCreateUser() {
+      this.showCreate = false;
+      this.$refs[""].resetFields();
+    },
+
+    handleDeleteUser() {
+      let ids = this.selectBill.map(item => {
+        return item.id;
+      });
+      console.log(ids);
+      this.$axios
+        .post("/users/deleteBatch", ids)
+        .then(() => {
+          this.showDelete = false;
+          this.deleteLoading = false;
+          this.$Message.success("删除成功");
+          /*删除成功，回调查询接口*/
+          this.handleQuery();
+        })
+        .catch(() => {
+          this.deleteLoading = false;
+          this.$Message.error("删除失败");
+        });
+    },
+    handleCreateUser() {
+      this.$refs[""].validate(valid => {
+        if (valid) {
+          this.createLoading = true;
+          this.$axios
+            .post("/users", this.BillFormData)
+            .then(() => {
+              this.createLoading = false;
+              this.showCreate = false;
+              this.$Message.success("报存单据成功");
+              this.$refs[""].resetFields();
+              this.handleQuery();
+            })
+            .catch(() => {
+              this.createLoading = false;
+              this.$Message.success("报存单据失败");
+            });
+        }
+      });
+    },
+    /*此处为更新操作 获取到查询的实体数据*/
+    showModifyDrawer() {
+      this.BillFormData = {
+        name: this.selectBill[0].name,
+        password: this.selectBill[0].password,
+        gender: this.selectBill[0].gender,
+        code: this.selectBill[0].code,
+        phone: this.selectBill[0].phone,
+        birthDay: this.selectBill[0].birthDay
+      };
+      this.showModify = true;
+    },
+    handleCancelModifyUser() {
+      this.showModify = false;
+      this.$refs["modifyDriverForm"].resetFields();
+    },
+    handleModifyUser() {
+      this.$refs["modifyDriverForm"].validate(valid => {
+        if (valid) {
+          this.modifyLoading = true;
+          this.$axios
+            .put(`/users/${this.selectBill[0].id}`, this.BillFormData)
+            .then(() => {
+              this.modifyLoading = false;
+              this.showModify = false;
+              this.$Message.success("报存单据成功");
+              this.$refs["modifyDriverForm"].resetFields();
+              this.handleQuery();
+            })
+            .catch(() => {
+              this.createLoading = false;
+              this.$Message.success("报存单据失败");
+            });
+        }
+      });
+    }
+  },
+  mounted() {
+    this.handleQuery();
+  }
+};
 </script>
 
-
+<style lang="less" scoped>
+.operation {
+  .button {
+    margin-right: 5px;
+  }
+}
+</style>
 <style lang="less">
-    @import "bill.less";
+.ivu-table-tip {
+}
 </style>
 
-
+<style lang="less">
+.create-drawer-footer {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 16px;
+  text-align: right;
+  background: #fff;
+}
+</style>

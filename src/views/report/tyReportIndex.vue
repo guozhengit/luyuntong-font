@@ -8,19 +8,19 @@
                     :label-width="5"
                     inline
             >
-                <FormItem prop="optioner">
-                    <div class="ivu-form-item select-ground">
-                        <span class="select-name">业务员</span>
-                        <div class="select-input">
-                            <Select
-                                    v-model="tableData1.optioner"
-                                    placeholder="请选择业务员">
-                                <Option v-for="item in optioners" :value="item.value" :key="item.value">{{ item.label }}
-                                </Option>
-                            </Select>
-                        </div>
-                    </div>
-                </FormItem>
+                <!--<FormItem prop="optioner">-->
+                    <!--<div class="ivu-form-item select-ground">-->
+                        <!--<span class="select-name">业务员</span>-->
+                        <!--<div class="select-input">-->
+                            <!--<Select-->
+                                    <!--v-model="tableData1.optioner"-->
+                                    <!--placeholder="请选择业务员">-->
+                                <!--<Option v-for="item in optioners" :value="item.value" :key="item.value">{{ item.label }}-->
+                                <!--</Option>-->
+                            <!--</Select>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</FormItem>-->
                 <FormItem prop="billCode">
                     <div class="ivu-form-item select-ground">
                         <span class="select-name">托运单号</span>
@@ -74,8 +74,8 @@
                         </div>
                     </div>
                 </FormItem>
-                <FormItem>
-                    <ButtonGroup class="button-flot" style="right:-200%">
+                <FormItem style="float: left">
+                    <ButtonGroup class="button-flot">
                         <Button type="primary" icon="md-search" ghost @click="reportquery">查询</Button>
                         <Button type="success" ghost icon="ios-download-outline" @click="exportReport(1)">未排序导出</Button>
                         <Button type="success" ghost icon="ios-download-outline" @click="exportReport(2)">排序导出</Button>

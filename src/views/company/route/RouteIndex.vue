@@ -102,7 +102,7 @@
           ghost
           class="button"
           :disabled="!selectedEmployee.length > 0"
-          @click="handleDeleteUser"
+          @click="handleDeleteRoute"
           >删除
         </Button>
         <Button type="primary" icon="ios-refresh" ghost @click="handleQuery"
@@ -113,7 +113,7 @@
     <div class="data-table">
       <Table
         border
-        :columns="userColumns"
+        :columns="routeColumns"
         :data="employeeList"
         @on-selection-change="handleSelect"
       >
@@ -141,49 +141,50 @@
       :mask-closable="false"
     >
       <Form
-        ref="createUserForm"
-        :model="formData"
+        ref="createRouteForm"
+        :model="routeFormData"
         :rules="formRules"
         :label-width="80"
       >
         <Row>
-          <!--<i-Col span="24">-->
-          <!--<FormItem label="路线编号" prop="name">-->
-          <!--<Input v-model="formData.name" placeholder="请输入路线编号"/>-->
-          <!--</FormItem>-->
-          <!--</i-Col>-->
           <i-Col span="24">
-            <FormItem label="密码" prop="password">
-              <Input v-model="formData.password" placeholder="请输入密码" />
+          <FormItem label="路线编号" prop="code">
+          <Input v-model="routeFormData.code" placeholder="请输入路线编号"/>
+          </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="路线名称" prop="password">
+              <Input v-model="routeFormData.name" placeholder="请输入路线名称" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="用户编号" prop="code">
-              <Input v-model="formData.code" placeholder="请输入用户编号" />
+            <FormItem label="开始城市" prop="startCity">
+              <Input v-model="routeFormData.startCity" placeholder="请输入开始城市" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="生日" prop="birthday">
-              <Input placeholder="请输入生日" v-model="formData.birthday" />
+            <FormItem label="目标城市" prop="targetCity">
+              <Input v-model="routeFormData.targetCity" placeholder="请输入目标城市" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="电话" prop="phone">
-              <Input v-model="formData.phone" placeholder="请输入电话" />
+            <FormItem label="开始站点" prop="startStation">
+              <Input v-model="routeFormData.startStation" placeholder="请输入开始站点" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="邮箱" prop="email">
-              <Input v-model="formData.email" placeholder="请输入邮箱" />
+            <FormItem label="目标城市" prop="targetStation">
+              <Input v-model="routeFormData.targetStation" placeholder="请输入目标城市" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="性别" prop="gender">
-              <RadioGroup v-model="formData.gender">
-                <Radio label="男">1</Radio>
-                <Radio label="女">2</Radio>
-                <Radio label="未知">3</Radio>
-              </RadioGroup>
+            <FormItem label="城市距离" prop="cityDistance">
+              <Input placeholder="请输入生日" v-model="routeFormData.cityDistance" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="站点距离" prop="stationDistance">
+              <Input v-model="routeFormData.stationDistance" placeholder="请输入站点距离" />
             </FormItem>
           </i-Col>
         </Row>
@@ -208,44 +209,44 @@
     >
       <Form
         ref="modifyUserForm"
-        :model="formData"
+        :model="routeFormData"
         :rules="formRules"
         :label-width="80"
       >
         <Row>
           <i-Col span="24">
             <FormItem label="用户名" prop="name">
-              <Input v-model="formData.name" placeholder="请输入用户名" />
+              <Input v-model="routeFormData.name" placeholder="请输入用户名" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
             <FormItem label="用户编号" prop="name">
-              <Input v-model="formData.code" placeholder="请输入用户编号" />
+              <Input v-model="routeFormData.code" placeholder="请输入用户编号" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
             <FormItem label="密码" prop="password" placeholder="请输入密码">
-              <Input type="password" v-model="formData.password" />
+              <Input type="password" v-model="routeFormData.password" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
             <FormItem label="生日" prop="birthday">
-              <Input placeholder="请输入生日" v-model="formData.birthday" />
+              <Input placeholder="请输入生日" v-model="routeFormData.birthday" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
             <FormItem label="电话" prop="phone">
-              <Input v-model="formData.phone" placeholder="请输入电话" />
+              <Input v-model="routeFormData.phone" placeholder="请输入电话" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
             <FormItem label="邮箱" prop="email">
-              <Input v-model="formData.email" placeholder="请输入邮箱" />
+              <Input v-model="routeFormData.email" placeholder="请输入邮箱" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
             <FormItem label="性别" prop="gender">
-              <RadioGroup v-model="formData.gender">
+              <RadioGroup v-model="routeFormData.gender">
                 <Radio label="男">男</Radio>
                 <Radio label="女">女</Radio>
                 <Radio label="其他">其他</Radio>
@@ -274,7 +275,7 @@ export default {
   name: "ArticleList",
   data: function() {
     return {
-      userColumns: [
+      routeColumns: [
         {
           type: "selection",
           width: 60,
@@ -359,7 +360,7 @@ export default {
       pageIndex: 1,
       pageSize: 10,
 
-      formData: {
+      routeFormData: {
         name: "",
         code: "",
         startCity: "",
@@ -444,10 +445,10 @@ export default {
     },
     handleCancelCreateUser() {
       this.showCreate = false;
-      this.$refs["createUserForm"].resetFields();
+      this.$refs["createRouteForm"].resetFields();
     },
 
-    handleDeleteUser() {
+    handleDeleteRoute() {
       let ids = this.selectedEmployee.map(item => {
         return item.id;
       });
@@ -467,16 +468,16 @@ export default {
         });
     },
     handleCreateUser() {
-      this.$refs["createUserForm"].validate(valid => {
+      this.$refs["createRouteForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
           this.$axios
-            .post("/users", this.formData)
+            .post("/users", this.routeFormData)
             .then(() => {
               this.createLoading = false;
               this.showCreate = false;
               this.$Message.success("保存用户成功");
-              this.$refs["createUserForm"].resetFields();
+              this.$refs["createRouteForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {
@@ -487,7 +488,7 @@ export default {
       });
     },
     showModifyDrawer() {
-      this.formData = {
+      this.routeFormData = {
         name: this.selectedEmployee[0].name,
         password: this.selectedEmployee[0].password,
         gender: this.selectedEmployee[0].gender,
@@ -506,7 +507,7 @@ export default {
         if (valid) {
           this.modifyLoading = true;
           this.$axios
-            .put(`/users/${this.selectedEmployee[0].id}`, this.formData)
+            .put(`/users/${this.selectedEmployee[0].id}`, this.routeFormData)
             .then(() => {
               this.modifyLoading = false;
               this.showModify = false;

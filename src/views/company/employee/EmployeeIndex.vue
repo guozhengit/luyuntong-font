@@ -2,20 +2,20 @@
   <div class="table-page" style="overflow-y: hidden">
     <div class="search">
       <Form
-              class="search-form"
-              ref="searchForm"
-              :model="searchForm"
-              :label-width="5"
-              inline
+        class="search-form"
+        ref="employeeSearchForm"
+        :model="employeeSearchForm"
+        :label-width="5"
+        inline
       >
         <FormItem prop="name">
           <div class="ivu-form-item select-ground">
-            <span class="select-name">用户名</span>
+            <span class="select-name">职员名称</span>
             <div class="select-input">
               <Input
-                      v-model="searchForm.name"
-                      type="text"
-                      placeholder="请输入用户名称"
+                v-model="employeeSearchForm.name"
+                type="text"
+                placeholder="请输入职员名称"
               />
             </div>
           </div>
@@ -23,40 +23,58 @@
 
         <FormItem prop="code">
           <div class="ivu-form-item select-ground">
-            <span class="select-name">用户名</span>
+            <span class="select-name">职员编号</span>
             <div class="select-input">
               <Input
-                      v-model="searchForm.code"
-                      type="text"
-                      placeholder="请输入用户账号"
-                      clearable
+                v-model="employeeSearchForm.code"
+                type="text"
+                placeholder="请输入职员编号"
+                clearable
               />
             </div>
           </div>
         </FormItem>
-        <FormItem prop="gender">
+        <FormItem prop="age">
           <div class="ivu-form-item select-ground">
-            <span class="select-name">性别</span>
+            <span class="select-name">年龄</span>
             <div class="select-input">
-              <Select
-                      v-model="searchForm.gender"
-                      placeholder="请选择性别">
-                <Option v-for="item in types" :value="item.value" :key="item.value">{{ item.label }}
+              <Input
+                v-model="employeeSearchForm.age"
+                type="text"
+                placeholder="请输入职员年龄"
+                clearable
+              />
+            </div>
+          </div>
+        </FormItem>
+        <FormItem prop="age">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name"></span>
+            <div class="select-input">
+              <Select v-model="employeeSearchForm.age" placeholder="请选择性别">
+                <Option
+                  v-for="item in types"
+                  :value="item.value"
+                  :key="item.value"
+                  >{{ item.label }}
                 </Option>
               </Select>
             </div>
           </div>
         </FormItem>
         <FormItem style="float: right">
-          <ButtonGroup >
+          <ButtonGroup>
             <Button type="primary" icon="md-search" ghost @click="handleQuery"
-            >查询
-            </Button
-            >
-            <Button type="primary" style="color:#e82626" icon="md-close" ghost @click="handleQuery"
-            >重置
-            </Button
-            >
+              >查询
+            </Button>
+            <Button
+              type="primary"
+              style="color:#e82626"
+              icon="md-close"
+              ghost
+              @click="handleQuery"
+              >重置
+            </Button>
           </ButtonGroup>
         </FormItem>
       </Form>
@@ -64,42 +82,42 @@
     <div class="operation">
       <ButtonGroup>
         <Button
-                type="primary"
-                icon="md-add"
-                ghost
-                class="button"
-                @click="showCreateDrawer"
-        >新增
+          type="primary"
+          icon="md-add"
+          ghost
+          class="button"
+          @click="showCreateDrawer"
+          >新增
         </Button>
         <Button
-                type="info"
-                icon="md-create"
-                ghost
-                class="button"
-                :disabled="selectedUser.length !== 1"
-                @click="showModifyDrawer"
-        >修改
+          type="info"
+          icon="md-create"
+          ghost
+          class="button"
+          :disabled="selectedEmployee.length !== 1"
+          @click="showModifyDrawer"
+          >修改
         </Button>
         <Button
-                type="error"
-                icon="ios-trash"
-                ghost
-                class="button"
-                :disabled="!selectedUser.length > 0"
-                @click="handleDeleteUser"
-        >删除
+          type="error"
+          icon="ios-trash"
+          ghost
+          class="button"
+          :disabled="!selectedEmployee.length > 0"
+          @click="handleDeleteUser"
+          >删除
         </Button>
         <Button type="primary" icon="ios-refresh" ghost @click="handleQuery"
-        >刷新
+          >刷新
         </Button>
       </ButtonGroup>
     </div>
     <div class="data-table">
       <Table
-              border
-              :columns="userColumns"
-              :data="userList"
-              @on-selection-change="handleSelect"
+        border
+        :columns="EmployeeColumns"
+        :data="employeeList"
+        @on-selection-change="handleSelect"
       >
       </Table>
     </div>
@@ -107,63 +125,78 @@
 
     <div class="pagination">
       <Page
-              :total="totalCount"
-              :current="pageIndex"
-              :page-size="pageSize"
-              show-total
-              show-sizer
-              show-elevator
-              @on-change="handlePageChange"
-              @on-page-size-change="handlePageSizeChange"
+        :total="totalCount"
+        :current="pageIndex"
+        :page-size="pageSize"
+        show-total
+        show-sizer
+        show-elevator
+        @on-change="handlePageChange"
+        @on-page-size-change="handlePageSizeChange"
       >
       </Page>
     </div>
     <Drawer
-            title="添加用户"
-            v-model="showCreate"
-            width="360"
-            :mask-closable="false"
+      title="添加职员信息"
+      v-model="showCreate"
+      width="360"
+      :mask-closable="false"
     >
       <Form
-              ref="createUserForm"
-              :model="formData"
-              :rules="formRules"
-              :label-width="80"
+        ref="createUserForm"
+        :model="emplyeeFormData"
+        :rules="formRules"
+        :label-width="80"
       >
         <Row>
           <i-Col span="24">
-            <FormItem label="用户名" prop="name">
-              <Input v-model="formData.name" placeholder="请输入用户名"/>
+            <FormItem label="职员名称" prop="name">
+              <Input
+                v-model="emplyeeFormData.name"
+                placeholder="请输入职员名称"
+              />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="密码" prop="password" placeholder="请输入密码">
-              <Input type="password" v-model="formData.password"/>
+            <FormItem label="职员编号" prop="code">
+              <Input
+                v-model="emplyeeFormData.code"
+                placeholder="请输入职员编号"
+              />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="用户编号" prop="code">
-              <Input v-model="formData.code" placeholder="请输入用户编号"/>
+            <FormItem label="职员年龄" prop="age">
+              <Input
+                placeholder="请输入职员年龄"
+                v-model="emplyeeFormData.age"
+              />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="生日" prop="birthday">
-              <Input placeholder="请输入生日" v-model="formData.birthday"/>
+            <FormItem label="职员薪水" prop="salary">
+              <Input
+                placeholder="请输入职员薪水"
+                v-model="emplyeeFormData.salary"
+              />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="电话" prop="phone">
-              <Input v-model="formData.phone" placeholder="请输入电话"/>
+            <FormItem label="奖金" prop="bonus">
+              <Input v-model="emplyeeFormData.bonus" placeholder="请输入奖金" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="邮箱" prop="email">
-              <Input v-model="formData.email" placeholder="请输入邮箱"/>
+            <FormItem label="所属部门" prop="email">
+              <Input
+                v-model="emplyeeFormData.department"
+                placeholder="请选择部门"
+              />
             </FormItem>
           </i-Col>
           <i-Col span="24">
             <FormItem label="性别" prop="gender">
-              <RadioGroup v-model="formData.gender">
+              <RadioGroup v-model="emplyeeFormData.gender">
                 <Radio label="男">1</Radio>
                 <Radio label="女">2</Radio>
                 <Radio label="未知">3</Radio>
@@ -174,79 +207,85 @@
       </Form>
       <div class="create-drawer-footer">
         <Button style="margin-right: 8px" @click="handleCancelCreateUser"
-        >取消
+          >取消
         </Button>
         <Button
-                type="primary"
-                @click="handleCreateUser"
-                :loading="createLoading"
-        >保存
+          type="primary"
+          @click="handleCreateUser"
+          :loading="createLoading"
+          >保存
         </Button>
       </div>
     </Drawer>
     <Drawer
-            title="修改用户"
-            v-model="showModify"
-            width="360"
-            :mask-closable="false"
+      title="修改用户"
+      v-model="showModify"
+      width="360"
+      :mask-closable="false"
     >
       <Form
-              ref="modifyUserForm"
-              :model="formData"
-              :rules="formRules"
-              :label-width="80"
+        ref="modifyUserForm"
+        :model="emplyeeFormData"
+        :rules="formRules"
+        :label-width="80"
       >
         <Row>
           <i-Col span="24">
-            <FormItem label="用户名" prop="name">
-              <Input v-model="formData.name" placeholder="请输入用户名"/>
+            <FormItem label="职员名称" prop="name">
+              <Input
+                v-model="emplyeeFormData.name"
+                placeholder="请输入职员名称"
+              />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="用户编号" prop="name">
-              <Input v-model="formData.code" placeholder="请输入用户编号"/>
+            <FormItem label="职员编号" prop="code">
+              <Input
+                v-model="emplyeeFormData.code"
+                placeholder="请输入职员编号"
+              />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="密码" prop="password" placeholder="请输入密码">
-              <Input type="password" v-model="formData.password"/>
+            <FormItem label="职员年龄" prop="age">
+              <Input
+                placeholder="请输入职员年龄"
+                v-model="emplyeeFormData.age"
+              />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="生日" prop="birthday">
-              <Input placeholder="请输入生日" v-model="formData.birthday"/>
+            <FormItem label="职员薪水" prop="salary">
+              <Input
+                placeholder="请输入职员薪水"
+                v-model="emplyeeFormData.salary"
+              />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="电话" prop="phone">
-              <Input v-model="formData.phone" placeholder="请输入电话"/>
+            <FormItem label="奖金" prop="bonus">
+              <Input v-model="emplyeeFormData.bonus" placeholder="请输入奖金" />
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="邮箱" prop="email">
-              <Input v-model="formData.email" placeholder="请输入邮箱"/>
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="性别" prop="gender">
-              <RadioGroup v-model="formData.gender">
-                <Radio label="男">男</Radio>
-                <Radio label="女">女</Radio>
-                <Radio label="其他">其他</Radio>
-              </RadioGroup>
+            <FormItem label="所属部门" prop="email">
+              <Input
+                v-model="emplyeeFormData.department"
+                placeholder="请选择部门"
+              />
             </FormItem>
           </i-Col>
         </Row>
       </Form>
       <div class="create-drawer-footer">
         <Button style="margin-right: 8px" @click="handleCancelModifyUser"
-        >取消
+          >取消
         </Button>
         <Button
-                type="primary"
-                @click="handleModifyUser"
-                :loading="modifyLoading"
-        >保存
+          type="primary"
+          @click="handleModifyUser"
+          :loading="modifyLoading"
+          >保存
         </Button>
       </div>
     </Drawer>
@@ -254,267 +293,272 @@
 </template>
 
 <script>
-    export default {
-        name: "ArticleList",
-        data() {
-            return {
-                types: [
-                    {
-                        value: '1',
-                        label: '男'
-                    },
-                    {
-                        value: '2',
-                        label: '女'
-                    },
-                    {
-                        value: '3',
-                        label: '其他'
-                    },
-                ],
-                userColumns: [
-                    {
-                        type: "selection",
-                        width: 60,
-                        align: "center"
-                    },
-                    {
-                        title: "序号",
-                        type: "index",
-                        width: 80,
-                        align: "center"
-                    },
-                    {
-                        title: "用户名",
-                        key: "name",
-                        width: 200,
-                        align: "center",
-                        sortable: true
-                    },
-                    {
-                        width: 200,
-                        title: "用户编号",
-                        key: "code",
-                        align: "center"
-                    },
-                    {
-                        width: 120,
-                        title: "性别",
-                        key: "gender",
-                        align: "center",
-                        sortable: true
-                    },
-                    {
-                        width: 400,
-                        title: "电话",
-                        key: "phone",
-                        align: "center",
-                        sortable: true
-                    },
-                    {
-                        title: "邮箱",
-                        key: "email",
-                        align: "center",
-                        sortable: true
-                    }
-                ],
-                searchForm: {
-                    name: "",
-                    code: "",
-                    gender: "",
-                },
-                userList: [],
-                totalCount: 0,
-                selectedUser: [],
-                pageIndex: 1,
-                pageSize: 10,
-
-                // @Override
-                // public String toString() {
-                //     final StringBuffer sb = new StringBuffer("Employee{");
-                //     sb.append("code='").append(code).append('\'');
-                //     sb.append(", birthday='").append(birthday).append('\'');
-                //     sb.append(", age='").append(age).append('\'');
-                //     sb.append(", position='").append(position).append('\'');
-                //     sb.append(", gender='").append(gender).append('\'');
-                //     sb.append(", salary=").append(salary);
-                //     sb.append(", bonus=").append(bonus);
-                //     sb.append(", stationCode='").append(stationCode).append('\'');
-                //     sb.append(", department=").append(department);
-                //     sb.append('}');
-                //     return sb.toString();
-                // }
-                formData: {
-                    name: "",
-                    password: "123456",
-                    gender: "",
-                    age: "",
-                    phone: "",
-                    code: "",
-                    birthday: "",
-                    email: ""
-                },
-                formRules: {
-                    name: [
-                        {required: true, message: "用户名不能为空", trigger: "blur,change"}
-                    ],
-                    password: [
-                        {required: true, message: "密码不能为空", trigger: "blur,change"}
-                    ],
-                    gender: [],
-                    phone: [],
-                    age: [],
-                    code: [],
-                    email: [],
-                    birthday: []
-                },
-                showCreate: false,
-                createLoading: false,
-
-                showModify: false,
-                modifyLoading: false,
-
-                showDelete: false,
-                deleteLoading: false
-            };
+export default {
+  name: "ArticleList",
+  data() {
+    return {
+      EmployeeColumns: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
         },
-        methods: {
-            handleQuery() {
-                this.$axios
-                    .post(
-                        `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
-                        this.searchForm
-                    )
-                    .then(res => {
-                        let result = res.data;
-                        this.userList = result.data.content;
-                        this.totalCount = result.data.totalElements;
-                    })
-                    .catch(() => {
-                        this.userList = [];
-                        this.totalCount = 0;
-                    });
-            },
-            handlePageChange(userIndex) {
-                this.pageIndex = userIndex;
-                this.handleQuery();
-            },
-            handlePageSizeChange(size) {
-                this.pageSize = size;
-                this.handleQuery();
-            },
-            handleSelect(selection, row) {
-                this.selectedUser = selection;
-                console.log(selection, row);
-            },
-            showCreateDrawer() {
-                this.showCreate = true;
-            },
-            handleCancelCreateUser() {
-                this.showCreate = false;
-                this.$refs["createUserForm"].resetFields();
-            },
-
-            handleDeleteUser() {
-                let ids = this.selectedUser.map(item => {
-                    return item.id;
-                });
-                console.log(ids);
-                this.$axios.post("/users/deleteBatch", ids).then(() => {
-                    this.showDelete = false;
-                    this.deleteLoading = false;
-                    this.$Message.success("删除成功");
-                    /*删除成功，回调查询接口*/
-                    this.handleQuery();
-                })
-                    .catch(() => {
-                        this.deleteLoading = false;
-                        this.$Message.error("删除失败");
-                    });
-            },
-            handleCreateUser() {
-                this.$refs["createUserForm"].validate(valid => {
-                    if (valid) {
-                        this.createLoading = true;
-                        this.$axios
-                            .post("/users", this.formData)
-                            .then(() => {
-                                this.createLoading = false;
-                                this.showCreate = false;
-                                this.$Message.success("保存用户成功");
-                                this.$refs["createUserForm"].resetFields();
-                                this.handleQuery();
-                            })
-                            .catch(() => {
-                                this.createLoading = false;
-                                this.$Message.success("保存用户失败");
-                            });
-                    }
-                });
-            },
-            showModifyDrawer() {
-                this.formData = {
-                    name: this.selectedUser[0].name,
-                    password: this.selectedUser[0].password,
-                    gender: this.selectedUser[0].gender,
-                    code: this.selectedUser[0].code,
-                    phone: this.selectedUser[0].phone,
-                    birthDay: this.selectedUser[0].birthDay
-                };
-                this.showModify = true;
-            },
-            handleCancelModifyUser() {
-                this.showModify = false;
-                this.$refs["modifyUserForm"].resetFields();
-            },
-            handleModifyUser() {
-                this.$refs["modifyUserForm"].validate(valid => {
-                    if (valid) {
-                        this.modifyLoading = true;
-                        this.$axios
-                            .put(`/users/${this.selectedUser[0].id}`, this.formData)
-                            .then(() => {
-                                this.modifyLoading = false;
-                                this.showModify = false;
-                                this.$Message.success("保存用户成功");
-                                this.$refs["modifyUserForm"].resetFields();
-                                this.handleQuery();
-                            })
-                            .catch(() => {
-                                this.createLoading = false;
-                                this.$Message.success("保存用户失败");
-                            });
-                    }
-                });
-            }
+        {
+          title: "序号",
+          type: "index",
+          width: 80,
+          align: "center"
         },
-        mounted() {
-            this.handleQuery();
+        {
+          title: "职员姓名",
+          key: "name",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "职员编号",
+          key: "code",
+          align: "center"
+        },
+        {
+          width: 120,
+          title: "性别",
+          key: "gender",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "薪水",
+          key: "salary",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "奖金",
+          key: "bonus",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "部门",
+          key: "department",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "邮箱",
+          key: "email",
+          align: "center",
+          sortable: true
         }
+      ],
+      employeeSearchForm: {
+        code: "",
+        name: "",
+        birthday: "",
+        age: "",
+        position: "",
+        gender: "",
+        salary: "",
+        bonus: "",
+        department: "",
+        stationCode: ""
+      },
+      employeeList: [],
+      totalCount: 0,
+      selectedEmployee: [],
+      pageIndex: 1,
+      pageSize: 10,
+      emplyeeFormData: {
+        code: "",
+        name: "",
+        birthday: "",
+        age: "",
+        position: "",
+        gender: "",
+        salary: "",
+        bonus: "",
+        department: "",
+        stationCode: ""
+      },
+      formRules: {
+        code: [
+          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+        ],
+        birthday: [
+          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+        ],
+        age: [
+          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+        ],
+        position: [
+          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+        ],
+        gender: [
+          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+        ],
+        salary: [
+          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+        ],
+        bonus: [
+          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+        ],
+        department: [
+          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+        ],
+        stationCode: [
+          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+        ]
+      },
+      showCreate: false,
+      createLoading: false,
+
+      showModify: false,
+      modifyLoading: false,
+
+      showDelete: false,
+      deleteLoading: false
     };
+  },
+  methods: {
+    handleQuery() {
+      this.$axios
+        .post(
+          `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
+          this.employeeSearchForm
+        )
+        .then(res => {
+          let result = res.data;
+          this.employeeList = result.data.content;
+          this.totalCount = result.data.totalElements;
+        })
+        .catch(() => {
+          this.employeeList = [];
+          this.totalCount = 0;
+        });
+    },
+    handlePageChange(userIndex) {
+      this.pageIndex = userIndex;
+      this.handleQuery();
+    },
+    handlePageSizeChange(size) {
+      this.pageSize = size;
+      this.handleQuery();
+    },
+    handleSelect(selection, row) {
+      this.selectedEmployee = selection;
+      console.log(selection, row);
+    },
+    showCreateDrawer() {
+      this.showCreate = true;
+    },
+    handleCancelCreateUser() {
+      this.showCreate = false;
+      this.$refs["createUserForm"].resetFields();
+    },
+
+    handleDeleteUser() {
+      let ids = this.selectedEmployee.map(item => {
+        return item.id;
+      });
+      console.log(ids);
+      this.$axios
+        .post("/users/deleteBatch", ids)
+        .then(() => {
+          this.showDelete = false;
+          this.deleteLoading = false;
+          this.$Message.success("删除成功");
+          /*删除成功，回调查询接口*/
+          this.handleQuery();
+        })
+        .catch(() => {
+          this.deleteLoading = false;
+          this.$Message.error("删除失败");
+        });
+    },
+    handleCreateUser() {
+      this.$refs["createUserForm"].validate(valid => {
+        if (valid) {
+          this.createLoading = true;
+          this.$axios
+            .post("/users", this.emplyeeFormData)
+            .then(() => {
+              this.createLoading = false;
+              this.showCreate = false;
+              this.$Message.success("保存职员成功");
+              this.$refs["createUserForm"].resetFields();
+              this.handleQuery();
+            })
+            .catch(() => {
+              this.createLoading = false;
+              this.$Message.success("保存职员失败");
+            });
+        }
+      });
+    },
+    showModifyDrawer() {
+      this.emplyeeFormData = {
+        name: this.selectedEmployee[0].name,
+        password: this.selectedEmployee[0].password,
+        gender: this.selectedEmployee[0].gender,
+        code: this.selectedEmployee[0].code,
+        phone: this.selectedEmployee[0].phone,
+        birthDay: this.selectedEmployee[0].birthDay
+      };
+      this.showModify = true;
+    },
+    handleCancelModifyUser() {
+      this.showModify = false;
+      this.$refs["modifyUserForm"].resetFields();
+    },
+    handleModifyUser() {
+      this.$refs["modifyUserForm"].validate(valid => {
+        if (valid) {
+          this.modifyLoading = true;
+          this.$axios
+            .put(`/users/${this.selectedEmployee[0].id}`, this.emplyeeFormData)
+            .then(() => {
+              this.modifyLoading = false;
+              this.showModify = false;
+              this.$Message.success("保存职员成功");
+              this.$refs["modifyUserForm"].resetFields();
+              this.handleQuery();
+            })
+            .catch(() => {
+              this.createLoading = false;
+              this.$Message.success("保存职员失败");
+            });
+        }
+      });
+    }
+  },
+  mounted() {
+    this.handleQuery();
+  }
+};
 </script>
 
 <style lang="less" scoped>
-  .operation {
-    .button {
-      margin-right: 5px;
-    }
+.operation {
+  .button {
+    margin-right: 5px;
   }
+}
 </style>
 <style lang="less">
-  .ivu-table-tip {
-  }
+.ivu-table-tip {
+}
 </style>
 
 <style lang="less">
-  .create-drawer-footer {
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    border-top: 1px solid #e8e8e8;
-    padding: 10px 16px;
-    text-align: right;
-    background: #fff;
-  }
+.create-drawer-footer {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 16px;
+  text-align: right;
+  background: #fff;
+}
 </style>
