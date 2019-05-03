@@ -135,16 +135,16 @@
       </Page>
     </div>
     <Drawer
-      title="添加用户"
+      title="添加路线信息 "
       v-model="showCreate"
-      width="360"
+      width="400"
       :mask-closable="false"
     >
       <Form
         ref="createRouteForm"
         :model="routeFormData"
         :rules="formRules"
-        :label-width="80"
+        :label-width="100"
       >
         <Row>
           <i-Col span="24">
@@ -374,31 +374,31 @@ export default {
       },
       formRules: {
         name: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "路线名不能为空", trigger: "blur,change" }
         ],
         code: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "路线编号不能为空", trigger: "blur,change" }
         ],
         startCity: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "开始城市不能为空", trigger: "blur,change" }
         ],
         targetCity: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "目标城市不能为空", trigger: "blur,change" }
         ],
         startStation: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "开始站点不能为空", trigger: "blur,change" }
         ],
         cityDistance: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "距离不能为空", trigger: "blur,change" }
         ],
         transferCity: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "中转城市不能为空", trigger: "blur,change" }
         ],
         transferStation: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "中转站点不能为空", trigger: "blur,change" }
         ],
         cityCode: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "城市编号不能为空", trigger: "blur,change" }
         ]
       },
       showCreate: false,
