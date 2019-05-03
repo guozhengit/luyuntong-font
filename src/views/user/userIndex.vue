@@ -99,7 +99,7 @@
         </Button>
       </ButtonGroup>
     </div>
-    <div class="data-table">
+    <div class="data-table" style="height: 70%">
       <Table
         border
         :columns="userColumns"

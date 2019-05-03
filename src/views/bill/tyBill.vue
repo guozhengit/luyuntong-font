@@ -34,7 +34,7 @@
           </div>
         </FormItem>
 
-        <FormItem prop="customerName">
+       <!-- <FormItem prop="customerName">
           <div class="ivu-form-item select-ground">
             <span class="select-name">客户名称</span>
             <div class="select-input">
@@ -45,20 +45,19 @@
               />
             </div>
           </div>
-        </FormItem>
-
-        <FormItem prop="startDate">
-          <div class="ivu-form-item select-ground">
-            <span class="select-name">托运日期</span>
-            <div class="select-input">
-              <Input
-                v-model="billSearchForm.startDate"
-                type="text"
-                placeholder="请输入托运日期"
-              />
-            </div>
-          </div>
-        </FormItem>
+        </FormItem>-->
+        <!--<FormItem prop="startDate">-->
+          <!--<div class="ivu-form-item select-ground">-->
+            <!--<span class="select-name">托运日期</span>-->
+            <!--<div class="select-input">-->
+              <!--<Input-->
+                <!--v-model="billSearchForm.startDate"-->
+                <!--type="text"-->
+                <!--placeholder="请输入托运日期"-->
+              <!--/>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</FormItem>-->
 
         <FormItem prop="receiveMan">
           <div class="ivu-form-item select-ground">
@@ -215,7 +214,7 @@
         </Button>
       </ButtonGroup>
     </div>
-    <div class="data-table" style="overflow: scroll">
+    <div class="data-table" style="overflow: scroll;height: 60%">
       <Table
         border
         :columns="billsColumns"
