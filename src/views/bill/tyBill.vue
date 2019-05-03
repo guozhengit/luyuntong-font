@@ -248,208 +248,148 @@
       <Form ref="" :model="BillFormData" :rules="formRules" :label-width="100">
         <Row>
           <i-Col span="6">
-            <FormItem label="司机姓名" prop="name">
-              <Input v-model="BillFormData.code" placeholder="请输入用户名" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="6">
-            <FormItem label="司机编号" prop="name">
-              <Input v-model="BillFormData.conSignMan" placeholder="请输入用户编号" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="6">
-            <FormItem label="身份证" prop="name">
-              <Input v-model="BillFormData.conSignPhone" placeholder="请输入身份证" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="6">
-            <FormItem label="司机编号" prop="name">
-              <Input v-model="BillFormData.customer" placeholder="请输入用户编号" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="6">
-            <FormItem label="客户名称" prop="birthday">
-              <Input placeholder="请输入生日" v-model="BillFormData.customerName" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="6">
-            <FormItem label="电话" prop="phone">
-              <Input v-model="BillFormData.phone" placeholder="请输入电话" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="6">
-            <FormItem label="地址" prop="email">
-              <Input v-model="BillFormData.address" placeholder="请输入邮箱" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="6">
-            <FormItem label="性别" prop="gender">
-              <RadioGroup v-model="BillFormData.gender">
-                <Radio label="男">男</Radio>
-                <Radio label="女">女</Radio>
-              </RadioGroup>
-            </FormItem>
-          </i-Col>
-        </Row>
-      </Form>
-      <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelCreateUser"
-          >取消
-        </Button>
-        <Button
-          type="primary"
-          @click="handleCreateUser"
-          :loading="createLoading"
-          >保存
-        </Button>
-      </div>
-    </Drawer>
-    <Drawer
-      title="修改司机信息"
-      v-model="showModify"
-      width="360"
-      :mask-closable="false"
-    >
-      <Form
-        ref="modifyDriverForm"
-        :model="BillFormData"
-        :rules="formRules"
-        :label-width="80"
-      >
-        <Row>
-          <i-Col span="6">
             <FormItem label="单据编号" prop="name">
               <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="单据类型" prop="type">
+              <Input v-model="BillFormData.type" placeholder="请输入单据类型" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="服务站点" prop="salesStation">
+              <Input v-model="BillFormData.salesStation" placeholder="请输入单据编号" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="顾客姓名" prop="customerName">
+              <Input v-model="BillFormData.customerName" placeholder="请输入顾客姓名" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="托运人" prop="conSignMan">
+              <Input v-model="BillFormData.conSignMan" placeholder="请输入托运人" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="托运人电话" prop="conSignPhone">
+              <Input v-model="BillFormData.conSignPhone" placeholder="请输入托运人电话" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="始发地址" prop="startAddress">
+              <Input v-model="BillFormData.startAddress" placeholder="请输入始发地址" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="始发所在区域" prop="startRegion">
+              <Input v-model="BillFormData.startRegion" placeholder="请输入始发所在区域" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="始发邮编" prop="startPostCode">
+              <Input v-model="BillFormData.startPostCode" placeholder="请输入始发邮编" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="始发日期" prop="startDate">
+              <Input v-model="BillFormData.startDate" placeholder="请输入始发日期" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="始发站点" prop="startStation">
+              <Input v-model="BillFormData.startStation" placeholder="请输入始发站点" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="接货人" prop="transportationType">
+              <Input v-model="BillFormData.transportationType" placeholder="请输入接货人" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="接货人电话" prop="receivePhone">
+              <Input v-model="BillFormData.receivePhone" placeholder="请输入接货人电话" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="接货人地址" prop="receiveAddress">
+              <Input v-model="BillFormData.receiveAddress" placeholder="请输入接货人地址" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="接货日期" prop="receiveDate">
+              <Input v-model="BillFormData.receiveDate" placeholder="请输入接货日期" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="目标站点" prop="targetStation">
+              <Input v-model="BillFormData.targetStation" placeholder="请输入目标站点" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="目标区域" prop="targetRegion">
+              <Input v-model="BillFormData.targetRegion" placeholder="请输入目标区域" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="单据编号" prop="serviceType">
+              <Input v-model="BillFormData.serviceType" placeholder="请输入单据编号" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="运输方式" prop="transportationType">
+              <Input v-model="BillFormData.transportationType" placeholder="请输入运输方式" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="其他费用" prop="otherCost">
+              <Input v-model="BillFormData.otherCost" placeholder="请输入其他费用" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="物流费用" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入物流费用" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="运输费用" prop="transportCost">
+              <Input v-model="BillFormData.transportCost" placeholder="请输入运输费用" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="付款类型" prop="paymentType">
+              <Input v-model="BillFormData.paymentType" placeholder="请输入付款类型" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="应付金额" prop="accountPayable">
+              <Input v-model="BillFormData.accountPayable" placeholder="请输入应付金额" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="实付金额" prop="realityPayable">
+              <Input v-model="BillFormData.realityPayable" placeholder="请输入实付金额" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="未付金额" prop="unReceivedPayable">
+              <Input v-model="BillFormData.unReceivedPayable" placeholder="请输入未付金额" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="单据编号" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            <FormItem label="折让金额" prop="allowancePayable">
+              <Input v-model="BillFormData.allowancePayable" placeholder="请输入折让金额" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="发车状态" prop="arriveVehicleStatus">
+              <Input v-model="BillFormData.arriveVehicleStatus" placeholder="请输入发车状态" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="车到站状态" prop="departVehicleStatus">
+              <Input v-model="BillFormData.departVehicleStatus" placeholder="请输入车到站状态" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
@@ -458,12 +398,12 @@
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="车辆类型" prop="name">
+            <FormItem label="车辆类型" prop="vehicleType">
               <Input v-model="BillFormData.vehicleType" placeholder="请输入车辆类型" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="司机姓名" prop="name">
+            <FormItem label="司机姓名" prop="driverName">
               <Input v-model="BillFormData.driverName" placeholder="请输入司机姓名" />
             </FormItem>
           </i-Col>
@@ -483,12 +423,224 @@
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="收支合计" prop="phone">
+            <FormItem label="收支合计" prop="paymentsTotal">
               <Input v-model="BillFormData.paymentsTotal" placeholder="请输入收支合计" />
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="收支日期" prop="email">
+            <FormItem label="收支日期" prop="paymentsDate">
+              <Input v-model="BillFormData.paymentsDate" placeholder="请选择收支日期" />
+            </FormItem>
+          </i-Col>
+        </Row>
+      </Form>
+      <div class="create-drawer-footer">
+        <Button style="margin-right: 8px" @click="handleCancelCreateUser"
+          >取消
+        </Button>
+        <Button
+          type="primary"
+          @click="handleCreateBill"
+          :loading="createLoading"
+          >保存
+        </Button>
+      </div>
+    </Drawer>
+    <Drawer
+      title="修改单据信息"
+      v-model="showModify"
+      width="360"
+      :mask-closable="false"
+    >
+      <Form
+        ref="modifyBillForm"
+        :model="BillFormData"
+        :rules="formRules"
+        :label-width="80"
+      >
+        <Row>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据类型" prop="type">
+              <Input v-model="BillFormData.type" placeholder="请输入单据类型" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="服务站点" prop="salesStation">
+              <Input v-model="BillFormData.salesStation" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="顾客姓名" prop="customerName">
+              <Input v-model="BillFormData.customerName" placeholder="请输入顾客姓名" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="托运人" prop="conSignMan">
+              <Input v-model="BillFormData.conSignMan" placeholder="请输入托运人" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="托运人电话" prop="conSignPhone">
+              <Input v-model="BillFormData.conSignPhone" placeholder="请输入托运人电话" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="始发地址" prop="startAddress">
+              <Input v-model="BillFormData.startAddress" placeholder="请输入始发地址" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="始发所在区域" prop="startRegion">
+              <Input v-model="BillFormData.startRegion" placeholder="请输入始发所在区域" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="始发邮编" prop="startPostCode">
+              <Input v-model="BillFormData.startPostCode" placeholder="请输入始发邮编" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="始发日期" prop="startDate">
+              <Input v-model="BillFormData.startDate" placeholder="请输入始发日期" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="始发站点" prop="startStation">
+              <Input v-model="BillFormData.startStation" placeholder="请输入始发站点" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="接货人" prop="transportationType">
+              <Input v-model="BillFormData.transportationType" placeholder="请输入接货人" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="接货人电话" prop="receivePhone">
+              <Input v-model="BillFormData.receivePhone" placeholder="请输入接货人电话" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="接货人地址" prop="receiveAddress">
+              <Input v-model="BillFormData.receiveAddress" placeholder="请输入接货人地址" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="接货日期" prop="receiveDate">
+              <Input v-model="BillFormData.receiveDate" placeholder="请输入接货日期" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="目标站点" prop="targetStation">
+              <Input v-model="BillFormData.targetStation" placeholder="请输入目标站点" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="目标区域" prop="targetRegion">
+              <Input v-model="BillFormData.targetRegion" placeholder="请输入目标区域" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="serviceType">
+              <Input v-model="BillFormData.serviceType" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="运输方式" prop="transportationType">
+              <Input v-model="BillFormData.transportationType" placeholder="请输入运输方式" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="其他费用" prop="otherCost">
+              <Input v-model="BillFormData.otherCost" placeholder="请输入其他费用" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="物流费用" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入物流费用" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="运输费用" prop="transportCost">
+              <Input v-model="BillFormData.transportCost" placeholder="请输入运输费用" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="付款类型" prop="paymentType">
+              <Input v-model="BillFormData.paymentType" placeholder="请输入付款类型" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="应付金额" prop="accountPayable">
+              <Input v-model="BillFormData.accountPayable" placeholder="请输入应付金额" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="实付金额" prop="realityPayable">
+              <Input v-model="BillFormData.realityPayable" placeholder="请输入实付金额" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="未付金额" prop="unReceivedPayable">
+              <Input v-model="BillFormData.unReceivedPayable" placeholder="请输入未付金额" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="折让金额" prop="allowancePayable">
+              <Input v-model="BillFormData.allowancePayable" placeholder="请输入折让金额" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="发车状态" prop="arriveVehicleStatus">
+              <Input v-model="BillFormData.arriveVehicleStatus" placeholder="请输入发车状态" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="车到站状态" prop="departVehicleStatus">
+              <Input v-model="BillFormData.departVehicleStatus" placeholder="请输入车到站状态" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="车牌号" prop="vehicleCode">
+              <Input v-model="BillFormData.vehicleCode" placeholder="请输入车牌号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="车辆类型" prop="vehicleType">
+              <Input v-model="BillFormData.vehicleType" placeholder="请输入车辆类型" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="司机姓名" prop="driverName">
+              <Input v-model="BillFormData.driverName" placeholder="请输入司机姓名" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="司机电话" prop="driverPhone">
+              <Input v-model="BillFormData.driverPhone" placeholder="请输入司机电话" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="收入金额" prop="incomePayable">
+              <Input v-model="BillFormData.incomePayable" placeholder="请输入收入金额" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="支出金额" prop="expendPayable">
+              <Input v-model="BillFormData.expendPayable" placeholder="请输入支出金额" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="收支合计" prop="paymentsTotal">
+              <Input v-model="BillFormData.paymentsTotal" placeholder="请输入收支合计" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="收支日期" prop="paymentsDate">
               <Input v-model="BillFormData.paymentsDate" placeholder="请选择收支日期" />
             </FormItem>
           </i-Col>
@@ -1317,7 +1469,7 @@ export default {
           this.$Message.error("删除失败");
         });
     },
-    handleCreateUser() {
+    handleCreateBill() {
       this.$refs[""].validate(valid => {
         if (valid) {
           this.createLoading = true;
@@ -1351,10 +1503,10 @@ export default {
     },
     handleCancelModifyUser() {
       this.showModify = false;
-      this.$refs["modifyDriverForm"].resetFields();
+      this.$refs["modifyBillForm"].resetFields();
     },
     handleModifyUser() {
-      this.$refs["modifyDriverForm"].validate(valid => {
+      this.$refs["modifyBillForm"].validate(valid => {
         if (valid) {
           this.modifyLoading = true;
           this.$axios
@@ -1363,7 +1515,7 @@ export default {
               this.modifyLoading = false;
               this.showModify = false;
               this.$Message.success("报存单据成功");
-              this.$refs["modifyDriverForm"].resetFields();
+              this.$refs["modifyBillForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {
