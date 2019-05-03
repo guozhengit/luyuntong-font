@@ -2,32 +2,30 @@
   <div>
     <Row>
       <label class="left"><h1>年度统计报表</h1></label>
-      <tr/>
+      <tr />
       <Card shadow>
-        <example style="height: 500px;width: 100%"/>
+        <example style="height: 500px;width: 100%" />
       </Card>
     </Row>
   </div>
 </template>
 
 <script>
-    import Example from './example.vue'
-    export default {
-        name: 'home',
-        components: {
-            Example
-        },
-        data () {
-            return {
-            }
-        },
-        mounted () {
-        }
-    }
+import Example from "./example.vue";
+export default {
+  name: "home",
+  components: {
+    Example
+  },
+  data() {
+    return {};
+  },
+  mounted() {}
+};
 </script>
 
 <style lang="less">
-  .count-style{
-    font-size: 50px;
-  }
+.count-style {
+  font-size: 50px;
+}
 </style>

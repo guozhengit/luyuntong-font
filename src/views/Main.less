@@ -152,18 +152,20 @@
           border-bottom: solid 1px @border-color;
         }
         .data-table {
-          height: calc(~'100% - 175px');
+          height: calc(~'100% - 225px');
           overflow: hidden;
           .ivu-table-wrapper {
             height: 100%;
             .ivu-table-body {
               height: calc(~'100% - 40px');
               overflow-y: scroll;
-              overflow-x: hidden;
+              overflow-x: scroll;
+
             }
           }
         }
         .pagination {
+          height: 100%;
           margin-top: 5px;
           text-align: right;
           padding: 10px 15px 5px 0;

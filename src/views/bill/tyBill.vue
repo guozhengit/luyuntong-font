@@ -3,43 +3,17 @@
     <div class="search">
       <Form
         class="search-form"
-        ref="searchForm"
-        :model="searchForm"
+        ref="billSearchForm"
+        :model="billSearchForm"
         :label-width="5"
         inline
       >
-        <!--
-        1.	用户 （用户编号，用户名，性别，年龄，职务）；
-        2.	职员 （工号，姓名，职位）；
-        3.	部门 （部门编号，名称）；
-        4.	车辆 （车牌号，车容量，车高，保险号，使用年限，类型）；
-        5.	司机 （工号，姓名，年龄，电话）；
-        6.	路线 （编号，起始点，终点）；
-        7.	站点 （站点编号、所属省份、站点电话）；
-        8.	托运单 （托运单号，发货人，货物数量，货物种类，运费，创建时间）
-        9.	发车单 （发车单号，出发点，目的地，发车日期）；
-        10.	回车单 （回车单号，）
-        11.	客户结算单 （结算单号，付款人，收款人，应收金额，已收金额，优惠金额）
-        12.	司机结算单 （结算单号，付款人，收款人，应收金额，已收金额，优惠金额）
-        1.	用户 （用户编号，用户名，性别，年龄，职务）；
-        2.	职员 （工号，姓名，职位）；
-        3.	部门 （部门编号，名称）；
-        4.	车辆 （车牌号，车容量，车高，保险号，使用年限，类型）；
-        5.	司机 （工号，姓名，年龄，电话）；
-        6.	路线 （编号，起始点，终点）；
-        7.	站点 （站点编号、所属省份、站点电话）；
-        8.	托运单 （托运单号，发货人，货物数量，货物种类，运费，创建时间）
-        9.	发车单 （发车单号，出发点，目的地，发车日期）；
-        10.	回车单 （回车单号，）
-        11.	客户结算单 （结算单号，付款人，收款人，应收金额，已收金额，优惠金额）
-        12.	司机结算单 （结算单号，付款人，收款人，应收金额，已收金额，优惠金额
-        -->
         <FormItem prop="code">
           <div class="ivu-form-item select-ground">
             <span class="select-name">单据编号</span>
             <div class="select-input">
               <Input
-                v-model="searchForm.code"
+                v-model="billSearchForm.code"
                 type="text"
                 placeholder="请输入单据编号"
               />
@@ -52,7 +26,7 @@
             <span class="select-name">业务员</span>
             <div class="select-input">
               <Input
-                v-model="searchForm.conSignMan"
+                v-model="billSearchForm.conSignMan"
                 type="text"
                 placeholder="请输入业务员"
               />
@@ -65,7 +39,7 @@
             <span class="select-name">客户名称</span>
             <div class="select-input">
               <Input
-                v-model="searchForm.customerName"
+                v-model="billSearchForm.customerName"
                 type="text"
                 placeholder="请输入客户名称"
               />
@@ -78,7 +52,7 @@
             <span class="select-name">托运日期</span>
             <div class="select-input">
               <Input
-                v-model="searchForm.startDate"
+                v-model="billSearchForm.startDate"
                 type="text"
                 placeholder="请输入托运日期"
               />
@@ -91,7 +65,7 @@
             <span class="select-name">接收人</span>
             <div class="select-input">
               <Input
-                v-model="searchForm.receiveMan"
+                v-model="billSearchForm.receiveMan"
                 type="text"
                 placeholder="请输入接收人信息"
               />
@@ -104,7 +78,7 @@
             <span class="select-name">接收时间</span>
             <div class="select-input">
               <Input
-                v-model="searchForm.receiveDate"
+                v-model="billSearchForm.receiveDate"
                 type="text"
                 placeholder="请输入接收时间"
               />
@@ -117,7 +91,7 @@
             <span class="select-name">托运人</span>
             <div class="select-input">
               <Input
-                v-model="searchForm.conSignMan"
+                v-model="billSearchForm.conSignMan"
                 type="text"
                 placeholder="请输入托运人"
               />
@@ -130,7 +104,7 @@
             <span class="select-name">托运时间</span>
             <div class="select-input">
               <Input
-                v-model="searchForm.startDate"
+                v-model="billSearchForm.startDate"
                 type="text"
                 placeholder="请输入托运时间"
               />
@@ -142,7 +116,7 @@
             <span class="select-name">支付方式</span>
             <div class="select-input">
               <Select
-                v-model="searchForm.paymentType"
+                v-model="billSearchForm.paymentType"
                 placeholder="请选择支付方式"
               >
                 <Option
@@ -160,7 +134,7 @@
             <span class="select-name">运输方式</span>
             <div class="select-input">
               <Select
-                v-model="searchForm.gatherType"
+                v-model="billSearchForm.gatherType"
                 placeholder="请选择运输方式"
               >
                 <Option
@@ -178,7 +152,7 @@
             <span class="select-name">发车状态</span>
             <div class="select-input">
               <Select
-                v-model="searchForm.arriveVehicleStatus"
+                v-model="billSearchForm.arriveVehicleStatus"
                 placeholder="请选择车辆状态"
               >
                 <Option
@@ -233,7 +207,7 @@
           ghost
           class="button"
           :disabled="!selectBill.length > 0"
-          @click="handleDeleteUser"
+          @click="handleDeleteBill"
           >删除
         </Button>
         <Button type="primary" icon="ios-refresh" ghost @click="handleQuery"
@@ -241,10 +215,10 @@
         </Button>
       </ButtonGroup>
     </div>
-    <div class="data-table" style="overflow-x:scroll ">
+    <div class="data-table" style="overflow: scroll">
       <Table
         border
-        :columns="userColumns"
+        :columns="billsColumns"
         :data="tyBillList"
         @on-selection-change="handleSelect"
       >
@@ -252,7 +226,7 @@
     </div>
     <!--<br>-->
 
-    <div class="pagination">
+    <div class="pagination" style="float: bottom">
       <Page
         :total="totalCount"
         :current="pageIndex"
@@ -266,49 +240,49 @@
       </Page>
     </div>
     <Drawer
-      title="添加司机信息"
+      title="添加单据信息"
       v-model="showCreate"
-      width="360"
+      width="88%"
       :mask-closable="false"
     >
-      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="80">
+      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="100">
         <Row>
-          <i-Col span="24">
+          <i-Col span="6">
             <FormItem label="司机姓名" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入用户名" />
+              <Input v-model="BillFormData.code" placeholder="请输入用户名" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="6">
             <FormItem label="司机编号" prop="name">
-              <Input v-model="BillFormData.code" placeholder="请输入用户编号" />
+              <Input v-model="BillFormData.conSignMan" placeholder="请输入用户编号" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="6">
             <FormItem label="身份证" prop="name">
-              <Input v-model="BillFormData.idCard" placeholder="请输入身份证" />
+              <Input v-model="BillFormData.conSignPhone" placeholder="请输入身份证" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="6">
             <FormItem label="司机编号" prop="name">
-              <Input v-model="BillFormData.code" placeholder="请输入用户编号" />
+              <Input v-model="BillFormData.customer" placeholder="请输入用户编号" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="生日" prop="birthday">
-              <Input placeholder="请输入生日" v-model="BillFormData.birthday" />
+          <i-Col span="6">
+            <FormItem label="客户名称" prop="birthday">
+              <Input placeholder="请输入生日" v-model="BillFormData.customerName" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="6">
             <FormItem label="电话" prop="phone">
               <Input v-model="BillFormData.phone" placeholder="请输入电话" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="6">
             <FormItem label="地址" prop="email">
               <Input v-model="BillFormData.address" placeholder="请输入邮箱" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="6">
             <FormItem label="性别" prop="gender">
               <RadioGroup v-model="BillFormData.gender">
                 <Radio label="男">男</Radio>
@@ -343,42 +317,182 @@
         :label-width="80"
       >
         <Row>
-          <i-Col span="24">
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="单据编号" prop="name">
+              <Input v-model="BillFormData.name" placeholder="请输入单据编号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="车牌号" prop="vehicleCode">
+              <Input v-model="BillFormData.vehicleCode" placeholder="请输入车牌号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="车辆类型" prop="name">
+              <Input v-model="BillFormData.vehicleType" placeholder="请输入车辆类型" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
             <FormItem label="司机姓名" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入用户名" />
+              <Input v-model="BillFormData.driverName" placeholder="请输入司机姓名" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="司机编号" prop="name">
-              <Input v-model="BillFormData.code" placeholder="请输入用户编号" />
+          <i-Col span="6">
+            <FormItem label="司机电话" prop="driverPhone">
+              <Input v-model="BillFormData.driverPhone" placeholder="请输入司机电话" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="身份证" prop="name">
-              <Input v-model="BillFormData.idCard" placeholder="请输入身份证" />
+          <i-Col span="6">
+            <FormItem label="收入金额" prop="incomePayable">
+              <Input v-model="BillFormData.incomePayable" placeholder="请输入收入金额" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="司机编号" prop="name">
-              <Input v-model="BillFormData.code" placeholder="请输入用户编号" />
+          <i-Col span="6">
+            <FormItem label="支出金额" prop="expendPayable">
+              <Input v-model="BillFormData.expendPayable" placeholder="请输入支出金额" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="生日" prop="birthday">
-              <Input placeholder="请输入生日" v-model="BillFormData.birthday" />
+          <i-Col span="6">
+            <FormItem label="收支合计" prop="phone">
+              <Input v-model="BillFormData.paymentsTotal" placeholder="请输入收支合计" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="电话" prop="phone">
-              <Input v-model="BillFormData.phone" placeholder="请输入电话" />
+          <i-Col span="6">
+            <FormItem label="收支日期" prop="email">
+              <Input v-model="BillFormData.paymentsDate" placeholder="请选择收支日期" />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="地址" prop="email">
-              <Input v-model="BillFormData.address" placeholder="请输入邮箱" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
+          <i-Col span="6">
             <FormItem label="性别" prop="gender">
               <RadioGroup v-model="BillFormData.gender">
                 <Radio label="男">男</Radio>
@@ -408,11 +522,12 @@ export default {
   name: "ArticleList",
   data: function() {
     return {
-      userColumns: [
+      billsColumns: [
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
+          fixed: "left"
         },
         {
           title: "序号",
@@ -421,65 +536,265 @@ export default {
           align: "center"
         },
         {
-          title: "司机姓名",
-          type: "name",
+          title: "单据编号",
+          width: 200,
+          type: "code",
           align: "center"
         },
         {
-          title: "身份证",
-          key: "idCard",
+          title: "服务站点",
+          key: "salesStation",
+          width: 200,
           align: "center",
           sortable: true
         },
         {
-          title: "籍贯",
-          key: "nativePlace",
+          title: "顾客姓名",
+          key: "customerName",
+          width: 200,
           align: "center",
           sortable: true
         },
         {
-          title: "站点编号",
-          key: "stationCode",
+          title: "支付类型",
+          key: "gatherType",
+          width: 200,
           align: "center",
           sortable: true
         },
         {
-          title: "地址",
-          key: "address",
+          title: "托运人",
+          key: "conSignMan",
+          width: 200,
           align: "center",
           sortable: true
         },
         {
-          title: "驾驶证",
-          key: "driveLicence",
+          title: "托运电话",
+          key: "conSignPhone",
+          width: 200,
           align: "center",
           sortable: true
         },
         {
-          title: "车辆运营证",
-          key: "runLicence",
+          title: "始发地址",
+          key: "startAddress",
+          width: 200,
           align: "center"
         },
         {
-          title: "性别",
-          key: "gender",
+          title: "始发区域",
+          key: "startRegion",
+          width: 200,
           align: "center",
           sortable: true
         },
         {
-          title: "电话",
-          key: "phone",
+          title: "始发邮编",
+          key: "startPostCode",
+          width: 200,
           align: "center",
           sortable: true
         },
         {
-          title: "车辆编号",
+          title: "始发日期",
+          key: "startDate",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "始发站点",
+          key: "startStation",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "接收人",
+          key: "receiveMan",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "接货人电话",
+          key: "receivePhone",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "接货人地址",
+          key: "receiveAddress",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "接货日期",
+          key: "receiveDate",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "目标站点",
+          key: "targetStation",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "目标区域",
+          key: "targetRegion",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "服务类型",
+          key: "serviceType",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "运输方式",
+          key: "transportationType",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "其他费用",
+          key: "otherCost",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "物流费用",
+          key: "logisCost",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "运输费用",
+          key: "transportCost",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "付款类型",
+          key: "paymentType",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "应付金额",
+          key: "accountPayable",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "实付金额",
+          key: "realityPayable",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "未付金额",
+          key: "unReceivedPayable",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "折让金额",
+          key: "allowancePayable",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "发车状态",
+          key: "arriveVehicleStatus",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "车到站状态",
+          key: "departVehicleStatus",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "车牌号",
           key: "vehicleCode",
+          width: 200,
           align: "center",
           sortable: true
+        },
+        {
+          title: "车辆类型",
+          key: "vehicleType",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "司机姓名",
+          key: "driverName",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "司机电话",
+          key: "driverPhone",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "收入金额",
+          key: "incomePayable",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "支出金额",
+          key: "expendPayable",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "收支合计",
+          key: "paymentsTotal",
+          width: 200,
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "收支日期",
+          key: "paymentsDate",
+          width: 200,
+          align: "center",
+          sortable: true,
+          fixed: "right"
         }
       ],
-      searchForm: {
+      billSearchForm: {
         /*单据编号*/
         code: "",
         /*单据类型*/
@@ -547,7 +862,7 @@ export default {
         vehicleType: "",
         /*司机姓名*/
         driverName: "",
-        /*司机姓名*/
+        /*司机电话*/
         driverPhone: "",
         /*收入金额*/
         incomePayable: "",
@@ -951,7 +1266,7 @@ export default {
       this.$axios
         .post(
           `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
-          this.searchForm
+          this.billSearchForm
         )
         .then(res => {
           let result = res.data;
@@ -983,7 +1298,7 @@ export default {
       this.$refs[""].resetFields();
     },
 
-    handleDeleteUser() {
+    handleDeleteBill() {
       let ids = this.selectBill.map(item => {
         return item.id;
       });
