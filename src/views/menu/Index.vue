@@ -258,7 +258,7 @@ export default {
         });
     },
     handlePageChange(index) {
-      this.pageIndex = userIndex;
+      this.pageIndex = index;
       this.handleQuery();
     },
     handlePageSizeChange(size) {

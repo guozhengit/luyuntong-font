@@ -4,32 +4,24 @@ export const MENU_INDEX = {
   HOME: "home",
   /*用户*/
   USER: "user",
-  /*日志*/
-  LOG: "log",
   /*单据*/
   BILL: "bill",
-    /*托运单据*/
-    TYBILL: "tybill",
-    /*发车单据*/
-    FCBILL: "fcbill",
-    /*到车单据*/
-    DCBILL: "dcbill",
-    /*回车单据*/
-    HCBILL: "hcbill",
-    /*收支单据*/
-    SZBILL: "szbill",
-    /*客户结算单据*/
-    KFJSBILL: "kfjsbill",
-    /*司机单据*/
-    SJJSBILL: "sjjsbill",
+  /*托运单据*/
+  TYBILL: "tybill",
+  /*收支单据*/
+  SZBILL: "szbill",
+  /*结算单据*/
+  JSBILL: "jsbill",
+  /*车辆单据*/
+  CarBILL: "carbill",
 
-    SALARY:"salary",
-    YXZC:"yxzc",
-    KHJS:"khjs",
-    YLTJ:"yltj",
-
-  /*物流*/
-  PHYSICAL: "physical",
+  /*成本中心*/
+  COST: "cost",
+  /*工资、运营、客户、盈利*/
+  SALARY: "salary",
+  YXZC: "yxzc",
+  KHJS: "khjs",
+  YLTJ: "yltj",
 
   /*权限*/
   AUTHORITY: "authority",
@@ -56,8 +48,6 @@ export const MENU_INDEX = {
   /*城市*/
   CITY: "city",
 
-  /*成本中心*/
-  COST: "cost",
   /*报表管理*/
   REPORT: "report",
   WLREPORT: "wlReport",
