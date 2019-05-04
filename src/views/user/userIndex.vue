@@ -169,9 +169,9 @@
           <i-Col span="24">
             <FormItem label="性别" prop="gender">
               <RadioGroup v-model="formData.gender">
-                <Radio label="男">1</Radio>
-                <Radio label="女">2</Radio>
-                <Radio label="未知">3</Radio>
+                <Radio label="男">男</Radio>
+                <Radio label="女">女</Radio>
+                <Radio label="未知">其他</Radio>
               </RadioGroup>
             </FormItem>
           </i-Col>

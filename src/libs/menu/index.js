@@ -59,7 +59,7 @@ const appMenu = {
         },
         {
           index: MENU_INDEX.CarBILL,
-          name: "车辆单据",
+          name: "运输单据",
           icon: "iconfont icon-wuliufeiguanli"
         },
         {
