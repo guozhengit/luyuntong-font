@@ -96,7 +96,7 @@
           <div style="text-align: center">
             Copyright © 2019
             <a href="http://www.ayit.edu.cn/" target="_blank">安阳工学院</a>.
-            Powered By 陆运通物流管理系统. Version-1.0
+            Powered By 陆运通物流管理系统. Version1.0
           </div>
         </Footer>
       </Layout>
@@ -171,7 +171,7 @@ export default {
       //   this.$axios.post("/auth/logout").then(() => {
       //   });
       this.userInfo = {
-        username: `夏明凤${Math.random().toExponential(10)}`
+        username: `夏明凤`
       };
     }
   },

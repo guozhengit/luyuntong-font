@@ -38,7 +38,7 @@
           <div class="ivu-form-item select-ground">
             <span class="select-name">性别</span>
             <div class="select-input">
-              <Select v-model="searchForm.gender" placeholder="请选择性别">
+              <Select v-model="searchForm.gender" clearable placeholder="请选择性别">
                 <Option
                   v-for="item in types"
                   :value="item.value"
@@ -53,14 +53,6 @@
           <ButtonGroup>
             <Button type="primary" icon="md-search" ghost @click="handleQuery"
               >查询
-            </Button>
-            <Button
-              type="primary"
-              style="color:#e82626"
-              icon="md-close"
-              ghost
-              @click="handleQuery"
-              >重置
             </Button>
           </ButtonGroup>
         </FormItem>
@@ -171,7 +163,6 @@
               <RadioGroup v-model="formData.gender">
                 <Radio label="男">男</Radio>
                 <Radio label="女">女</Radio>
-                <Radio label="未知">其他</Radio>
               </RadioGroup>
             </FormItem>
           </i-Col>
@@ -237,7 +228,6 @@
               <RadioGroup v-model="formData.gender">
                 <Radio label="男">男</Radio>
                 <Radio label="女">女</Radio>
-                <Radio label="其他">其他</Radio>
               </RadioGroup>
             </FormItem>
           </i-Col>
@@ -265,16 +255,12 @@ export default {
     return {
       types: [
         {
-          value: "1",
+          value: "男",
           label: "男"
         },
         {
-          value: "2",
+          value: "女",
           label: "女"
-        },
-        {
-          value: "3",
-          label: "其他"
         }
       ],
       userColumns: [

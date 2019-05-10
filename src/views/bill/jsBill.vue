@@ -38,7 +38,7 @@
             <div class="select-input">
               <Input
                 v-model="billSearchForm.accountBillDate"
-                type="text"
+                type="date"
                 placeholder="请输入结算日期"
               />
             </div>
@@ -79,24 +79,6 @@
                 type="text"
                 placeholder="请输入客户编号"
               />
-            </div>
-          </div>
-        </FormItem>
-        <FormItem prop="gender">
-          <div class="ivu-form-item select-ground">
-            <span class="select-name">收款方式</span>
-            <div class="select-input">
-              <Select
-                v-model="billSearchForm.paymentType"
-                placeholder="请选择收款方式"
-              >
-                <Option
-                  v-for="item in types"
-                  :value="item.value"
-                  :key="item.value"
-                  >{{ item.label }}
-                </Option>
-              </Select>
             </div>
           </div>
         </FormItem>
@@ -142,7 +124,7 @@
         </Button>
       </ButtonGroup>
     </div>
-    <div class="data-table" style="overflow: scroll; height: 65%">
+    <div class="data-table" style="height: 65%">
       <Table
         border
         :columns="billsColumns"
@@ -287,14 +269,14 @@
     <Drawer
       title="修改结算单"
       v-model="showModify"
-      width="40%"
+      width="88%"
       :mask-closable="false"
     >
       <Form
         ref="modifyBillForm"
         :model="BillFormData"
         :rules="formRules"
-        :label-width="80"
+        :label-width="120"
       >
         <Row>
           <i-Col span="12">
@@ -1002,7 +984,7 @@ export default {
     handleQuery() {
       this.$axios
         .post(
-          `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
+          `/bill/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
           this.billSearchForm
         )
         .then(res => {
@@ -1041,7 +1023,7 @@ export default {
       });
       console.log(ids);
       this.$axios
-        .post("/users/deleteBatch", ids)
+        .post("/bill/deleteBatch", ids)
         .then(() => {
           this.showDelete = false;
           this.deleteLoading = false;
@@ -1059,7 +1041,7 @@ export default {
         if (valid) {
           this.createLoading = true;
           this.$axios
-            .post("/users", this.BillFormData)
+            .post("/bill", this.BillFormData)
             .then(() => {
               this.createLoading = false;
               this.showCreate = false;
@@ -1077,12 +1059,51 @@ export default {
     /*此处为更新操作 获取到查询的实体数据*/
     showModifyDrawer() {
       this.BillFormData = {
-        name: this.selectBill[0].name,
-        password: this.selectBill[0].password,
-        gender: this.selectBill[0].gender,
-        code: this.selectBill[0].code,
-        phone: this.selectBill[0].phone,
-        birthDay: this.selectBill[0].birthDay
+        type: this.selectBill[0].type,
+        vehicleBillCode: this.selectBill[0].vehicleBillCode,
+        vehicelBillType: this.selectBill[0].vehicelBillType,
+        vehicleBillDate: this.selectBill[0].vehicleBillDate,
+        accountBillCode: this.selectBill[0].accountBillCode,
+        accountBillType: this.selectBill[0].accountBillType,
+        accountBillDate: this.selectBill[0].accountBillDate,
+        paymentCode: this.selectBill[0].paymentCode,
+        salesStation: this.selectBill[0].salesStation,
+        customerName: this.selectBill[0].customerName,
+        gatherType: this.selectBill[0].gatherType,
+        conSignMan: this.selectBill[0].conSignMan,
+        conSignPhone: this.selectBill[0].conSignPhone,
+        startAddress: this.selectBill[0].startAddress,
+        startRegion: this.selectBill[0].startRegion,
+        startPostCode: this.selectBill[0].startPostCode,
+        startDate: this.selectBill[0].startDate,
+        startStation: this.selectBill[0].startStation,
+        receiveMan: this.selectBill[0].receiveMan,
+        receivePhone: this.selectBill[0].receivePhone,
+        receiveAddress: this.selectBill[0].receiveAddress,
+        receiveDate: this.selectBill[0].receiveDate,
+        targetStation: this.selectBill[0].targetStation,
+        targetRegion: this.selectBill[0].targetRegion,
+        serviceType: this.selectBill[0].serviceType,
+        transportationType: this.selectBill[0].transportationType,
+        otherCost: this.selectBill[0].otherCost,
+        logisCost: this.selectBill[0].logisCost,
+        transportCost: this.selectBill[0].transportCost,
+        paymentType: this.selectBill[0].paymentType,
+        accountPayable: this.selectBill[0].accountPayable,
+        realityPayable: this.selectBill[0].realityPayable,
+        unReceivedPayable: this.selectBill[0].unReceivedPayable,
+        allowancePayable: this.selectBill[0].allowancePayable,
+        arriveVehicleStatus: this.selectBill[0].arriveVehicleStatus,
+        departVehicleStatus: this.selectBill[0].departVehicleStatus,
+        vehicleCode: this.selectBill[0].vehicleCode,
+        vehicleType: this.selectBill[0].vehicleType,
+        driverName: this.selectBill[0].driverName,
+        driverPhone: this.selectBill[0].driverPhone,
+        incomePayable: this.selectBill[0].incomePayable,
+        expendPayable: this.selectBill[0].expendPayable,
+        paymentsTotal: this.selectBill[0].paymentsTotal,
+        paymentsDate: this.selectBill[0].paymentsDate,
+        code: this.selectBill[0].code
       };
       this.showModify = true;
     },
@@ -1095,7 +1116,7 @@ export default {
         if (valid) {
           this.modifyLoading = true;
           this.$axios
-            .put(`/users/${this.selectBill[0].id}`, this.BillFormData)
+            .put(`/bill/${this.selectBill[0].id}`, this.BillFormData)
             .then(() => {
               this.modifyLoading = false;
               this.showModify = false;

@@ -7,7 +7,6 @@ import Login from "../views/login/loginPage.vue";
 import Home from "../views/home/homeIndex";
 import User from "../views/user/userIndex";
 
-// import Bill from "../views/bill/billIndex";
 import jsBill from "../views/bill/jsBill.vue";
 import szBill from "../views/bill/szBill.vue";
 import tyBill from "../views/bill/tyBill.vue";

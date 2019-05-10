@@ -10,53 +10,17 @@
       >
         <FormItem prop="name">
           <div class="ivu-form-item select-ground">
-            <span class="select-name">客户编号</span>
+            <span class="select-name">盈利时间</span>
             <div class="select-input">
               <Input
-                v-model="searchYltjData.name"
-                type="text"
-                placeholder="请输入客户编号"
+                v-model="searchYltjData.ProfitTime"
+                type="date"
+                placeholder="请选择日期区间"
+                clearable
               />
             </div>
           </div>
         </FormItem>
-        <FormItem prop="name">
-          <div class="ivu-form-item select-ground">
-            <span class="select-name">结算方式</span>
-            <div class="select-input">
-              <Input
-                v-model="searchYltjData.name"
-                type="text"
-                placeholder="请输入结算方式"
-              />
-            </div>
-          </div>
-        </FormItem>
-        <FormItem prop="name">
-          <div class="ivu-form-item select-ground">
-            <span class="select-name">结算状态</span>
-            <div class="select-input">
-              <Input
-                v-model="searchYltjData.name"
-                type="text"
-                placeholder="请输入结算状态"
-              />
-            </div>
-          </div>
-        </FormItem>
-        <FormItem prop="accountTime">
-          <div class="ivu-form-item select-ground">
-            <span class="select-name">结算日期</span>
-            <div class="select-input">
-              <Input
-                v-model="searchYltjData.accountTime"
-                type="text"
-                placeholder="请输入结算日期"
-              />
-            </div>
-          </div>
-        </FormItem>
-
         <FormItem style="float: right">
           <ButtonGroup>
             <Button type="primary" icon="md-search" ghost @click="handleQuery"
@@ -66,7 +30,6 @@
         </FormItem>
       </Form>
     </div>
-
     <div class="data-table" style="height: 90%">
       <Table
         border
@@ -190,7 +153,7 @@ export default {
     handleQuery() {
       this.$axios
         .post(
-          `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
+          `/finaceManage/profit?page=${this.pageIndex - 1}&size=${this.pageSize}`,
           this.searchYltjData
         )
         .then(res => {
@@ -203,8 +166,8 @@ export default {
           this.totalCount = 0;
         });
     },
-    handlePageChange(userIndex) {
-      this.pageIndex = userIndex;
+    handlePageChange(profitIndex) {
+      this.pageIndex = profitIndex;
       this.handleQuery();
     },
     handlePageSizeChange(size) {

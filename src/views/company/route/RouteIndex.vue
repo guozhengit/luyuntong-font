@@ -47,14 +47,14 @@
             </div>
           </div>
         </FormItem>
-        <FormItem prop="startCity">
+        <FormItem prop="cityDistance">
           <div class="ivu-form-item select-ground">
-            <span class="select-name">出发城市</span>
+            <span class="select-name">城市距离</span>
             <div class="select-input">
               <Input
-                v-model="searchRouteForm.startCity"
+                v-model="searchRouteForm.cityDistance"
                 type="text"
-                placeholder="请输入出发城市"
+                placeholder="请输入城市距离"
                 clearable
               />
             </div>
@@ -64,14 +64,6 @@
           <ButtonGroup>
             <Button type="primary" icon="md-search" ghost @click="handleQuery"
               >查询
-            </Button>
-            <Button
-              type="primary"
-              style="color:#e82626"
-              icon="md-close"
-              ghost
-              @click="handleQuery"
-              >重置
             </Button>
           </ButtonGroup>
         </FormItem>
@@ -92,7 +84,7 @@
           icon="md-create"
           ghost
           class="button"
-          :disabled="selectedEmployee.length !== 1"
+          :disabled="selectedRoute.length !== 1"
           @click="showModifyDrawer"
           >修改
         </Button>
@@ -101,7 +93,7 @@
           icon="ios-trash"
           ghost
           class="button"
-          :disabled="!selectedEmployee.length > 0"
+          :disabled="!selectedRoute.length > 0"
           @click="handleDeleteRoute"
           >删除
         </Button>
@@ -120,7 +112,6 @@
       </Table>
     </div>
     <!--<br>-->
-
     <div class="pagination">
       <Page
         :total="totalCount"
@@ -137,131 +128,228 @@
     <Drawer
       title="添加路线信息 "
       v-model="showCreate"
-      width="400"
+      width="600"
       :mask-closable="false"
     >
       <Form
         ref="createRouteForm"
         :model="routeFormData"
         :rules="formRules"
-        :label-width="100"
+        :label-width="120"
       >
         <Row>
-          <i-Col span="24">
-          <FormItem label="路线编号" prop="code">
-          <Input v-model="routeFormData.code" placeholder="请输入路线编号"/>
-          </FormItem>
+          <i-Col span="12">
+            <FormItem label="城市编号" prop="cityCode">
+              <Input
+                v-model="routeFormData.cityCode"
+                placeholder="请输入城市编号"
+              />
+            </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="12">
+            <FormItem label="路线编号" prop="code">
+              <Input
+                v-model="routeFormData.code"
+                placeholder="请输入路线编号"
+              />
+            </FormItem>
+          </i-Col>
+          <i-Col span="12">
             <FormItem label="路线名称" prop="password">
-              <Input v-model="routeFormData.name" placeholder="请输入路线名称" />
+              <Input
+                v-model="routeFormData.name"
+                placeholder="请输入路线名称"
+              />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="12">
             <FormItem label="开始城市" prop="startCity">
-              <Input v-model="routeFormData.startCity" placeholder="请输入开始城市" />
+              <Input
+                v-model="routeFormData.startCity"
+                placeholder="请输入开始城市"
+              />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="12">
             <FormItem label="目标城市" prop="targetCity">
-              <Input v-model="routeFormData.targetCity" placeholder="请输入目标城市" />
+              <Input
+                v-model="routeFormData.targetCity"
+                placeholder="请输入目标城市"
+              />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="12">
             <FormItem label="开始站点" prop="startStation">
-              <Input v-model="routeFormData.startStation" placeholder="请输入开始站点" />
+              <Input
+                v-model="routeFormData.startStation"
+                placeholder="请输入开始站点"
+              />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="12">
             <FormItem label="目标城市" prop="targetStation">
-              <Input v-model="routeFormData.targetStation" placeholder="请输入目标城市" />
+              <Input
+                v-model="routeFormData.targetStation"
+                placeholder="请输入目标城市"
+              />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="12">
             <FormItem label="城市距离" prop="cityDistance">
-              <Input placeholder="请输入生日" v-model="routeFormData.cityDistance" />
+              <Input
+                placeholder="请输入城市距离"
+                v-model="routeFormData.cityDistance"
+              />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="12">
             <FormItem label="站点距离" prop="stationDistance">
-              <Input v-model="routeFormData.stationDistance" placeholder="请输入站点距离" />
+              <Input
+                v-model="routeFormData.stationDistance"
+                placeholder="请输入站点距离"
+              />
+            </FormItem>
+          </i-Col>
+          <i-Col span="12">
+            <FormItem label="中转城市" prop="transferCity">
+              <Input
+                v-model="routeFormData.transferCity"
+                placeholder="请输入中转城市"
+              />
+            </FormItem>
+          </i-Col>
+          <i-Col span="12">
+            <FormItem label="中转站点" prop="transferStation">
+              <Input
+                v-model="routeFormData.transferStation"
+                placeholder="请输入中转站点"
+              />
             </FormItem>
           </i-Col>
         </Row>
       </Form>
       <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelCreateUser"
+        <Button style="margin-right: 8px" @click="handleCancelCreateRoute"
           >取消
         </Button>
         <Button
           type="primary"
-          @click="handleCreateUser"
+          @click="handleCreateRoute"
           :loading="createLoading"
           >保存
         </Button>
       </div>
     </Drawer>
     <Drawer
-      title="修改用户"
+      title="修改路线"
       v-model="showModify"
-      width="360"
+      width="600"
       :mask-closable="false"
     >
       <Form
-        ref="modifyUserForm"
+        ref="modifyRouteForm"
         :model="routeFormData"
         :rules="formRules"
-        :label-width="80"
+        :label-width="120"
       >
         <Row>
-          <i-Col span="24">
-            <FormItem label="用户名" prop="name">
-              <Input v-model="routeFormData.name" placeholder="请输入用户名" />
+          <i-Col span="12">
+            <FormItem label="城市编号" prop="cityCode">
+              <Input
+                v-model="routeFormData.cityCode"
+                placeholder="请输入城市编号"
+              />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="用户编号" prop="name">
-              <Input v-model="routeFormData.code" placeholder="请输入用户编号" />
+          <i-Col span="12">
+            <FormItem label="路线编号" prop="code">
+              <Input
+                v-model="routeFormData.code"
+                placeholder="请输入路线编号"
+              />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="密码" prop="password" placeholder="请输入密码">
-              <Input type="password" v-model="routeFormData.password" />
+          <i-Col span="12">
+            <FormItem label="路线名称" prop="password">
+              <Input
+                v-model="routeFormData.name"
+                placeholder="请输入路线名称"
+              />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="生日" prop="birthday">
-              <Input placeholder="请输入生日" v-model="routeFormData.birthday" />
+          <i-Col span="12">
+            <FormItem label="开始城市" prop="startCity">
+              <Input
+                v-model="routeFormData.startCity"
+                placeholder="请输入开始城市"
+              />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="电话" prop="phone">
-              <Input v-model="routeFormData.phone" placeholder="请输入电话" />
+          <i-Col span="12">
+            <FormItem label="目标城市" prop="targetCity">
+              <Input
+                v-model="routeFormData.targetCity"
+                placeholder="请输入目标城市"
+              />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="邮箱" prop="email">
-              <Input v-model="routeFormData.email" placeholder="请输入邮箱" />
+          <i-Col span="12">
+            <FormItem label="开始站点" prop="startStation">
+              <Input
+                v-model="routeFormData.startStation"
+                placeholder="请输入开始站点"
+              />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="性别" prop="gender">
-              <RadioGroup v-model="routeFormData.gender">
-                <Radio label="男">男</Radio>
-                <Radio label="女">女</Radio>
-                <Radio label="其他">其他</Radio>
-              </RadioGroup>
+          <i-Col span="12">
+            <FormItem label="目标城市" prop="targetStation">
+              <Input
+                v-model="routeFormData.targetStation"
+                placeholder="请输入目标城市"
+              />
+            </FormItem>
+          </i-Col>
+          <i-Col span="12">
+            <FormItem label="城市距离" prop="cityDistance">
+              <Input
+                placeholder="请输入城市距离"
+                v-model="routeFormData.cityDistance"
+              />
+            </FormItem>
+          </i-Col>
+          <i-Col span="12">
+            <FormItem label="站点距离" prop="stationDistance">
+              <Input
+                v-model="routeFormData.stationDistance"
+                placeholder="请输入站点距离"
+              />
+            </FormItem>
+          </i-Col>
+          <i-Col span="12">
+            <FormItem label="中转城市" prop="transferCity">
+              <Input
+                v-model="routeFormData.transferCity"
+                placeholder="请输入中转城市"
+              />
+            </FormItem>
+          </i-Col>
+          <i-Col span="12">
+            <FormItem label="中转站点" prop="transferStation">
+              <Input
+                v-model="routeFormData.transferStation"
+                placeholder="请输入中转站点"
+              />
             </FormItem>
           </i-Col>
         </Row>
       </Form>
       <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelModifyUser"
+        <Button style="margin-right: 8px" @click="handleCancelModifyRoute"
           >取消
         </Button>
         <Button
           type="primary"
-          @click="handleModifyUser"
+          @click="handleModifyRoute"
           :loading="modifyLoading"
           >保存
         </Button>
@@ -290,6 +378,12 @@ export default {
         {
           title: "路线编号",
           key: "code",
+          align: "center",
+          sortable: true
+        },
+        {
+          title: "城市编号",
+          key: "cityCode",
           align: "center",
           sortable: true
         },
@@ -334,17 +428,12 @@ export default {
           key: "transferStation",
           align: "center",
           sortable: true
-        },
-        {
-          title: "城市编号",
-          key: "cityCode",
-          align: "center",
-          sortable: true
         }
       ],
       searchRouteForm: {
         name: "",
         code: "",
+        cityCode: "",
         startCity: "",
         targetCity: "",
         startStation: "",
@@ -356,13 +445,14 @@ export default {
       },
       employeeList: [],
       totalCount: 0,
-      selectedEmployee: [],
+      selectedRoute: [],
       pageIndex: 1,
       pageSize: 10,
 
       routeFormData: {
         name: "",
         code: "",
+        cityCode: "",
         startCity: "",
         targetCity: "",
         startStation: "",
@@ -374,31 +464,61 @@ export default {
       },
       formRules: {
         name: [
-          { required: true, message: "路线名不能为空", trigger: "blur,change" }
+          { required: true,
+              message: "路线名不能为空",
+              trigger: "blur,change" }
         ],
         code: [
-          { required: true, message: "路线编号不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "路线编号不能为空",
+            trigger: "blur,change"
+          }
         ],
         startCity: [
-          { required: true, message: "开始城市不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "开始城市不能为空",
+            trigger: "blur,change"
+          }
         ],
         targetCity: [
-          { required: true, message: "目标城市不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "目标城市不能为空",
+            trigger: "blur,change"
+          }
         ],
         startStation: [
-          { required: true, message: "开始站点不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "开始站点不能为空",
+            trigger: "blur,change"
+          }
         ],
         cityDistance: [
           { required: true, message: "距离不能为空", trigger: "blur,change" }
         ],
         transferCity: [
-          { required: true, message: "中转城市不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "中转城市不能为空",
+            trigger: "blur,change"
+          }
         ],
         transferStation: [
-          { required: true, message: "中转站点不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "中转站点不能为空",
+            trigger: "blur,change"
+          }
         ],
         cityCode: [
-          { required: true, message: "城市编号不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "城市编号不能为空",
+            trigger: "blur,change"
+          }
         ]
       },
       showCreate: false,
@@ -415,7 +535,7 @@ export default {
     handleQuery() {
       this.$axios
         .post(
-          `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
+          `/route/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
           this.searchRouteForm
         )
         .then(res => {
@@ -437,24 +557,24 @@ export default {
       this.handleQuery();
     },
     handleSelect(selection, row) {
-      this.selectedEmployee = selection;
+      this.selectedRoute = selection;
       console.log(selection, row);
     },
     showCreateDrawer() {
       this.showCreate = true;
     },
-    handleCancelCreateUser() {
+    handleCancelCreateRoute() {
       this.showCreate = false;
       this.$refs["createRouteForm"].resetFields();
     },
 
     handleDeleteRoute() {
-      let ids = this.selectedEmployee.map(item => {
+      let ids = this.selectedRoute.map(item => {
         return item.id;
       });
       console.log(ids);
       this.$axios
-        .post("/users/deleteBatch", ids)
+        .post("/route/deleteBatch", ids)
         .then(() => {
           this.showDelete = false;
           this.deleteLoading = false;
@@ -467,57 +587,61 @@ export default {
           this.$Message.error("删除失败");
         });
     },
-    handleCreateUser() {
+    handleCreateRoute() {
       this.$refs["createRouteForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
           this.$axios
-            .post("/users", this.routeFormData)
+            .post("/route", this.routeFormData)
             .then(() => {
               this.createLoading = false;
               this.showCreate = false;
-              this.$Message.success("保存用户成功");
+              this.$Message.success("保存路线成功");
               this.$refs["createRouteForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {
               this.createLoading = false;
-              this.$Message.success("保存用户失败");
+              this.$Message.error("保存路线失败");
             });
         }
       });
     },
     showModifyDrawer() {
       this.routeFormData = {
-        name: this.selectedEmployee[0].name,
-        password: this.selectedEmployee[0].password,
-        gender: this.selectedEmployee[0].gender,
-        code: this.selectedEmployee[0].code,
-        phone: this.selectedEmployee[0].phone,
-        birthDay: this.selectedEmployee[0].birthDay
+        startCity: this.selectedRoute[0].startCity,
+        targetCity: this.selectedRoute[0].targetCity,
+        startStation: this.selectedRoute[0].startStation,
+        targetStation: this.selectedRoute[0].targetStation,
+        cityDistance: this.selectedRoute[0].cityDistance,
+        stationDistance: this.selectedRoute[0].stationDistance,
+        transferCity: this.selectedRoute[0].transferCity,
+        transferStation: this.selectedRoute[0].transferStation,
+        name: this.selectedRoute[0].name,
+        code: this.selectedRoute[0].code
       };
       this.showModify = true;
     },
-    handleCancelModifyUser() {
+    handleCancelModifyRoute() {
       this.showModify = false;
-      this.$refs["modifyUserForm"].resetFields();
+      this.$refs["modifyRouteForm"].resetFields();
     },
-    handleModifyUser() {
-      this.$refs["modifyUserForm"].validate(valid => {
+    handleModifyRoute() {
+      this.$refs["modifyRouteForm"].validate(valid => {
         if (valid) {
           this.modifyLoading = true;
           this.$axios
-            .put(`/users/${this.selectedEmployee[0].id}`, this.routeFormData)
+            .put(`/route/${this.selectedRoute[0].id}`, this.routeFormData)
             .then(() => {
               this.modifyLoading = false;
               this.showModify = false;
-              this.$Message.success("保存用户成功");
-              this.$refs["modifyUserForm"].resetFields();
+              this.$Message.success("保存路线成功");
+              this.$refs["modifyRouteForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {
               this.createLoading = false;
-              this.$Message.success("保存用户失败");
+              this.$Message.error("保存路线失败");
             });
         }
       });

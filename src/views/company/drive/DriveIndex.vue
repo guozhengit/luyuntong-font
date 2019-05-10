@@ -1,10 +1,11 @@
+<!--suppress ALL -->
 <template>
   <div class="table-page">
     <div class="search">
       <Form
         class="search-form"
-        ref="searchForm"
-        :model="searchForm"
+        ref="searchDriverForm"
+        :model="searchDriverForm"
         :label-width="5"
         inline
       >
@@ -13,9 +14,10 @@
             <span class="select-name">司机编号</span>
             <div class="select-input">
               <Input
-                v-model="searchForm.code"
+                v-model="searchDriverForm.code"
                 type="text"
                 placeholder="请输入司机编号"
+                clearable
               />
             </div>
           </div>
@@ -26,7 +28,7 @@
             <span class="select-name">驾驶证</span>
             <div class="select-input">
               <Input
-                v-model="searchForm.driveLicence"
+                v-model="searchDriverForm.driveLicence"
                 type="text"
                 placeholder="请输入驾驶证"
                 clearable
@@ -39,9 +41,9 @@
             <span class="select-name">身份证</span>
             <div class="select-input">
               <Input
-                v-model="searchForm.idCard"
+                v-model="searchDriverForm.idCard"
                 type="text"
-                placeholder="请输入驾驶证"
+                placeholder="请输入身份证"
                 clearable
               />
             </div>
@@ -52,9 +54,11 @@
         <span class="select-name">性别</span>
         <div class="select-input">
         <Select
-        v-model="searchForm.gender"
-        placeholder="请选择性别">
-        <Option v-for="item in types" :value="item.value" :key="item.value">{{ item.label }}
+        v-model="searchDriverForm.gender"
+        placeholder="请选择性别"
+        clearable
+        >
+        <Option v-for="item in genderList" :value="item.value" :key="item.value">{{ item.label }}
         </Option>
         </Select>
         </div>
@@ -64,14 +68,6 @@
           <ButtonGroup>
             <Button type="primary" icon="md-search" ghost @click="handleQuery"
               >查询
-            </Button>
-            <Button
-              type="primary"
-              style="color:#e82626"
-              icon="md-close"
-              ghost
-              @click="handleQuery"
-              >重置
             </Button>
           </ButtonGroup>
         </FormItem>
@@ -102,7 +98,7 @@
           ghost
           class="button"
           :disabled="!selectDriver.length > 0"
-          @click="handleDeleteUser"
+          @click="handleDeleteDriver"
           >删除
         </Button>
         <Button type="primary" icon="ios-refresh" ghost @click="handleQuery"
@@ -113,7 +109,7 @@
     <div class="data-table">
       <Table
         border
-        :columns="userColumns"
+        :columns="driverColumns"
         :data="darverList"
         @on-selection-change="handleSelect"
       >
@@ -134,10 +130,11 @@
       >
       </Page>
     </div>
+
     <Drawer
       title="添加司机信息"
       v-model="showCreate"
-      width="360"
+      width="40%"
       :mask-closable="false"
     >
       <Form
@@ -147,59 +144,83 @@
         :label-width="80"
       >
         <Row>
-          <i-Col span="24">
+          <i-Col span="12">
             <FormItem label="司机姓名" prop="name">
-              <Input v-model="DriverFormData.name" placeholder="请输入用户名" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="司机编号" prop="name">
-              <Input
-                v-model="DriverFormData.code"
-                placeholder="请输入用户编号"
+              <Input v-model="DriverFormData.name"
+                     placeholder="请输入司机名"
+                     clearable
               />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="身份证" prop="name">
+          <i-Col span="12">
+            <FormItem label="司机编号" prop="code">
+              <Input
+                v-model="DriverFormData.code"
+                placeholder="请输入司机编号"
+                clearable
+              />
+            </FormItem>
+          </i-Col>
+          <i-Col span="12">
+            <FormItem label="身份证" prop="idCard">
               <Input
                 v-model="DriverFormData.idCard"
                 placeholder="请输入身份证"
+                clearable
               />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="司机编号" prop="name">
+          <i-Col span="12">
+            <FormItem label="籍贯" prop="nativePlace">
               <Input
-                v-model="DriverFormData.code"
-                placeholder="请输入用户编号"
+                v-model="DriverFormData.nativePlace"
+                placeholder="请输入籍贯信息"
+                clearable
               />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="生日" prop="birthday">
+          <i-Col span="12">
+            <FormItem label="站点编号" prop="stationCode">
               <Input
-                placeholder="请输入生日"
-                v-model="DriverFormData.birthday"
+                placeholder="请选择站点编号"
+                v-model="DriverFormData.stationCode"
+                clearable
               />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="12">
+            <FormItem label="驾驶证" prop="driveLicence">
+              <Input v-model="DriverFormData.driveLicence" placeholder="请输入驾驶证"
+                     clearable/>
+            </FormItem>
+          </i-Col>
+          <i-Col span="12">
+            <FormItem label="运营证" prop="runLicence">
+              <Input v-model="DriverFormData.runLicence" placeholder="请输入运营证" clearable/>
+            </FormItem>
+          </i-Col>
+          <i-Col span="12">
+            <FormItem label="车牌号" prop="vehicleCode">
+              <Input v-model="DriverFormData.vehicleCode" placeholder="请输入车牌号" clearable/>
+            </FormItem>
+          </i-Col>
+          <i-Col span="12">
             <FormItem label="电话" prop="phone">
-              <Input v-model="DriverFormData.phone" placeholder="请输入电话" />
+              <Input v-model="DriverFormData.phone" placeholder="请输入电话" clearable/>
             </FormItem>
           </i-Col>
-          <i-Col span="24">
-            <FormItem label="地址" prop="email">
+          <i-Col span="12">
+            <FormItem label="地址" prop="address">
               <Input
                 v-model="DriverFormData.address"
-                placeholder="请输入邮箱"
+                placeholder="请输入详细地址"
+                clearable
               />
             </FormItem>
           </i-Col>
-          <i-Col span="24">
+          <i-Col span="12">
             <FormItem label="性别" prop="gender">
-              <RadioGroup v-model="DriverFormData.gender">
+              <RadioGroup v-model="DriverFormData.gender" clearable>
                 <Radio label="男">男</Radio>
                 <Radio label="女">女</Radio>
               </RadioGroup>
@@ -208,101 +229,125 @@
         </Row>
       </Form>
       <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelCreateUser"
+        <Button style="margin-right: 8px" @click="handleCancelCreateDriver"
           >取消
         </Button>
         <Button
           type="primary"
-          @click="handleCreateUser"
+          @click="handleCreateDriver"
           :loading="createLoading"
           >保存
         </Button>
       </div>
     </Drawer>
     <Drawer
-      title="修改司机信息"
-      v-model="showModify"
-      width="360"
-      :mask-closable="false"
+            title="修改司机信息"
+            v-model="showModify"
+            width="360"
+            :mask-closable="false"
     >
       <Form
-        ref="modifyDriverForm"
-        :model="DriverFormData"
-        :rules="formRules"
-        :label-width="80"
+              ref="modifyDriverForm"
+              :model="emplyeeFormData"
+              :rules="formRules"
+              :label-width="80"
       >
-        <Row>
-          <i-Col span="24">
-            <FormItem label="司机姓名" prop="name">
-              <Input v-model="DriverFormData.name" placeholder="请输入用户名" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="司机编号" prop="name">
-              <Input
-                v-model="DriverFormData.code"
-                placeholder="请输入用户编号"
-              />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="身份证" prop="name">
-              <Input
-                v-model="DriverFormData.idCard"
-                placeholder="请输入身份证"
-              />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="司机编号" prop="name">
-              <Input
-                v-model="DriverFormData.code"
-                placeholder="请输入用户编号"
-              />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="生日" prop="birthday">
-              <Input
-                placeholder="请输入生日"
-                v-model="DriverFormData.birthday"
-              />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="电话" prop="phone">
-              <Input v-model="DriverFormData.phone" placeholder="请输入电话" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="地址" prop="email">
-              <Input
-                v-model="DriverFormData.address"
-                placeholder="请输入邮箱"
-              />
-            </FormItem>
-          </i-Col>
-          <i-Col span="24">
-            <FormItem label="性别" prop="gender">
-              <RadioGroup v-model="DriverFormData.gender">
-                <Radio label="男">男</Radio>
-                <Radio label="女">女</Radio>
-              </RadioGroup>
-            </FormItem>
-          </i-Col>
-        </Row>
-      </Form>
-      <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelModifyUser"
+    <Row>
+      <i-Col span="12">
+        <FormItem label="司机姓名" prop="name">
+          <Input v-model="DriverFormData.name"
+                 placeholder="请输入司机名"
+                 clearable
+          />
+        </FormItem>
+      </i-Col>
+      <i-Col span="12">
+        <FormItem label="司机编号" prop="code">
+          <Input
+                  v-model="DriverFormData.code"
+                  placeholder="请输入司机编号"
+                  clearable
+          />
+        </FormItem>
+      </i-Col>
+      <i-Col span="12">
+        <FormItem label="身份证" prop="idCard">
+          <Input
+                  v-model="DriverFormData.idCard"
+                  placeholder="请输入身份证"
+                  clearable
+          />
+        </FormItem>
+      </i-Col>
+      <i-Col span="12">
+        <FormItem label="籍贯" prop="nativePlace">
+          <Input
+                  v-model="DriverFormData.nativePlace"
+                  placeholder="请输入籍贯信息"
+                  clearable
+          />
+        </FormItem>
+      </i-Col>
+      <i-Col span="12">
+        <FormItem label="站点编号" prop="stationCode">
+          <Input
+                  placeholder="请选择站点编号"
+                  v-model="DriverFormData.stationCode"
+                  clearable
+          />
+        </FormItem>
+      </i-Col>
+      <i-Col span="12">
+        <FormItem label="驾驶证" prop="driveLicence">
+          <Input v-model="DriverFormData.driveLicence" placeholder="请输入驾驶证"
+                 clearable/>
+        </FormItem>
+      </i-Col>
+      <i-Col span="12">
+        <FormItem label="运营证" prop="runLicence">
+          <Input v-model="DriverFormData.runLicence" placeholder="请输入运营证" clearable/>
+        </FormItem>
+      </i-Col>
+      <i-Col span="12">
+        <FormItem label="车牌号" prop="vehicleCode">
+          <Input v-model="DriverFormData.vehicleCode" placeholder="请输入车牌号" clearable/>
+        </FormItem>
+      </i-Col>
+      <i-Col span="12">
+        <FormItem label="电话" prop="phone">
+          <Input v-model="DriverFormData.phone" placeholder="请输入电话" clearable/>
+        </FormItem>
+      </i-Col>
+      <i-Col span="12">
+        <FormItem label="地址" prop="address">
+          <Input
+                  v-model="DriverFormData.address"
+                  placeholder="请输入详细地址"
+                  clearable
+          />
+        </FormItem>
+      </i-Col>
+      <i-Col span="12">
+        <FormItem label="性别" prop="gender">
+          <RadioGroup v-model="DriverFormData.gender" clearable>
+            <Radio label="男">男</Radio>
+            <Radio label="女">女</Radio>
+          </RadioGroup>
+        </FormItem>
+      </i-Col>
+    </Row>
+        <div class="create-drawer-footer">
+          <Button style="margin-right: 8px" @click="handleCancelModifyDriver"
           >取消
-        </Button>
-        <Button
-          type="primary"
-          @click="handleModifyUser"
-          :loading="modifyLoading"
+          </Button>
+          <Button
+                  type="primary"
+                  @click="handleModifyDriver"
+                  :loading="modifyLoading"
           >保存
-        </Button>
-      </div>
+          </Button>
+        </div>
+      </Form>
     </Drawer>
   </div>
 </template>
@@ -310,164 +355,159 @@
 <script>
 export default {
   name: "ArticleList",
-  data() {
-    return {
-      genderList: [
-        {
-          value: "1",
-          label: "男"
-        },
-        {
-          value: "2",
-          label: "女"
-        }
-      ],
-      userColumns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          title: "序号",
-          type: "index",
-          width: 80,
-          align: "center"
-        },
-        {
-          title: "司机姓名",
-          type: "name",
-          align: "center"
-        },
-        {
-          title: "身份证",
-          key: "idCard",
-          align: "center",
-          sortable: true
-        },
-        {
-          title: "籍贯",
-          key: "nativePlace",
-          align: "center",
-          sortable: true
-        },
-        {
-          title: "站点编号",
-          key: "stationCode",
-          align: "center",
-          sortable: true
-        },
-        {
-          title: "地址",
-          key: "address",
-          align: "center",
-          sortable: true
-        },
-        {
-          title: "驾驶证",
-          key: "driveLicence",
-          align: "center",
-          sortable: true
-        },
-        {
-          title: "车辆运营证",
-          key: "runLicence",
-          align: "center"
-        },
-        {
-          title: "性别",
-          key: "gender",
-          align: "center",
-          sortable: true
-        },
-        {
-          title: "电话",
-          key: "phone",
-          align: "center",
-          sortable: true
-        },
-        {
-          title: "车辆编号",
-          key: "vehicleCode",
-          align: "center",
-          sortable: true
-        }
-      ],
-      searchForm: {
-        name: "",
-        code: "",
-        gender: ""
-      },
-      darverList: [],
-      totalCount: 0,
-      selectDriver: [],
-      pageIndex: 1,
-      pageSize: 10,
+    data: function () {
+        return {
+            genderList: [
+                {
+                    value: "男",
+                    label: "男"
+                },
+                {
+                    value: "女",
+                    label: "女"
+                }
+            ],
+            driverColumns: [
+                {
+                    type: "selection",
+                    width: 60,
+                    align: "center"
+                },
+                {
+                    title: "序号",
+                    type: "index",
+                    width: 80,
+                    align: "center"
+                },
+                {
+                    title: "司机姓名",
+                    key: "name",
+                    align: "center"
+                },
+                {
+                    title: "司机编号",
+                    key: "code" ,
+                    align: "center"
+                },
+                {
+                    title: "身份证",
+                    key: "idCard",
+                    align: "center",
+                    sortable: true
+                },
+                {
+                    title: "籍贯",
+                    key: "nativePlace",
+                    align: "center",
+                    sortable: true
+                },
+                {
+                    title: "站点编号",
+                    key: "stationCode",
+                    align: "center",
+                    sortable: true
+                },
+                {
+                    title: "地址",
+                    key: "address",
+                    align: "center",
+                    sortable: true
+                },
+                {
+                    title: "驾驶证",
+                    key: "driveLicence",
+                    align: "center",
+                    sortable: true
+                },
+                {
+                    title: "车辆运营证",
+                    key: "runLicence",
+                    align: "center"
+                },
+                {
+                    title: "性别",
+                    key: "gender",
+                    align: "center",
+                    sortable: true
+                },
+                {
+                    title: "电话",
+                    key: "phone",
+                    align: "center",
+                    sortable: true
+                },
+            ],
+            searchDriverForm: {
+                code: "",
+                driveLicence: "",
+                idCard: "",
+                gender: ""
+            },
+            darverList: [],
+            totalCount: 0,
+            selectDriver: [],
+            pageIndex: 1,
+            pageSize: 10,
 
-      DriverFormData: {
-        code: "",
-        idCard: "412823XXXXXXXX1218",
-        nativePlace: "",
-        stationCode: "",
-        phone: "",
-        gender: "",
-        birthday: "",
-        address: "",
-        driveLicence: "",
-        runLicence: "",
-        vehicleCode: ""
-      },
-      formRules: {
-        code: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ],
-        idCard: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ],
-        nativePlace: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ],
-        stationCode: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ],
-        phone: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ],
-        gender: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ],
-        birthday: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ],
-        address: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ],
-        driveLicence: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ],
-        runLicence: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ],
-        vehicleICode: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ]
-      },
-      showCreate: false,
-      createLoading: false,
+            DriverFormData: {
+                code: "",
+                name: "",
+                idCard: "412823XXXXXXXX1218",
+                nativePlace: "",
+                stationCode: "",
+                phone: "",
+                gender: "",
+                birthday: "",
+                address: "",
+                driveLicence: "",
+                runLicence: "",
+                vehicleCode: ""
+            },
+            formRules: {
+                code: [
+                    {required: true, message: "司机编号不能为空", trigger: "blur,change"}
+                ],
+                idCard: [
+                    {required: true, message: "身份证不能为空", trigger: "blur,change"}
+                ],
+                nativePlace: [
+                    {required: true, message: "籍贯不能为空", trigger: "blur,change"}
+                ],
+                stationCode: [
+                    {required: true, message: "站点编号不能为空", trigger: "blur,change"}
+                ],
+                phone: [
+                    {required: true, message: "电话不能为空", trigger: "blur,change"}
+                ],
+                gender: [
+                    {required: true, message: "性别不能为空", trigger: "blur,change"}
+                ],
+                birthday: [
+                    {required: true, message: "生日不能为空", trigger: "blur,change"}
+                ],
+                address: [
+                    {required: true, message: "地址不能为空", trigger: "blur,change"}
+                ],
+                vehicleCode: [
+                    {required: true, message: "车牌号不能为空", trigger: "blur,change"}
+                ],
+            },
+            showCreate: false,
+            createLoading: false,
 
-      showModify: false,
-      modifyLoading: false,
+            showModify: false,
+            modifyLoading: false,
 
-      showDelete: false,
-      deleteLoading: false
-    };
-  },
+            showDelete: false,
+            deleteLoading: false
+        };
+    },
   methods: {
     handleQuery() {
       this.$axios
         .post(
-          `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
-          this.searchForm
+          `/driver/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
+          this.searchDriverForm
         )
         .then(res => {
           let result = res.data;
@@ -479,8 +519,8 @@ export default {
           this.totalCount = 0;
         });
     },
-    handlePageChange(userIndex) {
-      this.pageIndex = userIndex;
+    handlePageChange(driverIndex) {
+      this.pageIndex = driverIndex;
       this.handleQuery();
     },
     handlePageSizeChange(size) {
@@ -494,18 +534,18 @@ export default {
     showCreateDrawer() {
       this.showCreate = true;
     },
-    handleCancelCreateUser() {
+    handleCancelCreateDriver() {
       this.showCreate = false;
       this.$refs["createDriverForm"].resetFields();
     },
 
-    handleDeleteUser() {
+    handleDeleteDriver() {
       let ids = this.selectDriver.map(item => {
         return item.id;
       });
       console.log(ids);
       this.$axios
-        .post("/users/deleteBatch", ids)
+        .post("/driver/deleteBatch", ids)
         .then(() => {
           this.showDelete = false;
           this.deleteLoading = false;
@@ -518,57 +558,63 @@ export default {
           this.$Message.error("删除失败");
         });
     },
-    handleCreateUser() {
+    handleCreateDriver() {
       this.$refs["createDriverForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
           this.$axios
-            .post("/users", this.DriverFormData)
+            .post("/driver", this.DriverFormData)
             .then(() => {
               this.createLoading = false;
               this.showCreate = false;
-              this.$Message.success("保存用户成功");
+              this.$Message.success("保存司机成功");
               this.$refs["createDriverForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {
               this.createLoading = false;
-              this.$Message.success("保存用户失败");
+              this.$Message.error("保存司机失败");
             });
         }
       });
     },
     showModifyDrawer() {
       this.DriverFormData = {
-        name: this.selectDriver[0].name,
-        password: this.selectDriver[0].password,
-        gender: this.selectDriver[0].gender,
-        code: this.selectDriver[0].code,
-        phone: this.selectDriver[0].phone,
-        birthDay: this.selectDriver[0].birthDay
+          code:this.selectDriver[0].code,
+          name: this.selectDriver[0].name,
+          idCard: this.selectDriver[0].idCard,
+          nativePlace: this.selectDriver[0].nativePlace,
+          stationCode: this.selectDriver[0].stationCode,
+          phone: this.selectDriver[0].phone,
+          driveLicence: this.selectDriver[0].driveLicence,
+          runLicence: this.selectDriver[0].runLicence,
+          vehicleCode: this.selectDriver[0].vehicleCode,
+          password: this.selectDriver[0].password,
+          gender: this.selectDriver[0].gender,
+          birthDay: this.selectDriver[0].birthDay
       };
       this.showModify = true;
     },
-    handleCancelModifyUser() {
+    handleCancelModifyDriver() {
       this.showModify = false;
       this.$refs["modifyDriverForm"].resetFields();
     },
-    handleModifyUser() {
+    handleModifyDriver() {
       this.$refs["modifyDriverForm"].validate(valid => {
         if (valid) {
           this.modifyLoading = true;
           this.$axios
-            .put(`/users/${this.selectDriver[0].id}`, this.DriverFormData)
+            .put(`/driver/${this.selectDriver[0].id}`, this.DriverFormData)
             .then(() => {
               this.modifyLoading = false;
               this.showModify = false;
-              this.$Message.success("保存用户成功");
+              this.$Message.success("保存司机成功");
               this.$refs["modifyDriverForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {
               this.createLoading = false;
-              this.$Message.success("保存用户失败");
+              this.$Message.success("保存司机失败");
             });
         }
       });

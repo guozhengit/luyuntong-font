@@ -8,38 +8,26 @@
         :label-width="5"
         inline
       >
-        <FormItem prop="name">
+        <FormItem prop="customerCode">
           <div class="ivu-form-item select-ground">
             <span class="select-name">客户编号</span>
             <div class="select-input">
               <Input
-                v-model="searchKhjsData.name"
+                v-model="searchKhjsData.customerCode"
                 type="text"
                 placeholder="请输入客户编号"
               />
             </div>
           </div>
         </FormItem>
-        <FormItem prop="name">
+        <FormItem prop="accountType">
           <div class="ivu-form-item select-ground">
             <span class="select-name">结算方式</span>
             <div class="select-input">
               <Input
-                v-model="searchKhjsData.name"
+                v-model="searchKhjsData.accountType"
                 type="text"
                 placeholder="请输入结算方式"
-              />
-            </div>
-          </div>
-        </FormItem>
-        <FormItem prop="name">
-          <div class="ivu-form-item select-ground">
-            <span class="select-name">结算状态</span>
-            <div class="select-input">
-              <Input
-                v-model="searchKhjsData.name"
-                type="text"
-                placeholder="请输入结算状态"
               />
             </div>
           </div>
@@ -50,7 +38,7 @@
             <div class="select-input">
               <Input
                 v-model="searchKhjsData.accountTime"
-                type="text"
+                type="date"
                 placeholder="请输入结算日期"
               />
             </div>
@@ -95,7 +83,7 @@
 
 <script>
 export default {
-  name: "ArticleList",
+  // name: "ArticleList",
   data() {
     return {
       khjsColumns: [
@@ -148,18 +136,10 @@ export default {
         }
       ],
       searchKhjsData: {
-        /*客户名称*/
-        customerName: "",
         /*客户编号*/
         customerCode: "",
-        /*结算状态*/
-        accountStatus: "",
         /*结算方式*/
         accountType: "",
-        /*结算金额*/
-        accountAmount: "",
-        /*未结算金额*/
-        unAccountAmount: "",
         /*结算时间*/
         accountTime: ""
       },
@@ -184,29 +164,26 @@ export default {
         /*结算时间*/
         accountTime: ""
       },
-      showCreate: false,
-      createLoading: false
     };
   },
   methods: {
     handleQuery() {
       this.$axios
-        .post(
-          `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
+        .post(`/finaceManage/customer?page=${this.pageIndex - 1}&size=${this.pageSize}`,
           this.searchKhjsData
         )
         .then(res => {
-          let result = res.data;
-          this.khjsList = result.data.content;
-          this.totalCount = result.data.totalElements;
+            let result = res.data;
+            this.khjsList = result.data.content;
+            this.totalCount = result.data.totalElements;
         })
         .catch(() => {
           this.khjsList = [];
           this.totalCount = 0;
         });
     },
-    handlePageChange(userIndex) {
-      this.pageIndex = userIndex;
+    handlePageChange(customerIndex) {
+      this.pageIndex = customerIndex;
       this.handleQuery();
     },
     handlePageSizeChange(size) {

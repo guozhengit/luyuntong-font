@@ -70,7 +70,7 @@
                   <Button
                     @click="handleSubmit"
                     style="border-color:#f0f3f7"
-                    type="primary"
+                    type="error"
                     long
                     :loading="loading"
                     >忘记密码</Button

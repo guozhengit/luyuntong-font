@@ -22,8 +22,33 @@
         </FormItem>
         <FormItem style="float: right">
           <ButtonGroup>
-            <Button type="primary" icon="md-search" ghost @click="handleQuery"
+            <Button
+              style="margin: 5px;"
+              type="primary"
+              icon="md-search"
+              ghost
+              @click="handleQuery"
               >查询
+            </Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <Button
+              style="margin: 5px;"
+              type="error"
+              icon="md-arrow-down"
+              ghost
+              @click="exportReport1()"
+              >导出
+            </Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <Button
+              style="margin: 5px;"
+              type="success"
+              icon="md-film"
+              ghost
+              @click="handleQuery"
+              >智能BI展示
             </Button>
           </ButtonGroup>
         </FormItem>
@@ -35,6 +60,7 @@
         border
         :columns="OPEXColumns"
         :data="OPEXList"
+        ref="table"
         @on-selection-change="handleSelect"
       >
       </Table>
@@ -54,18 +80,12 @@ export default {
           width: 80,
           align: "center"
         },
-       /* {
-          title: "季度",
-          key: "quarter",
-          align: "center",
-          sortable: true
-        },
         {
           title: "月份",
           key: "month",
           align: "center",
           sortable: true
-        },*/
+        },
         {
           title: "租金",
           key: "rent",
@@ -85,7 +105,7 @@ export default {
         },
         {
           title: "电费",
-          key: "salary",
+          key: "electricFee",
           align: "center",
           sortable: true
         },
@@ -118,8 +138,8 @@ export default {
       pageIndex: 1,
       pageSize: 10,
       formSalaryData: {
-        /*季度*/
-        quarter: "",
+        // /*季度*/
+        // quarter: "",
         /*月份*/
         month: "",
         /*租金*/
@@ -132,16 +152,21 @@ export default {
         telephoneFee: "",
         /*支出合计*/
         totalFee: ""
-      },
-      showCreate: false,
-      createLoading: false
+      }
     };
   },
   methods: {
+    exportReport1() {
+      this.$refs.table.exportCsv({
+        filename: "运行支出",
+      });
+    },
     handleQuery() {
       this.$axios
         .post(
-          `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
+          `/finaceManage/operation?page=${this.pageIndex - 1}&size=${
+            this.pageSize
+          }`,
           this.searchOPEXData
         )
         .then(res => {
@@ -154,8 +179,8 @@ export default {
           this.totalCount = 0;
         });
     },
-    handlePageChange(userIndex) {
-      this.pageIndex = userIndex;
+    handlePageChange(operationIndex) {
+      this.pageIndex = operationIndex;
       this.handleQuery();
     },
     handlePageSizeChange(size) {

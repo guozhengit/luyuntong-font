@@ -11,17 +11,17 @@
 </template>
 
 <script>
-import Example from "./example.vue";
-export default {
-  name: "home",
-  components: {
-    Example
-  },
-  data() {
-    return {};
-  },
-  mounted() {}
-};
+    import Example from "./example.vue";
+    export default {
+        name: "home",
+        components: {
+            Example
+        },
+        data() {
+            return {};
+        },
+        mounted() {}
+    };
 </script>
 
 <style lang="less">

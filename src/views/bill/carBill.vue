@@ -25,14 +25,17 @@
           <div class="ivu-form-item select-ground">
             <span class="select-name">运输单据类型</span>
             <div class="select-input">
-                <Select v-model="BillFormData.vehicelBillType" placeholder="请选择运输单据类型">
-                    <Option v-for="item in billTypes" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-              <!--<Input-->
-                <!--v-model="billSearchForm.vehicelBillType"-->
-                <!--type="text"-->
-                <!--placeholder="请选择运输单据类型"-->
-              <!--/>-->
+              <Select
+                v-model="BillFormData.vehicelBillType"
+                placeholder="请选择运输单据类型"
+              >
+                <Option
+                  v-for="item in billTypes"
+                  :value="item.value"
+                  :key="item.value"
+                  >{{ item.label }}</Option
+                >
+              </Select>
             </div>
           </div>
         </FormItem>
@@ -43,7 +46,7 @@
             <div class="select-input">
               <Input
                 v-model="billSearchForm.vehicleBillDate"
-                type="text"
+                type="date"
                 placeholder="请输入业务操作日期"
               />
             </div>
@@ -58,7 +61,7 @@
                 placeholder="请选择运输状态"
               >
                 <Option
-                  v-for="item in types"
+                  v-for="item in arriveVehicleStatusList"
                   :value="item.value"
                   :key="item.value"
                   >{{ item.label }}
@@ -113,7 +116,7 @@
       <Table
         border
         :columns="billColumns"
-        :data="tyBillList"
+        :data="billList"
         @on-selection-change="handleSelect"
       >
       </Table>
@@ -151,16 +154,16 @@
           </i-Col>
           <i-Col span="8">
             <FormItem label="运输单据类型" prop="vehicelBillType">
-                <Select v-model="BillFormData.vehicelBillType">
-                    <Option v-for="item in billTypes" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
+              <Select v-model="BillFormData.vehicelBillType">
+                <Option
+                  v-for="item in billTypes"
+                  :value="item.value"
+                  :key="item.value"
+                  >{{ item.label }}</Option
+                >
+              </Select>
             </FormItem>
           </i-Col>
-          <!--<i-Col span="8">-->
-            <!--<FormItem label="单据类型" prop="type">-->
-              <!--<Input v-model="BillFormData.type" placeholder="请输入单据类型" />-->
-            <!--</FormItem>-->
-          <!--</i-Col>-->
           <i-Col span="8">
             <FormItem label="开具日期" prop="vehicleBillDate">
               <Input
@@ -313,10 +316,23 @@
       <Form ref="" :model="BillFormData" :rules="formRules" :label-width="100">
         <Row>
           <i-Col span="8">
-            <FormItem label="车辆运输号" prop="vehicleBillCode">
+            <FormItem label="托运单号" prop="code">
+              <Input v-model="BillFormData.code" placeholder="请选择托运单号" />
+            </FormItem>
+          </i-Col>
+          <i-Col span="8">
+            <FormItem label="业务员" prop="salesMan">
+              <Input
+                v-model="BillFormData.salesMan"
+                placeholder="请选择业务员"
+              />
+            </FormItem>
+          </i-Col>
+          <i-Col span="8">
+            <FormItem label="车辆单据号" prop="vehicleBillCode">
               <Input
                 v-model="BillFormData.vehicleBillCode"
-                placeholder="请输入运输单据号"
+                placeholder="请输入车辆单据号"
               />
             </FormItem>
           </i-Col>
@@ -335,33 +351,28 @@
           </i-Col>
           <i-Col span="8">
             <FormItem label="开具日期" prop="vehicleBillDate">
-              <Input
+              <DatePicker
                 v-model="BillFormData.vehicleBillDate"
+                type="date"
                 placeholder="请输入开具日期"
-              />
+                style="width: 200px"
+              >
+              </DatePicker>
             </FormItem>
           </i-Col>
           <i-Col span="8">
-            <FormItem label="业务员" prop="salesMan">
-              <Input
-                v-model="BillFormData.salesMan"
-                placeholder="请选择业务员"
-              />
-            </FormItem>
-          </i-Col>
-          <i-Col span="8">
-            <FormItem label="业务站点" prop="salesStation">
+            <FormItem label="服务站点" prop="salesStation">
               <Input
                 v-model="BillFormData.salesStation"
-                placeholder="请输入业务站点"
+                placeholder="请输入服务站点"
               />
             </FormItem>
           </i-Col>
           <i-Col span="8">
-            <FormItem label="选择区域" prop="startRegion">
+            <FormItem label="所属区域" prop="startRegion">
               <Input
                 v-model="BillFormData.startRegion"
-                placeholder="请选择区域"
+                placeholder="请选择所属区域"
               />
             </FormItem>
           </i-Col>
@@ -484,20 +495,30 @@ export default {
   name: "ArticleList",
   data: function() {
     return {
-        billTypes:[
-            {
-                value: '1',
-                label: "发车单据"
-            },
-            {
-                value: '2',
-                label: '到车单据'
-            },
-            {
-                value: '3',
-                label: '回车单据'
-            },
-        ],
+      billTypes: [
+        {
+          value: "发车单据",
+          label: "发车单据"
+        },
+        {
+          value: "到车单据",
+          label: "到车单据"
+        },
+        {
+          value: "回车单据",
+          label: "回车单据"
+        }
+      ],
+      arriveVehicleStatusList: [
+        {
+          value: "已到站",
+          label: "已到站"
+        },
+        {
+          value: "运输中",
+          label: "运输中"
+        }
+      ],
       billColumns: [
         {
           type: "selection",
@@ -524,11 +545,16 @@ export default {
           align: "center"
         },
         {
+          title: "业务员",
+          key: "gatherType",
+          width: 200,
+          align: "center"
+        },
+        {
           title: "车辆单据类型",
           key: "vehicleBillType",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         },
         {
           title: "开具日期",
@@ -538,48 +564,36 @@ export default {
           sortable: true
         },
         {
-          title: "业务员",
-          key: "gatherType",
-          width: 200,
-          align: "center",
-          sortable: true
-        },
-        {
           title: "选择区域",
           key: "conSignMan",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         },
 
         {
           title: "始发站点",
           key: "startStation",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         },
         {
           title: "目标站点",
           key: "targetStation",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         },
 
         {
           title: "付款类型",
           key: "paymentType",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         },
         {
           title: "其他费用",
           key: "otherCost",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         },
         {
           title: "运输费用",
@@ -592,50 +606,43 @@ export default {
           title: "已付金额",
           key: "realityPayable",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         },
         {
           title: "未付金额",
           key: "unReceivedPayable",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         },
         {
           title: "折让金额",
           key: "allowancePayable",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         },
         {
           title: "车牌号",
           key: "vehicleCode",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         },
         {
           title: "车辆类型",
           key: "vehicleType",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         },
         {
           title: "司机姓名",
           key: "driverName",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         },
         {
           title: "司机电话",
           key: "driverPhone",
           width: 200,
-          align: "center",
-          sortable: true
+          align: "center"
         }
       ],
       billSearchForm: {
@@ -731,7 +738,7 @@ export default {
         /*收支日期*/
         paymentsDate: ""
       },
-      tyBillList: [],
+      billList: [],
       totalCount: 0,
       selectBill: [],
       pageIndex: 1,
@@ -740,13 +747,8 @@ export default {
       BillFormData: {
         /*单据编号*/
         code: "",
-        /*单据类型*/
-        type:
-          "1:托运单；2:发车单；3：到车单；4回车单；5收支费用单；6客户结算单；7司机结算单",
         /*车辆单据编号*/
         vehicleBillCode: "",
-        /*车辆单据类型*/
-        vehicelBillType: "",
         /*车辆单据开具日期*/
         vehicleBillDate: "",
         /*结算单据编号*/
@@ -829,11 +831,7 @@ export default {
         /*收支合计*/
         paymentsTotal: "",
         /*收支日期*/
-        paymentsDate: "",
-        /**/
-        customer: {},
-        detailGoods: [],
-        detailPayments: []
+        paymentsDate: ""
       },
       formRules: {
         /*单据编号*/
@@ -1138,21 +1136,21 @@ export default {
     handleQuery() {
       this.$axios
         .post(
-          `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
+          `/bill/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
           this.billSearchForm
         )
         .then(res => {
           let result = res.data;
-          this.tyBillList = result.data.content;
+          this.billList = result.data.content;
           this.totalCount = result.data.totalElements;
         })
         .catch(() => {
-          this.tyBillList = [];
+          this.billList = [];
           this.totalCount = 0;
         });
     },
-    handlePageChange(userIndex) {
-      this.pageIndex = userIndex;
+    handlePageChange(billIndex) {
+      this.pageIndex = billIndex;
       this.handleQuery();
     },
     handlePageSizeChange(size) {
@@ -1177,7 +1175,7 @@ export default {
       });
       console.log(ids);
       this.$axios
-        .post("/users/deleteBatch", ids)
+        .post("/bill/deleteBatch", ids)
         .then(() => {
           this.showDelete = false;
           this.deleteLoading = false;
@@ -1195,7 +1193,7 @@ export default {
         if (valid) {
           this.createLoading = true;
           this.$axios
-            .post("/users", this.BillFormData)
+            .post("/bill", this.BillFormData)
             .then(() => {
               this.createLoading = false;
               this.showCreate = false;
@@ -1213,12 +1211,51 @@ export default {
     /*此处为更新操作 获取到查询的实体数据*/
     showModifyDrawer() {
       this.BillFormData = {
-        name: this.selectBill[0].name,
-        password: this.selectBill[0].password,
-        gender: this.selectBill[0].gender,
-        code: this.selectBill[0].code,
-        phone: this.selectBill[0].phone,
-        birthDay: this.selectBill[0].birthDay
+        type: this.selectBill[0].type,
+        vehicleBillCode: this.selectBill[0].vehicleBillCode,
+        vehicelBillType: this.selectBill[0].vehicelBillType,
+        vehicleBillDate: this.selectBill[0].vehicleBillDate,
+        accountBillCode: this.selectBill[0].accountBillCode,
+        accountBillType: this.selectBill[0].accountBillType,
+        accountBillDate: this.selectBill[0].accountBillDate,
+        paymentCode: this.selectBill[0].paymentCode,
+        salesStation: this.selectBill[0].salesStation,
+        customerName: this.selectBill[0].customerName,
+        gatherType: this.selectBill[0].gatherType,
+        conSignMan: this.selectBill[0].conSignMan,
+        conSignPhone: this.selectBill[0].conSignPhone,
+        startAddress: this.selectBill[0].startAddress,
+        startRegion: this.selectBill[0].startRegion,
+        startPostCode: this.selectBill[0].startPostCode,
+        startDate: this.selectBill[0].startDate,
+        startStation: this.selectBill[0].startStation,
+        receiveMan: this.selectBill[0].receiveMan,
+        receivePhone: this.selectBill[0].receivePhone,
+        receiveAddress: this.selectBill[0].receiveAddress,
+        receiveDate: this.selectBill[0].receiveDate,
+        targetStation: this.selectBill[0].targetStation,
+        targetRegion: this.selectBill[0].targetRegion,
+        serviceType: this.selectBill[0].serviceType,
+        transportationType: this.selectBill[0].transportationType,
+        otherCost: this.selectBill[0].otherCost,
+        logisCost: this.selectBill[0].logisCost,
+        transportCost: this.selectBill[0].transportCost,
+        paymentType: this.selectBill[0].paymentType,
+        accountPayable: this.selectBill[0].accountPayable,
+        realityPayable: this.selectBill[0].realityPayable,
+        unReceivedPayable: this.selectBill[0].unReceivedPayable,
+        allowancePayable: this.selectBill[0].allowancePayable,
+        arriveVehicleStatus: this.selectBill[0].arriveVehicleStatus,
+        departVehicleStatus: this.selectBill[0].departVehicleStatus,
+        vehicleCode: this.selectBill[0].vehicleCode,
+        vehicleType: this.selectBill[0].vehicleType,
+        driverName: this.selectBill[0].driverName,
+        driverPhone: this.selectBill[0].driverPhone,
+        incomePayable: this.selectBill[0].incomePayable,
+        expendPayable: this.selectBill[0].expendPayable,
+        paymentsTotal: this.selectBill[0].paymentsTotal,
+        paymentsDate: this.selectBill[0].paymentsDate,
+        code: this.selectBill[0].code
       };
       this.showModify = true;
     },
@@ -1231,7 +1268,7 @@ export default {
         if (valid) {
           this.modifyLoading = true;
           this.$axios
-            .put(`/users/${this.selectBill[0].id}`, this.BillFormData)
+            .put(`/bill/${this.selectBill[0].id}`, this.BillFormData)
             .then(() => {
               this.modifyLoading = false;
               this.showModify = false;

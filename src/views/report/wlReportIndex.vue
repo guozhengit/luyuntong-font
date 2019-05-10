@@ -52,14 +52,15 @@
         </FormItem>
         <FormItem style="float: right">
           <ButtonGroup>
-            <Button type="primary" icon="md-search" ghost @click="reportquery"
+            <Button style="margin: 3px" type="primary" icon="md-search" ghost @click="reportquery"
               >查询</Button
             >
             <Button
+              style="margin: 3px"
               type="success"
               ghost
               icon="ios-download-outline"
-              @click="exportReport(1)"
+              @click="exportReport()"
               >导出</Button
             >
           </ButtonGroup>
@@ -73,7 +74,7 @@
         size="small"
         ref="table"
         border
-        height="500"
+        height="480"
       ></Table>
     </div>
   </div>
@@ -278,12 +279,11 @@ export default {
     this.nowTimes();
   },
   methods: {
-    exportReport(type) {
-      if (type === 1) {
-        this.$refs.table.exportCsv({
-          filename: "物流跟踪报表"
-        });
-      }
+
+    exportReport() {
+      this.$refs.table.exportCsv({
+        filename: "物流跟踪报表"
+      });
     }
   }
 };

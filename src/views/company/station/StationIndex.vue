@@ -16,6 +16,7 @@
                 v-model="searchStationForm.name"
                 type="text"
                 placeholder="请输入站点名称"
+                clearable
               />
             </div>
           </div>
@@ -27,7 +28,7 @@
               <Input
                 v-model="searchStationForm.cityCode"
                 type="text"
-                placeholder="请输入用户账号"
+                placeholder="请输入站点账号"
                 clearable
               />
             </div>
@@ -37,14 +38,6 @@
           <ButtonGroup>
             <Button type="primary" icon="md-search" ghost @click="handleQuery"
               >查询
-            </Button>
-            <Button
-              type="primary"
-              style="color:#e82626"
-              icon="md-close"
-              ghost
-              @click="handleQuery"
-              >重置
             </Button>
           </ButtonGroup>
         </FormItem>
@@ -75,7 +68,7 @@
           ghost
           class="button"
           :disabled="!selectedStation.length > 0"
-          @click="handleDeleteUser"
+          @click="handleDeleteStation"
           >删除
         </Button>
         <Button type="primary" icon="ios-refresh" ghost @click="handleQuery"
@@ -108,13 +101,13 @@
       </Page>
     </div>
     <Drawer
-      title="添加用户"
+      title="添加站点"
       v-model="showCreate"
       width="400"
       :mask-closable="false"
     >
       <Form
-        ref="createUserForm"
+        ref="createStationForm"
         :model="stationFormData"
         :rules="formRules"
         :label-width="100"
@@ -125,6 +118,14 @@
               <Input
                 v-model="stationFormData.code"
                 placeholder="请输入站点编号"
+              />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="站点名称" prop="name">
+              <Input
+                      v-model="stationFormData.name"
+                      placeholder="请输入站点名称"
               />
             </FormItem>
           </i-Col>
@@ -153,7 +154,7 @@
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="邮编" prop="phone">
+            <FormItem label="邮编" prop="postCode">
               <Input
                 v-model="stationFormData.postCode"
                 placeholder="输入邮政编码"
@@ -171,25 +172,25 @@
         </Row>
       </Form>
       <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelCreateUser"
+        <Button style="margin-right: 8px" @click="handleCancelCreateStation"
           >取消
         </Button>
         <Button
           type="primary"
-          @click="handleCreateUser"
+          @click="handleCreateStation"
           :loading="createLoading"
           >保存
         </Button>
       </div>
     </Drawer>
     <Drawer
-      title="修改用户"
+      title="修改站点"
       v-model="showModify"
       width="400"
       :mask-closable="false"
     >
       <Form
-        ref="modifyUserForm"
+        ref="modifyStationForm"
         :model="stationFormData"
         :rules="formRules"
         :label-width="100"
@@ -198,8 +199,16 @@
           <i-Col span="24">
             <FormItem label="站点编号" prop="code">
               <Input
-                v-model="stationFormData.code"
-                placeholder="请输入站点编号"
+                      v-model="stationFormData.code"
+                      placeholder="请输入站点编号"
+              />
+            </FormItem>
+          </i-Col>
+          <i-Col span="24">
+            <FormItem label="站点名称" prop="name">
+              <Input
+                      v-model="stationFormData.name"
+                      placeholder="请输入站点名称"
               />
             </FormItem>
           </i-Col>
@@ -228,7 +237,7 @@
             </FormItem>
           </i-Col>
           <i-Col span="24">
-            <FormItem label="邮编" prop="phone">
+            <FormItem label="邮编" prop="postCode">
               <Input
                 v-model="stationFormData.postCode"
                 placeholder="输入邮政编码"
@@ -246,12 +255,12 @@
         </Row>
       </Form>
       <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelModifyUser"
+        <Button style="margin-right: 8px" @click="handleCancelModifyStation"
           >取消
         </Button>
         <Button
           type="primary"
-          @click="handleModifyUser"
+          @click="handleModifyStation"
           :loading="modifyLoading"
           >保存
         </Button>
@@ -273,12 +282,12 @@ export default {
         },
         {
           title: "站点编号",
-          type: "code",
+          key: "code",
           align: "center"
         },
         {
           title: "站点名称",
-          type: "name",
+          key: "name",
           align: "center"
         },
         {
@@ -337,25 +346,22 @@ export default {
       },
       formRules: {
         code: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "站点编号不能为空", trigger: "blur,change" }
         ],
         name: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ],
-        principal: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "站点名不能为空", trigger: "blur,change" }
         ],
         linkPhone: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "站点联系电话不能为空", trigger: "blur,change" }
         ],
         detailAddress: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "站点地址不能为空", trigger: "blur,change" }
         ],
         postCode: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "邮编不能为空", trigger: "blur,change" }
         ],
         cityCode: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          { required: true, message: "城市编号不能为空", trigger: "blur,change" }
         ]
       },
       showCreate: false,
@@ -372,7 +378,7 @@ export default {
     handleQuery() {
       this.$axios
         .post(
-          `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
+          `/station/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
           this.searchStationForm
         )
         .then(res => {
@@ -400,18 +406,18 @@ export default {
     showCreateDrawer() {
       this.showCreate = true;
     },
-    handleCancelCreateUser() {
+    handleCancelCreateStation() {
       this.showCreate = false;
-      this.$refs["createUserForm"].resetFields();
+      this.$refs["createStationForm"].resetFields();
     },
 
-    handleDeleteUser() {
+    handleDeleteStation() {
       let ids = this.selectedStation.map(item => {
         return item.id;
       });
       console.log(ids);
       this.$axios
-        .post("/users/deleteBatch", ids)
+        .post("/station/deleteBatch", ids)
         .then(() => {
           this.showDelete = false;
           this.deleteLoading = false;
@@ -424,57 +430,58 @@ export default {
           this.$Message.error("删除失败");
         });
     },
-    handleCreateUser() {
-      this.$refs["createUserForm"].validate(valid => {
+    handleCreateStation() {
+      this.$refs["createStationForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
           this.$axios
-            .post("/users", this.stationFormData)
+            .post("/station", this.stationFormData)
             .then(() => {
               this.createLoading = false;
               this.showCreate = false;
-              this.$Message.success("保存用户成功");
-              this.$refs["createUserForm"].resetFields();
+              this.$Message.success("保存站点成功");
+              this.$refs["createStationForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {
               this.createLoading = false;
-              this.$Message.success("保存用户失败");
+              this.$Message.error("保存站点失败");
             });
         }
       });
     },
     showModifyDrawer() {
       this.stationFormData = {
-        name: this.selectedStation[0].name,
-        password: this.selectedStation[0].password,
-        gender: this.selectedStation[0].gender,
         code: this.selectedStation[0].code,
-        phone: this.selectedStation[0].phone,
-        birthDay: this.selectedStation[0].birthDay
+        principal: this.selectedStation[0].principal,
+        linkPhone: this.selectedStation[0].linkPhone,
+        detailAddress: this.selectedStation[0].detailAddress,
+        postCode: this.selectedStation[0].postCode,
+        cityCode: this.selectedStation[0].cityCode,
+        name: this.selectedStation[0].name
       };
       this.showModify = true;
     },
-    handleCancelModifyUser() {
+    handleCancelModifyStation() {
       this.showModify = false;
-      this.$refs["modifyUserForm"].resetFields();
+      this.$refs["modifyStationForm"].resetFields();
     },
-    handleModifyUser() {
-      this.$refs["modifyUserForm"].validate(valid => {
+    handleModifyStation() {
+      this.$refs["modifyStationForm"].validate(valid => {
         if (valid) {
           this.modifyLoading = true;
           this.$axios
-            .put(`/users/${this.selectedStation[0].id}`, this.stationFormData)
+            .put(`/station/${this.selectedStation[0].id}`, this.stationFormData)
             .then(() => {
               this.modifyLoading = false;
               this.showModify = false;
-              this.$Message.success("保存用户成功");
-              this.$refs["modifyUserForm"].resetFields();
+              this.$Message.success("保存站点成功");
+              this.$refs["modifyStationForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {
               this.createLoading = false;
-              this.$Message.success("保存用户失败");
+              this.$Message.error("保存站点失败");
             });
         }
       });

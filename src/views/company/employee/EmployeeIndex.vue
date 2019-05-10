@@ -67,14 +67,6 @@
             <Button type="primary" icon="md-search" ghost @click="handleQuery"
               >查询
             </Button>
-            <Button
-              type="primary"
-              style="color:#e82626"
-              icon="md-close"
-              ghost
-              @click="handleQuery"
-              >重置
-            </Button>
           </ButtonGroup>
         </FormItem>
       </Form>
@@ -104,7 +96,7 @@
           ghost
           class="button"
           :disabled="!selectedEmployee.length > 0"
-          @click="handleDeleteUser"
+          @click="handleDeleteEmp"
           >删除
         </Button>
         <Button type="primary" icon="ios-refresh" ghost @click="handleQuery"
@@ -143,7 +135,7 @@
       :mask-closable="false"
     >
       <Form
-        ref="createUserForm"
+        ref="createEmpForm"
         :model="emplyeeFormData"
         :rules="formRules"
         :label-width="80"
@@ -189,7 +181,7 @@
           <i-Col span="24">
             <FormItem label="所属部门" prop="email">
               <Input
-                v-model="emplyeeFormData.department"
+                v-model="emplyeeFormData.departmentCode"
                 placeholder="请选择部门"
               />
             </FormItem>
@@ -197,34 +189,30 @@
           <i-Col span="24">
             <FormItem label="性别" prop="gender">
               <RadioGroup v-model="emplyeeFormData.gender">
-                <Radio label="男">1</Radio>
-                <Radio label="女">2</Radio>
-                <Radio label="未知">3</Radio>
+                <Radio label="男">男</Radio>
+                <Radio label="女">女</Radio>
               </RadioGroup>
             </FormItem>
           </i-Col>
         </Row>
       </Form>
       <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelCreateUser"
+        <Button style="margin-right: 8px" @click="handleCancelCreateEmp"
           >取消
         </Button>
-        <Button
-          type="primary"
-          @click="handleCreateUser"
-          :loading="createLoading"
+        <Button type="primary" @click="handleCreateEmp" :loading="createLoading"
           >保存
         </Button>
       </div>
     </Drawer>
     <Drawer
-      title="修改用户"
+      title="修改职员信息"
       v-model="showModify"
       width="360"
       :mask-closable="false"
     >
       <Form
-        ref="modifyUserForm"
+        ref="modifyEmpForm"
         :model="emplyeeFormData"
         :rules="formRules"
         :label-width="80"
@@ -270,7 +258,7 @@
           <i-Col span="24">
             <FormItem label="所属部门" prop="email">
               <Input
-                v-model="emplyeeFormData.department"
+                v-model="emplyeeFormData.departmentCode"
                 placeholder="请选择部门"
               />
             </FormItem>
@@ -278,13 +266,10 @@
         </Row>
       </Form>
       <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelModifyUser"
+        <Button style="margin-right: 8px" @click="handleCancelModifyEmp"
           >取消
         </Button>
-        <Button
-          type="primary"
-          @click="handleModifyUser"
-          :loading="modifyLoading"
+        <Button type="primary" @click="handleModifyEmp" :loading="modifyLoading"
           >保存
         </Button>
       </div>
@@ -341,13 +326,7 @@ export default {
         },
         {
           title: "部门",
-          key: "department",
-          align: "center",
-          sortable: true
-        },
-        {
-          title: "邮箱",
-          key: "email",
+          key: "departmentCode",
           align: "center",
           sortable: true
         }
@@ -361,7 +340,7 @@ export default {
         gender: "",
         salary: "",
         bonus: "",
-        department: "",
+        departmentCode: "",
         stationCode: ""
       },
       employeeList: [],
@@ -378,36 +357,65 @@ export default {
         gender: "",
         salary: "",
         bonus: "",
-        department: "",
+        departmentCode: "",
         stationCode: ""
       },
       formRules: {
         code: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "职员编号不能为空",
+            trigger: "blur,change"
+          }
         ],
         birthday: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "职员生日不能为空",
+            trigger: "blur,change"
+          }
         ],
         age: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "职员年龄不能为空",
+            trigger: "blur,change"
+          }
         ],
         position: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "职员职级不能为空",
+            trigger: "blur,change"
+          }
         ],
         gender: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "职员性别不能为空",
+            trigger: "blur,change"
+          }
         ],
         salary: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "职员薪资不能为空",
+            trigger: "blur,change"
+          }
         ],
-        bonus: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
-        ],
-        department: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+        departmentCode: [
+          {
+            required: true,
+            message: "所属部门编号不能为空",
+            trigger: "blur,change"
+          }
         ],
         stationCode: [
-          { required: true, message: "用户名不能为空", trigger: "blur,change" }
+          {
+            required: true,
+            message: "工作站点不能为空",
+            trigger: "blur,change"
+          }
         ]
       },
       showCreate: false,
@@ -424,7 +432,7 @@ export default {
     handleQuery() {
       this.$axios
         .post(
-          `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
+          `/emp/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
           this.employeeSearchForm
         )
         .then(res => {
@@ -437,8 +445,8 @@ export default {
           this.totalCount = 0;
         });
     },
-    handlePageChange(userIndex) {
-      this.pageIndex = userIndex;
+    handlePageChange(employeeIndex) {
+      this.pageIndex = employeeIndex;
       this.handleQuery();
     },
     handlePageSizeChange(size) {
@@ -452,18 +460,18 @@ export default {
     showCreateDrawer() {
       this.showCreate = true;
     },
-    handleCancelCreateUser() {
+    handleCancelCreateEmp() {
       this.showCreate = false;
-      this.$refs["createUserForm"].resetFields();
+      this.$refs["createEmpForm"].resetFields();
     },
 
-    handleDeleteUser() {
+    handleDeleteEmp() {
       let ids = this.selectedEmployee.map(item => {
         return item.id;
       });
       console.log(ids);
       this.$axios
-        .post("/users/deleteBatch", ids)
+        .post("/emp/deleteBatch", ids)
         .then(() => {
           this.showDelete = false;
           this.deleteLoading = false;
@@ -476,17 +484,17 @@ export default {
           this.$Message.error("删除失败");
         });
     },
-    handleCreateUser() {
-      this.$refs["createUserForm"].validate(valid => {
+    handleCreateEmp() {
+      this.$refs["createEmpForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
           this.$axios
-            .post("/users", this.emplyeeFormData)
+            .post("/emp", this.emplyeeFormData)
             .then(() => {
               this.createLoading = false;
               this.showCreate = false;
               this.$Message.success("保存职员成功");
-              this.$refs["createUserForm"].resetFields();
+              this.$refs["createEmpForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {
@@ -498,30 +506,35 @@ export default {
     },
     showModifyDrawer() {
       this.emplyeeFormData = {
+        birthday: this.selectedEmployee[0].birthday,
+        age: this.selectedEmployee[0].age,
+        position: this.selectedEmployee[0].position,
+        salary: this.selectedEmployee[0].salary,
+        bonus: this.selectedEmployee[0].bonus,
+        departmentCode: this.selectedEmployee[0].departmentCode,
+        stationCode: this.selectedEmployee[0].stationCode,
         name: this.selectedEmployee[0].name,
-        password: this.selectedEmployee[0].password,
         gender: this.selectedEmployee[0].gender,
         code: this.selectedEmployee[0].code,
-        phone: this.selectedEmployee[0].phone,
-        birthDay: this.selectedEmployee[0].birthDay
+        phone: this.selectedEmployee[0].phone
       };
       this.showModify = true;
     },
-    handleCancelModifyUser() {
+    handleCancelModifyEmp() {
       this.showModify = false;
-      this.$refs["modifyUserForm"].resetFields();
+      this.$refs["modifyEmpForm"].resetFields();
     },
-    handleModifyUser() {
-      this.$refs["modifyUserForm"].validate(valid => {
+    handleModifyEmp() {
+      this.$refs["modifyEmpForm"].validate(valid => {
         if (valid) {
           this.modifyLoading = true;
           this.$axios
-            .put(`/users/${this.selectedEmployee[0].id}`, this.emplyeeFormData)
+            .put(`/emp/${this.selectedEmployee[0].id}`, this.emplyeeFormData)
             .then(() => {
               this.modifyLoading = false;
               this.showModify = false;
               this.$Message.success("保存职员成功");
-              this.$refs["modifyUserForm"].resetFields();
+              this.$refs["modifyEmpForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {

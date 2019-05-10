@@ -94,7 +94,7 @@ export default {
         },
         {
           title: "身份分类",
-          key: "iDType",
+          key: "idType",
           align: "center",
           sortable: true
         },
@@ -136,7 +136,7 @@ export default {
       ],
       searchSalaryData: {
         /*身份类型*/
-        iDType: "",
+        idType: "",
         /*职员编号*/
         officeCode: "",
         /*结算日期*/
@@ -157,7 +157,7 @@ export default {
       pageSize: 10,
       formSalaryData: {
         /*身份类型*/
-        iDType: "",
+        idType: "",
         /*职员编号*/
         officeCode: "",
         /*工资结算日期*/
@@ -171,15 +171,13 @@ export default {
         /*合计总额*/
         totalSalary: ""
       },
-      showCreate: false,
-      createLoading: false
     };
   },
   methods: {
     handleQuery() {
       this.$axios
         .post(
-          `/users/pageQuery?page=${this.pageIndex - 1}&size=${this.pageSize}`,
+          `/finaceManage/salary?page=${this.pageIndex - 1}&size=${this.pageSize}`,
           this.searchSalaryData
         )
         .then(res => {
@@ -192,8 +190,8 @@ export default {
           this.totalCount = 0;
         });
     },
-    handlePageChange(userIndex) {
-      this.pageIndex = userIndex;
+    handlePageChange(salaryIndex) {
+      this.pageIndex = salaryIndex;
       this.handleQuery();
     },
     handlePageSizeChange(size) {
