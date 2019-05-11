@@ -105,90 +105,92 @@
 </template>
 
 <script>
-import CollapsedMenu from "@/components/CollapsedMenu.vue";
-import appMenu from "@/libs/menu";
-import { mapState } from "vuex";
-import { mapMutations } from "vuex";
+    import CollapsedMenu from "@/components/CollapsedMenu.vue";
+    import appMenu from "@/libs/menu";
+    import { mapState } from "vuex";
+    import { mapMutations } from "vuex";
 
-export default {
-  name: "home",
-  components: {
-    CollapsedMenu
-  },
-  data() {
-    return {
-      collapsed: false,
-      isFullscreen: false,
-      isCollapsed: false,
-      menuList: [],
-      fullScreen: false,
-      userInfo: {}
-    };
-  },
-  computed: {
-    ...mapState({
-      openedMenu: state => state.application.openedMenu,
-      activeMenu: state => state.application.activeMenu
-    }),
-    triggerIcon() {
-      let name = this.isCollapsed ? "menu-fold" : "menu-unfold";
-      return `iconfont icon-${name}`;
-    }
-  },
-  methods: {
-    ...mapMutations([
-      "initOpenedMenu",
-      "addOpenedMenu",
-      "setActiveMenu",
-      "removeOpenedMenu"
-    ]),
-    collapsedSide() {
-      this.$refs["side"].toggleCollapse();
-    },
-    handleSelectMenu(key) {
-      this.addOpenedMenu(appMenu.valueOf(key));
-    },
-    handleClickTab(name) {
-      this.setActiveMenu(appMenu.valueOf(name));
-    },
-    handleRemoveTab(name) {
-      this.removeOpenedMenu(appMenu.valueOf(name));
-    },
-    handleFullScreen() {},
-    handleExitFullScreen() {},
-    handleUserDropDownClick(name) {
-      if (name === "logout") {
-        this.handleLogOut();
-      }
-    },
+    export default {
+        name: "home",
+        components: {
+            CollapsedMenu
+        },
+        data() {
+            return {
+                collapsed: false,
+                isCollapsed: false,
+                menuList: [],
+                fullScreen: false,
+                userInfo: {}
+            };
+        },
+        computed: {
+            ...mapState({
+                openedMenu: state => state.application.openedMenu,
+                activeMenu: state => state.application.activeMenu
+            }),
+            triggerIcon() {
+                let name = this.isCollapsed ? "menu-fold" : "menu-unfold";
+                return `iconfont icon-${name}`;
+            }
+        },
+        methods: {
+            ...mapMutations([
+                "initOpenedMenu",
+                "addOpenedMenu",
+                "setActiveMenu",
+                "removeOpenedMenu"
+            ]),
+            collapsedSide() {
+                this.$refs["side"].toggleCollapse();
+            },
+            handleSelectMenu(key) {
+                this.addOpenedMenu(appMenu.valueOf(key));
+            },
+            handleClickTab(name) {
+                this.setActiveMenu(appMenu.valueOf(name));
+            },
+            handleRemoveTab(name) {
+                this.removeOpenedMenu(appMenu.valueOf(name));
+            },
+            handleFullScreen() {},
+            handleExitFullScreen() {},
+            handleUserDropDownClick(name) {
+                if (name === "logout") {
+                    this.handleLogOut();
+                }
+                else(name === "ownSpace")
+                {
+                    this.handleLogOut();
+                }
+            },
+
     handleLogOut() {
-      this.$axios.post("/auth/logout").then(() => {
-        this.$router.push({ path: "login" });
-      });
+        this.$axios.post("/auth/logout").then(() => {
+            this.$router.push({ path: "login" });
+        });
     },
     queryUserInfo() {
-      //TODO 加载用户信息
-      //   this.$axios.post("/auth/logout").then(() => {
-      //   });
-      this.userInfo = {
-        username: `夏明凤`
-      };
+        //TODO 加载用户信息
+        this.userInfo = {
+            username: `夏明凤`
+        };
     }
-  },
-  watch: {
-    activeMenu(menu) {
-      console.log(menu.index);
-      this.$router.push({ name: menu.index });
+    },
+    watch: {
+        activeMenu(menu) {
+            console.log(menu.index);
+            this.$router.push({ name: menu.index });
+        }
+    },
+    mounted() {
+        this.queryUserInfo();
+        this.menuList = appMenu.authMenu();
+        this.initOpenedMenu();
+        /*TODO*/
+        this.$util.setSessionStorageItem("Authorization", "TOKEN");
     }
-  },
-  mounted() {
-    this.queryUserInfo();
-    this.menuList = appMenu.authMenu();
-    this.initOpenedMenu();
-    /*TODO*/
-    this.$util.setSessionStorageItem("Authorization", "TOKEN");
-  }
-};
+    };
 </script>
 
 <style lang="less">

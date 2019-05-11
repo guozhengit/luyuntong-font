@@ -186,7 +186,7 @@ export default {
           align: "center"
         },
         {
-          type: "index",
+          type: "paymentindex",
           width: 60,
           align: "center"
         },
@@ -257,8 +257,8 @@ export default {
           this.totalCount = 0;
         });
     },
-    handlePageChange(index) {
-      this.pageIndex = userIndex;
+    handlePageChange(paymentindex) {
+      this.pageIndex = paymentindex;
       this.handleQuery();
     },
     handlePageSizeChange(size) {

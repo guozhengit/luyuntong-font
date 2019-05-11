@@ -128,14 +128,14 @@
     <Drawer
       title="添加路线信息 "
       v-model="showCreate"
-      width="600"
+      width="60%"
       :mask-closable="false"
     >
       <Form
         ref="createRouteForm"
         :model="routeFormData"
         :rules="formRules"
-        :label-width="120"
+        :label-width="140"
       >
         <Row>
           <i-Col span="12">
@@ -243,14 +243,14 @@
     <Drawer
       title="修改路线"
       v-model="showModify"
-      width="600"
+      width="60%"
       :mask-closable="false"
     >
       <Form
         ref="modifyRouteForm"
         :model="routeFormData"
         :rules="formRules"
-        :label-width="120"
+        :label-width="140"
       >
         <Row>
           <i-Col span="12">

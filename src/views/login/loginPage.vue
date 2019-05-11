@@ -68,7 +68,7 @@
                 </i-col>
                 <i-col span="12">
                   <Button
-                    @click="handleSubmit"
+                    @click="handleShowUpdatePassword(loginForm)"
                     style="border-color:#f0f3f7"
                     type="error"
                     long
@@ -89,14 +89,24 @@ import qs from "qs";
 export default {
   name: "LoginForm",
   data() {
+    const validatePassword = (rule, value, callback) => {
+      /* //密码强度正则，最少6位，包括至少1个字母，1个数字，1个特殊字符 */
+      let passwordReg = /^.*(?=.{8,})(?=.*[0-9])(?=.*[A-Z|a-z])(?=.*[!@#$%^&*?.]).*$/;
+      if (!passwordReg.test(value)) {
+        callback(
+          new Error("密码长度最少6位，包括字母、数字、特殊字符(!@#$%^&*?.)")
+        );
+      }
+      callback();
+    };
     return {
       loginForm: {
-        userName: "",
+        username: "",
         password: "",
         captcha: ""
       },
       loginRules: {
-        userName: [
+        username: [
           { required: true, message: "请输入用户名", trigger: "blur" }
         ],
         password: [
@@ -107,6 +117,9 @@ export default {
             message: "密码长度不能小于六位",
             trigger: "blur"
           }
+        ],
+        captcha: [
+          { required: true, message: "验证码不能为空", trigger: "blur" }
         ]
       },
       captchaImg: "",
@@ -123,6 +136,15 @@ export default {
       this.$axios.get("/auth/captcha").then(response => {
         this.captchaImg = `data:image/gif;base64,${response.data}`;
       });
+    },
+    handleShowUpdatePassword(loginForm) {
+      this.showReset = true;
+      this.$refs.loginForm.resetFields();
+      this.resetForm = {
+        username: loginForm.username,
+        captcha: "",
+        password: ""
+      };
     },
     handleSubmit() {
       this.$refs.loginForm.validate(valid => {
@@ -141,22 +163,37 @@ export default {
               }
             })
             .then(res => {
-              this.loading = false;
               let result = res.data;
               if (result.code === "200") {
-                this.$Message.success(result.message);
+                this.loading = false;
                 setTimeout(() => {
-                  this.$router.push({ path: "/" });
-                }, 2000);
+                  this.$router.push({ path: "/home" });
+                }, 1000);
+                this.$Notice.success({
+                  title: `登录成功`,
+                  duration: 2
+                });
               } else {
+                this.loading = true;
+                this.$Notice.warning({
+                  title: `登录失败，请重新登录`
+                });
+                setTimeout(() => {
+                  this.$router.push({ path: "/login" });
+                }, 1000);
+                this.loading = false;
                 this.setCaptcha();
-                this.$Message.error(result.message);
               }
             })
             .captcha(() => {
+              this.$Notice.warning({
+                title: `未知错误`
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 2000);
               this.loading = false;
               this.setCaptcha();
-              this.$Message.error("未知错误");
             });
         }
       });

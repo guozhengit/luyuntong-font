@@ -103,14 +103,14 @@
     <Drawer
       title="添加站点"
       v-model="showCreate"
-      width="400"
+      width="40%"
       :mask-closable="false"
     >
       <Form
         ref="createStationForm"
         :model="stationFormData"
         :rules="formRules"
-        :label-width="100"
+        :label-width="140"
       >
         <Row>
           <i-Col span="24">
@@ -186,14 +186,14 @@
     <Drawer
       title="修改站点"
       v-model="showModify"
-      width="400"
+      width="40%"
       :mask-closable="false"
     >
       <Form
         ref="modifyStationForm"
         :model="stationFormData"
         :rules="formRules"
-        :label-width="100"
+        :label-width="140"
       >
         <Row>
           <i-Col span="24">

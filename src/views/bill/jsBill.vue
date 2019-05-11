@@ -20,56 +20,27 @@
             </div>
           </div>
         </FormItem>
-        <FormItem prop="accountBillType">
+        <FormItem prop="paymentType">
           <div class="ivu-form-item select-ground">
-            <span class="select-name">结算类型</span>
+            <span class="select-name">付款类型</span>
             <div class="select-input">
-              <Input
-                v-model="billSearchForm.accountBillType"
-                type="text"
-                placeholder="请输入结算类型"
-              />
-            </div>
-          </div>
-        </FormItem>
-        <FormItem prop="accountBillDate">
-          <div class="ivu-form-item select-ground">
-            <span class="select-name">结算日期</span>
-            <div class="select-input">
-              <Input
-                v-model="billSearchForm.accountBillDate"
-                type="date"
-                placeholder="请输入结算日期"
-              />
+              <Select
+                      v-model="billSearchForm.paymentType"
+                      placeholder="请选择付款类型"
+                      clearable
+              >
+                <Option
+                        v-for="item in paymentTypes"
+                        :value="item.value"
+                        :key="item.value"
+                        :name="paymentType"
+                >{{ item.label }}
+                </Option>
+              </Select>
             </div>
           </div>
         </FormItem>
 
-        <FormItem prop="conSignMan">
-          <div class="ivu-form-item select-ground">
-            <span class="select-name">业务员</span>
-            <div class="select-input">
-              <Input
-                v-model="billSearchForm.conSignMan"
-                type="text"
-                placeholder="请输入业务员"
-              />
-            </div>
-          </div>
-        </FormItem>
-
-        <FormItem prop="customerName">
-          <div class="ivu-form-item select-ground">
-            <span class="select-name">客户名称</span>
-            <div class="select-input">
-              <Input
-                v-model="billSearchForm.customerName"
-                type="text"
-                placeholder="请输入客户名称"
-              />
-            </div>
-          </div>
-        </FormItem>
         <FormItem prop="customerCode">
           <div class="ivu-form-item select-ground">
             <span class="select-name">客户编号</span>
@@ -124,11 +95,11 @@
         </Button>
       </ButtonGroup>
     </div>
-    <div class="data-table" style="height: 65%">
+    <div class="data-table">
       <Table
         border
         :columns="billsColumns"
-        :data="tyBillList"
+        :data="BillList"
         @on-selection-change="handleSelect"
       >
       </Table>
@@ -151,10 +122,10 @@
     <Drawer
       title="添加结算单"
       v-model="showCreate"
-      width="40%"
+      width="60%"
       :mask-closable="false"
     >
-      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="100">
+      <Form ref="CreateBillForm" :model="BillFormData" :rules="formRules" :label-width="140">
         <Row>
           <i-Col span="12">
             <FormItem label="结算单编号" prop="accountBillCode">
@@ -255,7 +226,7 @@
         </Row>
       </Form>
       <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelCreateUser"
+        <Button style="margin-right: 8px" @click="handleCancelCreateBill"
           >取消
         </Button>
         <Button
@@ -269,14 +240,14 @@
     <Drawer
       title="修改结算单"
       v-model="showModify"
-      width="88%"
+      width="60%"
       :mask-closable="false"
     >
       <Form
         ref="modifyBillForm"
         :model="BillFormData"
         :rules="formRules"
-        :label-width="120"
+        :label-width="140"
       >
         <Row>
           <i-Col span="12">
@@ -378,12 +349,12 @@
         </Row>
       </Form>
       <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelModifyUser"
+        <Button style="margin-right: 8px" @click="handleCancelModifyBill"
           >取消
         </Button>
         <Button
           type="primary"
-          @click="handleModifyUser"
+          @click="handleModifyBill"
           :loading="modifyLoading"
           >保存
         </Button>
@@ -394,9 +365,27 @@
 
 <script>
 export default {
-  name: "ArticleList",
+  name: "jsBill",
   data: function() {
     return {
+        paymentTypes: [
+            {
+                value: "1",
+                label: "到付"
+            },
+            {
+                value: "2",
+                label: "部分结算"
+            },
+            {
+                value: "3",
+                label: "线上付款"
+            },
+            {
+                value: "4",
+                label: "其他"
+            }
+        ],
       billsColumns: [
         {
           type: "selection",
@@ -413,25 +402,19 @@ export default {
         {
           title: "结算单编号",
           width: 200,
-          type: "accountBillCode",
+          key: "accountBillCode",
           align: "center"
         },
         {
           title: "托运单编号",
           width: 200,
-          type: "code",
+          key: "code",
           align: "center"
         },
         {
           title: "车辆单据编号",
           width: 200,
-          type: "vehicleBillCode",
-          align: "center"
-        },
-        {
-          title: "车辆单据编号",
-          width: 200,
-          type: "vehicleBillCode",
+          key: "vehicleBillCode",
           align: "center"
         },
         {
@@ -449,13 +432,40 @@ export default {
           sortable: true
         },
 
-        {
-          title: "付款类型",
-          key: "paymentType",
-          width: 200,
-          align: "center",
-          sortable: true
-        },
+          {
+              title: "付款类型",
+              key: "paymentType",
+              sortable: true,
+              render: (h, params) => {
+                  const row = params.row;
+                  const color =
+                      row.paymentType === "1"
+                          ? "primary"
+                          : row.paymentType === "2"
+                          ? "warning"
+                          :row.paymentType === "3"
+                              ?"success":"error";
+                  const text =
+                      row.paymentType === "1"
+                          ? "到付"
+                          : row.paymentType === "2"
+                          ? "部分结算"
+                          :row.paymentType === "3"?"线上付款":"其他";
+
+                  return h(
+                      "Tag",
+                      {
+                          props: {
+                              type: "dot",
+                              color: color
+                          }
+                      },
+                      text
+                  );
+              },
+              width: 200,
+              align: "center"
+          },
         {
           title: "应付金额",
           key: "accountPayable",
@@ -489,111 +499,36 @@ export default {
         /*单据编号*/
         code: "",
         /*单据类型*/
-        type:
-          "1:托运单；2:发车单；3：到车单；4回车单；5收支费用单；6客户结算单；7司机结算单",
-        /*车辆单据编号*/
-        vehicleBillCode: "",
-        /*车辆单据类型*/
-        vehicelBillType: "",
-        /*车辆单据开具日期*/
-        vehicleBillDate: "",
-        /*结算单据编号*/
+        // type: "6客户结算单；7司机结算单",
+        type: "",
         accountBillCode: "",
         /*..类型*/
         accountBillType: "",
         /*..日期*/
         accountBillDate: "",
+
+        customerCode: "",
         /*收支单据编号*/
         paymentCode: "",
         /*服务站点*/
         salesStation: "",
         /*顾客姓名*/
         customerName: "",
-        /*收款类型*/
-        gatherType: "",
-        /*托运人*/
-        conSignMan: "",
-        /*托运人电话*/
-        conSignPhone: "",
-        /*始发地址*/
-        startAddress: "",
-        /*始发所在区域*/
-        startRegion: "",
-        /*始发邮编*/
-        startPostCode: "",
-        /*始发日期*/
-        startDate: "",
-        /*始发站点*/
-        startStation: "",
-        /*接货人*/
-        receiveMan: "",
-        /*接货人电话*/
-        receivePhone: "",
-        /*接货人地址*/
-        receiveAddress: "",
-        /*接货日期*/
-        receiveDate: "",
-        /*目标站点*/
-        targetStation: "",
-        /*目标区域*/
-        targetRegion: "",
-        /*服务类型*/
-        serviceType: "",
-        /*运输方式*/
-        transportationType: "",
-        /*其他费用*/
-        otherCost: "",
-        /*物流费用*/
-        logisCost: "",
-        /*运输费用*/
-        transportCost: "",
-        /*付款类型*/
-        paymentType: "",
-        /*应付金额*/
-        accountPayable: "",
-        /*实付金额*/
-        realityPayable: "",
-        /*未付金额*/
-        unReceivedPayable: "",
-        /*折让金额*/
-        allowancePayable: "",
-        /*发车状态*/
-        arriveVehicleStatus: "",
-        /*车到站状态*/
-        departVehicleStatus: "",
-        /*车牌号*/
-        vehicleCode: "",
-        /*车辆类型*/
-        vehicleType: "",
-        /*司机姓名*/
-        driverName: "",
-        /*司机电话*/
-        driverPhone: "",
-        /*收入金额*/
-        incomePayable: "",
-        /*支出金额*/
-        expendPayable: "",
-        /*收支合计*/
-        paymentsTotal: "",
-        /*收支日期*/
-        paymentsDate: ""
       },
-      tyBillList: [],
+      BillList: [],
       totalCount: 0,
       selectBill: [],
       pageIndex: 1,
       pageSize: 10,
-
       BillFormData: {
         /*单据编号*/
         code: "",
         /*单据类型*/
-        type:
-          "1:托运单；2:发车单；3：到车单；4回车单；5收支费用单；6客户结算单；7司机结算单",
+        type: "",
         /*车辆单据编号*/
         vehicleBillCode: "",
         /*车辆单据类型*/
-        vehicelBillType: "",
+        vehicleBillType: "",
         /*车辆单据开具日期*/
         vehicleBillDate: "",
         /*结算单据编号*/
@@ -989,16 +924,16 @@ export default {
         )
         .then(res => {
           let result = res.data;
-          this.tyBillList = result.data.content;
+          this.BillList = result.data.content;
           this.totalCount = result.data.totalElements;
         })
         .catch(() => {
-          this.tyBillList = [];
+          this.BillList = [];
           this.totalCount = 0;
         });
     },
-    handlePageChange(userIndex) {
-      this.pageIndex = userIndex;
+    handlePageChange(billIndex) {
+      this.pageIndex = billIndex;
       this.handleQuery();
     },
     handlePageSizeChange(size) {
@@ -1012,11 +947,6 @@ export default {
     showCreateDrawer() {
       this.showCreate = true;
     },
-    handleCancelCreateUser() {
-      this.showCreate = false;
-      this.$refs[""].resetFields();
-    },
-
     handleDeleteBill() {
       let ids = this.selectBill.map(item => {
         return item.id;
@@ -1036,8 +966,13 @@ export default {
           this.$Message.error("删除失败");
         });
     },
-    handleCreateBill() {
-      this.$refs[""].validate(valid => {
+
+      handleCancelCreateBill() {
+          this.showCreate = false;
+          this.$refs["CreateBillForm"].resetFields();
+      },
+      handleCreateBill() {
+      this.$refs["CreateBillForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
           this.$axios
@@ -1046,7 +981,7 @@ export default {
               this.createLoading = false;
               this.showCreate = false;
               this.$Message.success("报存单据成功");
-              this.$refs[""].resetFields();
+              this.$refs["CreateBillForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {
@@ -1061,7 +996,7 @@ export default {
       this.BillFormData = {
         type: this.selectBill[0].type,
         vehicleBillCode: this.selectBill[0].vehicleBillCode,
-        vehicelBillType: this.selectBill[0].vehicelBillType,
+        vehicleBillType: this.selectBill[0].vehicleBillType,
         vehicleBillDate: this.selectBill[0].vehicleBillDate,
         accountBillCode: this.selectBill[0].accountBillCode,
         accountBillType: this.selectBill[0].accountBillType,
@@ -1107,11 +1042,11 @@ export default {
       };
       this.showModify = true;
     },
-    handleCancelModifyUser() {
+    handleCancelModifyBill() {
       this.showModify = false;
       this.$refs["modifyBillForm"].resetFields();
     },
-    handleModifyUser() {
+    handleModifyBill() {
       this.$refs["modifyBillForm"].validate(valid => {
         if (valid) {
           this.modifyLoading = true;

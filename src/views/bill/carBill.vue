@@ -16,18 +16,20 @@
                 v-model="billSearchForm.vehicleBillCode"
                 type="text"
                 placeholder="请输入车辆单据编号"
+                clearable
               />
             </div>
           </div>
         </FormItem>
         <!--1发车单、2回车单、3到车单-->
-        <FormItem prop="vehicelBillType">
+        <FormItem prop="type">
           <div class="ivu-form-item select-ground">
             <span class="select-name">运输单据类型</span>
             <div class="select-input">
               <Select
-                v-model="BillFormData.vehicelBillType"
+                v-model="billSearchForm.type"
                 placeholder="请选择运输单据类型"
+                clearable
               >
                 <Option
                   v-for="item in billTypes"
@@ -48,25 +50,8 @@
                 v-model="billSearchForm.vehicleBillDate"
                 type="date"
                 placeholder="请输入业务操作日期"
+                clearable
               />
-            </div>
-          </div>
-        </FormItem>
-        <FormItem prop="arriveVehicleStatus">
-          <div class="ivu-form-item select-ground">
-            <span class="select-name">运输状态</span>
-            <div class="select-input">
-              <Select
-                v-model="billSearchForm.arriveVehicleStatus"
-                placeholder="请选择运输状态"
-              >
-                <Option
-                  v-for="item in arriveVehicleStatusList"
-                  :value="item.value"
-                  :key="item.value"
-                  >{{ item.label }}
-                </Option>
-              </Select>
             </div>
           </div>
         </FormItem>
@@ -112,7 +97,7 @@
         </Button>
       </ButtonGroup>
     </div>
-    <div class="data-table" style="overflow: scroll">
+    <div class="data-table">
       <Table
         border
         :columns="billColumns"
@@ -122,7 +107,6 @@
       </Table>
     </div>
     <!--<br>-->
-
     <div class="pagination" style="float: bottom">
       <Page
         :total="totalCount"
@@ -139,10 +123,15 @@
     <Drawer
       title="添加运输单据"
       v-model="showCreate"
-      width="50%"
+      width="70%"
       :mask-closable="false"
     >
-      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="100">
+      <Form
+        ref="createBillForm"
+        :model="BillFormData"
+        :rules="formRules"
+        :label-width="140"
+      >
         <Row>
           <i-Col span="8">
             <FormItem label="运输单据号" prop="vehicleBillCode">
@@ -153,8 +142,8 @@
             </FormItem>
           </i-Col>
           <i-Col span="8">
-            <FormItem label="运输单据类型" prop="vehicelBillType">
-              <Select v-model="BillFormData.vehicelBillType">
+            <FormItem label="运输单据类型" prop="vehicleBillType">
+              <Select v-model="BillFormData.vehicleBillType">
                 <Option
                   v-for="item in billTypes"
                   :value="item.value"
@@ -296,7 +285,7 @@
         </Row>
       </Form>
       <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelCreateUser"
+        <Button style="margin-right: 8px" @click="handleCancelCreateBill"
           >取消
         </Button>
         <Button
@@ -310,10 +299,10 @@
     <Drawer
       title="修改运输单据"
       v-model="showModify"
-      width="360"
+      width="70%"
       :mask-closable="false"
     >
-      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="100">
+      <Form ref="ModifyBillForm" :model="BillFormData" :label-width="140">
         <Row>
           <i-Col span="8">
             <FormItem label="托运单号" prop="code">
@@ -337,9 +326,9 @@
             </FormItem>
           </i-Col>
           <i-Col span="8">
-            <FormItem label="运输单据类型" prop="vehicelBillType">
+            <FormItem label="运输单据类型" prop="vehicleBillType">
               <Input
-                v-model="BillFormData.vehicelBillType"
+                v-model="BillFormData.vehicleBillType"
                 placeholder="运输单据类型"
               />
             </FormItem>
@@ -476,12 +465,12 @@
         </Row>
       </Form>
       <div class="create-drawer-footer">
-        <Button style="margin-right: 8px" @click="handleCancelModifyUser"
+        <Button style="margin-right: 8px" @click="handleCancelModifyBill"
           >取消
         </Button>
         <Button
           type="primary"
-          @click="handleModifyUser"
+          @click="handleModifyBill"
           :loading="modifyLoading"
           >保存
         </Button>
@@ -492,31 +481,21 @@
 
 <script>
 export default {
-  name: "ArticleList",
+  name: "carBill",
   data: function() {
     return {
       billTypes: [
         {
-          value: "发车单据",
+          value: "1",
           label: "发车单据"
         },
         {
-          value: "到车单据",
+          value: "2",
           label: "到车单据"
         },
         {
-          value: "回车单据",
+          value: "3",
           label: "回车单据"
-        }
-      ],
-      arriveVehicleStatusList: [
-        {
-          value: "已到站",
-          label: "已到站"
-        },
-        {
-          value: "运输中",
-          label: "运输中"
         }
       ],
       billColumns: [
@@ -535,26 +514,54 @@ export default {
         {
           title: "托运单据号",
           width: 200,
-          type: "code",
+          key: "code",
           align: "center"
         },
         {
           title: "车辆单据号",
           width: 200,
-          type: "vehicleBillCode",
+          key: "vehicleBillCode",
           align: "center"
         },
         {
           title: "业务员",
-          key: "gatherType",
+          key: "conSignMan",
           width: 200,
           align: "center"
         },
         {
-          title: "车辆单据类型",
-          key: "vehicleBillType",
+          title: "运输单据类型",
+          key: "type",
+          render: (h, params) => {
+            const row = params.row;
+            const color =
+              row.type === "1"
+                ? "primary"
+                : row.type === "2"
+                ? "warning"
+                :row.type === "3"
+                ?"success":"error";
+            const text =
+              row.type === "1"
+                ? "发车单据"
+                : row.type === "2"
+                ? "到处单据"
+                :row.type === "3"?"回车单据":"其他单据";
+
+            return h(
+              "Tag",
+              {
+                props: {
+                  type: "dot",
+                  color: color
+                }
+              },
+              text
+            );
+          },
           width: 200,
-          align: "center"
+          align: "center",
+          sortable: true
         },
         {
           title: "开具日期",
@@ -563,13 +570,6 @@ export default {
           align: "center",
           sortable: true
         },
-        {
-          title: "选择区域",
-          key: "conSignMan",
-          width: 200,
-          align: "center"
-        },
-
         {
           title: "始发站点",
           key: "startStation",
@@ -586,6 +586,32 @@ export default {
         {
           title: "付款类型",
           key: "paymentType",
+            render: (h, params) => {
+                const row = params.row;
+                const color =
+                    row.paymentType === "1"
+                        ? "primary"
+                        : row.paymentType === "2"
+                        ? "warning"
+                        :row.paymentType === "3"
+                            ?"success":"error";
+                const text =
+                    row.paymentType === "1"
+                        ? "到付"
+                        : row.paymentType === "2"
+                        ? "部分结算"
+                        :row.paymentType === "3"?"线上付款":"其他";
+
+                return h(
+                    "Tag",
+                    {
+                        props: {
+                            color: color
+                        }
+                    },
+                    text
+                );
+            },
           width: 200,
           align: "center"
         },
@@ -629,6 +655,32 @@ export default {
         {
           title: "车辆类型",
           key: "vehicleType",
+            render: (h, params) => {
+                const row = params.row;
+                const color =
+                    row.vehicleType === "1"
+                        ? "primary"
+                        : row.vehicleType === "2"
+                        ? "warning"
+                        :row.vehicleType === "3"
+                            ?"success":"error";
+                const text =
+                    row.vehicleType === "1"
+                        ? "B1"
+                        : row.vehicleType === "2"
+                        ? "B2"
+                        :row.vehicleType === "3"?"A1":"A2";
+
+                return h(
+                    "Tag",
+                    {
+                        props: {
+                            color: color
+                        }
+                    },
+                    text
+                );
+            },
           width: 200,
           align: "center"
         },
@@ -649,12 +701,12 @@ export default {
         /*单据编号*/
         code: "",
         /*单据类型*/
-        type:
-          "1:托运单；2:发车单；3：到车单；4回车单；5收支费用单；6客户结算单；7司机结算单",
+        // type: "1:托运单；2:发车单；3：到车单；4回车单；5收支费用单；6客户结算单；7司机结算单",
+        type: "",
         /*车辆单据编号*/
         vehicleBillCode: "",
         /*车辆单据类型*/
-        vehicelBillType: "",
+        vehicleBillType: "",
         /*车辆单据开具日期*/
         vehicleBillDate: "",
         /*结算单据编号*/
@@ -743,23 +795,13 @@ export default {
       selectBill: [],
       pageIndex: 1,
       pageSize: 10,
-
       BillFormData: {
-        /*单据编号*/
+        /*托运单据编号*/
         code: "",
-        /*车辆单据编号*/
-        vehicleBillCode: "",
-        /*车辆单据开具日期*/
-        vehicleBillDate: "",
-        /*结算单据编号*/
-        accountBillCode: "",
-        /*..类型*/
-        accountBillType: "",
-        /*..日期*/
-        accountBillDate: "",
-        /*收支单据编号*/
-        paymentCode: "",
-
+        /*单据类型*/
+        type: "",
+        /*业务员*/
+        salesMan: "",
         /*服务站点*/
         salesStation: "",
         /*顾客姓名*/
@@ -796,10 +838,10 @@ export default {
         serviceType: "",
         /*运输方式*/
         transportationType: "",
+        /*物流费用*/
+        logisticsCost: "",
         /*其他费用*/
         otherCost: "",
-        /*物流费用*/
-        logisCost: "",
         /*运输费用*/
         transportCost: "",
         /*付款类型*/
@@ -822,7 +864,7 @@ export default {
         vehicleType: "",
         /*司机姓名*/
         driverName: "",
-        /*司机姓名*/
+        /*司机电话*/
         driverPhone: "",
         /*收入金额*/
         incomePayable: "",
@@ -831,7 +873,29 @@ export default {
         /*收支合计*/
         paymentsTotal: "",
         /*收支日期*/
-        paymentsDate: ""
+        paymentsDate: "",
+        /*车辆单据编号*/
+        vehicleBillCode: "",
+        /*车辆单据类型*/
+        vehicleBillType: "",
+        /*车辆单据开具日期*/
+        vehicleBillDate: "",
+        /*结算单据编号*/
+        accountBillCode: "",
+        /*结算单据类型*/
+        accountBillType: "",
+        /*结算单据开具日期*/
+        accountBillDate: "",
+        /*收支单据编号*/
+        paymentCode: "",
+        /**/
+        targetPostCode: "",
+        /**/
+        customerCode: "",
+        /**/
+        detailGoodsCustomerCode: "",
+        /**/
+        detailPaymentCustomerCode: ""
       },
       formRules: {
         /*单据编号*/
@@ -842,14 +906,11 @@ export default {
             trigger: "blur,change"
           }
         ],
-        /*单据类型*/
-        type:
-          "1:托运单；2:发车单；3：到车单；4回车单；5收支费用单；6客户结算单；7司机结算单",
         /*服务站点*/
         salesStation: [
           {
             required: true,
-            message: "单据类型不能为空",
+            message: "服务站点不能为空",
             trigger: "blur,change"
           }
         ],
@@ -965,22 +1026,7 @@ export default {
             trigger: "blur,change"
           }
         ],
-        /*服务类型*/
-        serviceType: [
-          {
-            required: true,
-            message: "服务类型不能为空",
-            trigger: "blur,change"
-          }
-        ],
-        /*运输方式*/
-        transportationType: [
-          {
-            required: true,
-            message: "运输方式不能为空",
-            trigger: "blur,change"
-          }
-        ],
+
         /*其他费用*/
         otherCost: [
           {
@@ -990,7 +1036,7 @@ export default {
           }
         ],
         /*物流费用*/
-        logisCost: [
+        logisticsCost: [
           {
             required: true,
             message: "物流费用不能为空",
@@ -1002,14 +1048,6 @@ export default {
           {
             required: true,
             message: "运输费用不能为空",
-            trigger: "blur,change"
-          }
-        ],
-        /*付款类型*/
-        paymentType: [
-          {
-            required: true,
-            message: "付款类型不能为空",
             trigger: "blur,change"
           }
         ],
@@ -1164,11 +1202,6 @@ export default {
     showCreateDrawer() {
       this.showCreate = true;
     },
-    handleCancelCreateUser() {
-      this.showCreate = false;
-      this.$refs[""].resetFields();
-    },
-
     handleDeleteBill() {
       let ids = this.selectBill.map(item => {
         return item.id;
@@ -1188,8 +1221,13 @@ export default {
           this.$Message.error("删除失败");
         });
     },
+
+    handleCancelCreateBill() {
+      this.showCreate = false;
+      this.$refs["createBillForm"].resetFields();
+    },
     handleCreateBill() {
-      this.$refs[""].validate(valid => {
+      this.$refs["createBillForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
           this.$axios
@@ -1198,7 +1236,7 @@ export default {
               this.createLoading = false;
               this.showCreate = false;
               this.$Message.success("报存单据成功");
-              this.$refs[""].resetFields();
+              this.$refs["createBillForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {
@@ -1211,9 +1249,9 @@ export default {
     /*此处为更新操作 获取到查询的实体数据*/
     showModifyDrawer() {
       this.BillFormData = {
-        type: this.selectBill[0].type,
+        type: "",
+        code: this.selectBill[0].code,
         vehicleBillCode: this.selectBill[0].vehicleBillCode,
-        vehicelBillType: this.selectBill[0].vehicelBillType,
         vehicleBillDate: this.selectBill[0].vehicleBillDate,
         accountBillCode: this.selectBill[0].accountBillCode,
         accountBillType: this.selectBill[0].accountBillType,
@@ -1238,7 +1276,6 @@ export default {
         serviceType: this.selectBill[0].serviceType,
         transportationType: this.selectBill[0].transportationType,
         otherCost: this.selectBill[0].otherCost,
-        logisCost: this.selectBill[0].logisCost,
         transportCost: this.selectBill[0].transportCost,
         paymentType: this.selectBill[0].paymentType,
         accountPayable: this.selectBill[0].accountPayable,
@@ -1254,16 +1291,15 @@ export default {
         incomePayable: this.selectBill[0].incomePayable,
         expendPayable: this.selectBill[0].expendPayable,
         paymentsTotal: this.selectBill[0].paymentsTotal,
-        paymentsDate: this.selectBill[0].paymentsDate,
-        code: this.selectBill[0].code
+        paymentsDate: this.selectBill[0].paymentsDate
       };
       this.showModify = true;
     },
-    handleCancelModifyUser() {
+    handleCancelModifyBill() {
       this.showModify = false;
-      this.$refs["modifyBillForm"].resetFields();
+      this.$refs["ModifyBillForm"].resetFields();
     },
-    handleModifyUser() {
+    handleModifyBill() {
       this.$refs["modifyBillForm"].validate(valid => {
         if (valid) {
           this.modifyLoading = true;
