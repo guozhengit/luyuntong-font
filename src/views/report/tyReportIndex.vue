@@ -79,7 +79,7 @@
         size="small"
         ref="table"
         border
-        height="450"
+        height="600"
       ></Table>
     </div>
   </div>

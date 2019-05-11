@@ -35,12 +35,9 @@
             ></Icon>
           </div>
           <div class="admin-function">
-            <div class="admin-function-item" @click="handleFullScreen">
-              <Icon custom="iconfont icon-fullscreen" size="18"></Icon>
-            </div>
-            <div class="admin-function-item">
-              <Icon custom="iconfont icon-setting" size="21"></Icon>
-            </div>
+            <!--<div class="admin-function-item">-->
+              <!--<Icon custom="iconfont icon-setting" size="21"></Icon>-->
+            <!--</div>-->
             <div class="admin-user">
               <Dropdown
                 placement="bottom-start"
