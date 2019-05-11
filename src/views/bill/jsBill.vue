@@ -154,7 +154,7 @@
       width="40%"
       :mask-closable="false"
     >
-      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="100">
+      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="120">
         <Row>
           <i-Col span="12">
             <FormItem label="结算单编号" prop="accountBillCode">

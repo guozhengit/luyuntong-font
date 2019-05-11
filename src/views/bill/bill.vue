@@ -173,7 +173,7 @@
       width="88%"
       :mask-closable="false"
     >
-      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="100">
+      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="120">
         <Row>
           <i-Col span="6">
             <FormItem label="托运单编号" prop="code">
@@ -400,7 +400,7 @@
       width="88%"
       :mask-closable="false"
     >
-      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="100">
+      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="120">
         <Row>
           <i-Col span="6">
             <FormItem label="单据编号" prop="code">

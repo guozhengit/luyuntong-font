@@ -190,7 +190,7 @@
         ref="modifyUserForm"
         :model="formData"
         :rules="formRules"
-        :label-width="80"
+        :label-width="100"
       >
         <Row>
           <i-Col span="24">

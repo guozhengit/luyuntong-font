@@ -121,7 +121,7 @@
         ref="createVehicleForm"
         :model="vehicleFormData"
         :rules="formRules"
-        :label-width="100"
+        :label-width="120"
       >
         <Row>
           <i-Col span="12">
@@ -246,7 +246,7 @@
         ref="modifyVehicleForm"
         :model="vehicleFormData"
         :rules="formRules"
-        :label-width="100"
+        :label-width="120"
       >
         <Row>
           <i-Col span="12">
