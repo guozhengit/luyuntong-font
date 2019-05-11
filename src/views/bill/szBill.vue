@@ -35,22 +35,25 @@
         </FormItem>
         <FormItem prop="paymentType">
           <div class="ivu-form-item select-ground">
-            <span class="select-name">支付方式</span>
+            <span class="select-name">付款类型</span>
             <div class="select-input">
               <Select
-                v-model="billSearchForm.paymentType"
-                placeholder="请选择支付方式"
+                      v-model="billSearchForm.paymentType"
+                      placeholder="请选择付款类型"
+                      clearable
               >
                 <Option
-                  v-for="item in types"
-                  :value="item.value"
-                  :key="item.value"
-                  >{{ item.label }}
+                        v-for="item in paymentTypes"
+                        :value="item.value"
+                        :key="item.value"
+                        :name="paymentType"
+                >{{ item.label }}
                 </Option>
               </Select>
             </div>
           </div>
         </FormItem>
+
         <FormItem style="float: right">
           <ButtonGroup>
             <Button type="primary" icon="md-search" ghost @click="handleQuery"
@@ -93,7 +96,7 @@
         </Button>
       </ButtonGroup>
     </div>
-    <div class="data-table" style="overflow: scroll">
+    <div class="data-table">
       <Table
         border
         :columns="billsColumns"
@@ -120,10 +123,10 @@
     <Drawer
       title="添加收支信息"
       v-model="showCreate"
-      width="40%"
+      width="60%"
       :mask-closable="false"
     >
-      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="100">
+      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="140">
         <Row>
           <i-Col span="12">
             <FormItem label="收支单编号" prop="paymentCode">
@@ -181,11 +184,6 @@
               />
             </FormItem>
           </i-Col>
-          <!--<i-Col span="12">-->
-          <!--<FormItem label="费用类型" prop="costType">-->
-          <!--<Input v-model="BillFormData.costType" placeholder="请输入收支合计" />-->
-          <!--</FormItem>-->
-          <!--</i-Col>-->
         </Row>
       </Form>
       <div class="create-drawer-footer">
@@ -203,14 +201,14 @@
     <Drawer
       title="修改收支信息"
       v-model="showModify"
-      width="40%"
+      width="60%"
       :mask-closable="false"
     >
       <Form
         ref="modifyBillForm"
         :model="BillFormData"
         :rules="formRules"
-        :label-width="80"
+        :label-width="140"
       >
         <Row>
           <i-Col span="12">
@@ -293,6 +291,24 @@ export default {
   name: "ArticleList",
   data: function() {
     return {
+        paymentTypes: [
+            {
+                value: "1",
+                label: "到付"
+            },
+            {
+                value: "2",
+                label: "部分结算"
+            },
+            {
+                value: "3",
+                label: "线上付款"
+            },
+            {
+                value: "4",
+                label: "其他"
+            }
+        ],
       billsColumns: [
         {
           type: "selection",
@@ -306,10 +322,11 @@ export default {
           width: 80,
           align: "center"
         },
+
         {
           title: "收支单号",
           width: 200,
-          type: "code",
+          key: "code",
           align: "center"
         },
         {
@@ -319,6 +336,40 @@ export default {
           align: "center",
           sortable: true
         },
+          {
+              title: "付款类型",
+              key: "paymentType",
+              sortable: true,
+              render: (h, params) => {
+                  const row = params.row;
+                  const color =
+                      row.paymentType === "1"
+                          ? "primary"
+                          : row.paymentType === "2"
+                          ? "warning"
+                          :row.paymentType === "3"
+                              ?"success":"error";
+                  const text =
+                      row.paymentType === "1"
+                          ? "到付"
+                          : row.paymentType === "2"
+                          ? "部分结算"
+                          :row.paymentType === "3"?"线上付款":"其他";
+
+                  return h(
+                      "Tag",
+                      {
+                          props: {
+                              type: "dot",
+                              color: color
+                          }
+                      },
+                      text
+                  );
+              },
+              width: 200,
+              align: "center"
+          },
         {
           title: "业务员",
           key: "salesMan",
@@ -360,94 +411,12 @@ export default {
         /*单据编号*/
         code: "",
         /*单据类型*/
-        type:
-          "1:托运单；2:发车单；3：到车单；4回车单；5收支费用单；6客户结算单；7司机结算单",
-        /*车辆单据编号*/
-        vehicleBillCode: "",
-        /*车辆单据类型*/
-        vehicelBillType: "",
-        /*车辆单据开具日期*/
-        vehicleBillDate: "",
-        /*结算单据编号*/
-        accountBillCode: "",
-        /*..类型*/
-        accountBillType: "",
-        /*..日期*/
-        accountBillDate: "",
+        type: "",
         /*收支单据编号*/
         paymentCode: "",
-        /*服务站点*/
-        salesStation: "",
-        /*顾客姓名*/
-        customerName: "",
-        /*收款类型*/
-        gatherType: "",
-        /*托运人*/
         conSignMan: "",
-        /*托运人电话*/
-        conSignPhone: "",
-        /*始发地址*/
-        startAddress: "",
-        /*始发所在区域*/
-        startRegion: "",
-        /*始发邮编*/
-        startPostCode: "",
-        /*始发日期*/
-        startDate: "",
-        /*始发站点*/
-        startStation: "",
-        /*接货人*/
-        receiveMan: "",
-        /*接货人电话*/
-        receivePhone: "",
-        /*接货人地址*/
-        receiveAddress: "",
-        /*接货日期*/
-        receiveDate: "",
-        /*目标站点*/
-        targetStation: "",
-        /*目标区域*/
-        targetRegion: "",
-        /*服务类型*/
-        serviceType: "",
-        /*运输方式*/
-        transportationType: "",
-        /*其他费用*/
-        otherCost: "",
-        /*物流费用*/
-        logisCost: "",
-        /*运输费用*/
-        transportCost: "",
         /*付款类型*/
         paymentType: "",
-        /*应付金额*/
-        accountPayable: "",
-        /*实付金额*/
-        realityPayable: "",
-        /*未付金额*/
-        unReceivedPayable: "",
-        /*折让金额*/
-        allowancePayable: "",
-        /*发车状态*/
-        arriveVehicleStatus: "",
-        /*车到站状态*/
-        departVehicleStatus: "",
-        /*车牌号*/
-        vehicleCode: "",
-        /*车辆类型*/
-        vehicleType: "",
-        /*司机姓名*/
-        driverName: "",
-        /*司机电话*/
-        driverPhone: "",
-        /*收入金额*/
-        incomePayable: "",
-        /*支出金额*/
-        expendPayable: "",
-        /*收支合计*/
-        paymentsTotal: "",
-        /*收支日期*/
-        paymentsDate: ""
       },
       tyBillList: [],
       totalCount: 0,
@@ -459,12 +428,12 @@ export default {
         /*单据编号*/
         code: "",
         /*单据类型*/
-        type:
-          "1:托运单；2:发车单；3：到车单；4回车单；5收支费用单；6客户结算单；7司机结算单",
+        // type: "1:托运单；2:发车单；3：到车单；4回车单；5收支费用单；6客户结算单；7司机结算单",
+        type: "",
         /*车辆单据编号*/
         vehicleBillCode: "",
         /*车辆单据类型*/
-        vehicelBillType: "",
+        vehicleBillType: "",
         /*车辆单据开具日期*/
         vehicleBillDate: "",
         /*结算单据编号*/
@@ -932,7 +901,7 @@ export default {
       this.BillFormData = {
         type: this.selectBill[0].type,
         vehicleBillCode: this.selectBill[0].vehicleBillCode,
-        vehicelBillType: this.selectBill[0].vehicelBillType,
+        vehicleBillType: this.selectBill[0].vehicleBillType,
         vehicleBillDate: this.selectBill[0].vehicleBillDate,
         accountBillCode: this.selectBill[0].accountBillCode,
         accountBillType: this.selectBill[0].accountBillType,

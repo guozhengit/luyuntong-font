@@ -114,14 +114,14 @@
     <Drawer
       title="添加车辆信息"
       v-model="showCreate"
-      width="800"
+      width="60%"
       :mask-closable="false"
     >
       <Form
         ref="createVehicleForm"
         :model="vehicleFormData"
         :rules="formRules"
-        :label-width="120"
+        :label-width="140"
       >
         <Row>
           <i-Col span="12">
@@ -246,7 +246,7 @@
         ref="modifyVehicleForm"
         :model="vehicleFormData"
         :rules="formRules"
-        :label-width="120"
+        :label-width="100"
       >
         <Row>
           <i-Col span="12">

@@ -64,15 +64,8 @@
               ghost
               icon="ios-download-outline"
               @click="exportReport(1)"
-              >未排序导出</Button
+              >导出</Button
             >
-            <Button
-              style="margin: 3px"
-              type="success"
-              ghost
-              icon="ios-download-outline"
-              @click="exportReport(2)"
-              >排序导出</Button
             >
           </ButtonGroup>
         </FormItem>

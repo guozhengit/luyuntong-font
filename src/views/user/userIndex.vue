@@ -183,14 +183,14 @@
     <Drawer
       title="修改用户"
       v-model="showModify"
-      width="360"
+      width="40%"
       :mask-closable="false"
     >
       <Form
         ref="modifyUserForm"
         :model="formData"
         :rules="formRules"
-        :label-width="100"
+        :label-width="140"
       >
         <Row>
           <i-Col span="24">

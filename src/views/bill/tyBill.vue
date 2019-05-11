@@ -35,17 +35,23 @@
             </div>
           </div>
         </FormItem>
-
-        <FormItem prop="conSignMan">
+        <FormItem prop="gatherType">
           <div class="ivu-form-item select-ground">
-            <span class="select-name">业务员</span>
+            <span class="select-name">计价方式</span>
             <div class="select-input">
-              <Input
-                v-model="billSearchForm.conSignMan"
-                type="text"
-                placeholder="请输入业务员"
-                clearable
-              />
+              <Select
+                      v-model="billSearchForm.gatherType"
+                      placeholder="请选择计价方式"
+                      clearable
+              >
+                <Option
+                        v-for="item in gatherTypes"
+                        :value="item.value"
+                        :key="item.value"
+                        :name="gatherType"
+                >{{ item.label }}
+                </Option>
+              </Select>
             </div>
           </div>
         </FormItem>
@@ -63,14 +69,13 @@
             </div>
           </div>
         </FormItem>
-
         <FormItem prop="paymentType">
           <div class="ivu-form-item select-ground">
-            <span class="select-name">付款方式</span>
+            <span class="select-name">付款类型</span>
             <div class="select-input">
               <Select
                 v-model="billSearchForm.paymentType"
-                placeholder="请选择付款方式"
+                placeholder="请选择付款类型"
                 clearable
               >
                 <Option
@@ -84,6 +89,7 @@
             </div>
           </div>
         </FormItem>
+
         <FormItem prop="transportationType">
           <div class="ivu-form-item select-ground">
             <span class="select-name">运输方式</span>
@@ -146,7 +152,7 @@
         </Button>
       </ButtonGroup>
     </div>
-    <div class="data-table" style="height: 65%">
+    <div class="data-table" style="height: 60%">
       <Table
         border
         :columns="billColumns"
@@ -175,7 +181,12 @@
       width="88%"
       :mask-closable="false"
     >
-      <Form ref="" :model="BillFormData" :rules="formRules" :label-width="120">
+      <Form
+        ref="createBillForm"
+        :model="BillFormData"
+        :rules="formRules"
+        :label-width="140"
+      >
         <Row>
           <i-Col span="6">
             <FormItem label="单据编号" prop="code">
@@ -315,7 +326,7 @@
           <i-Col span="6">
             <FormItem label="运输方式" prop="transportationType">
               <Select
-                v-model="billSearchForm.transportationType"
+                v-model="BillFormData.transportationType"
                 placeholder="请选择运输方式"
                 clearable
               >
@@ -330,15 +341,10 @@
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="物流费用" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入物流费用" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="6">
-            <FormItem label="运输费用" prop="transportCost">
+            <FormItem label="物流费用" prop="logisticsCost">
               <Input
-                v-model="BillFormData.transportCost"
-                placeholder="请输入运输费用"
+                v-model="BillFormData.logisticsCost"
+                placeholder="请输入物流费用"
               />
             </FormItem>
           </i-Col>
@@ -353,7 +359,7 @@
           <i-Col span="6">
             <FormItem label="付款类型" prop="paymentType">
               <Select
-                v-model="billSearchForm.paymentType"
+                v-model="BillFormData.paymentType"
                 placeholder="请选择付款类型"
                 clearable
               >
@@ -420,7 +426,7 @@
       :rules="formRules"
       :mask-closable="false"
     >
-      <Form ref="" :model="BillFormData"  :label-width="120">
+      <Form ref="ModifyBillForm" :model="BillFormData" :label-width="140">
         <Row>
           <i-Col span="6">
             <FormItem label="单据编号" prop="code">
@@ -430,184 +436,171 @@
           <i-Col span="6">
             <FormItem label="业务员" prop="salesMan">
               <Input
-                      v-model="BillFormData.salesMan"
-                      placeholder="请选择业务员"
+                v-model="BillFormData.salesMan"
+                placeholder="请选择业务员"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="服务站点" prop="salesStation">
               <Input
-                      v-model="BillFormData.salesStation"
-                      placeholder="请输入服务站点"
+                v-model="BillFormData.salesStation"
+                placeholder="请输入服务站点"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="顾客姓名" prop="customerName">
               <Input
-                      v-model="BillFormData.customerName"
-                      placeholder="请输入顾客姓名"
+                v-model="BillFormData.customerName"
+                placeholder="请输入顾客姓名"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="托运人" prop="conSignMan">
               <Input
-                      v-model="BillFormData.conSignMan"
-                      placeholder="请输入托运人"
+                v-model="BillFormData.conSignMan"
+                placeholder="请输入托运人"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="托运人电话" prop="conSignPhone">
               <Input
-                      v-model="BillFormData.conSignPhone"
-                      placeholder="请输入托运人电话"
+                v-model="BillFormData.conSignPhone"
+                placeholder="请输入托运人电话"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="始发地址" prop="startAddress">
               <Input
-                      v-model="BillFormData.startAddress"
-                      placeholder="请输入始发地址"
+                v-model="BillFormData.startAddress"
+                placeholder="请输入始发地址"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="始发所在区域" prop="startRegion">
               <Input
-                      v-model="BillFormData.startRegion"
-                      placeholder="请输入始发所在区域"
+                v-model="BillFormData.startRegion"
+                placeholder="请输入始发所在区域"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="始发邮编" prop="startPostCode">
               <Input
-                      v-model="BillFormData.startPostCode"
-                      placeholder="请输入始发邮编"
+                v-model="BillFormData.startPostCode"
+                placeholder="请输入始发邮编"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="始发日期" prop="startDate">
               <Input
-                      v-model="BillFormData.startDate"
-                      placeholder="请输入始发日期"
-                      type="date"
+                v-model="BillFormData.startDate"
+                placeholder="请输入始发日期"
+                type="date"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="始发站点" prop="startStation">
               <Input
-                      v-model="BillFormData.startStation"
-                      placeholder="请输入始发站点"
+                v-model="BillFormData.startStation"
+                placeholder="请输入始发站点"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="接货人" prop="receiveMan">
               <Input
-                      v-model="BillFormData.receiveMan"
-                      placeholder="请输入接货人"
+                v-model="BillFormData.receiveMan"
+                placeholder="请输入接货人"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="接货人电话" prop="receivePhone">
               <Input
-                      v-model="BillFormData.receivePhone"
-                      placeholder="请输入接货人电话"
+                v-model="BillFormData.receivePhone"
+                placeholder="请输入接货人电话"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="接货人地址" prop="receiveAddress">
               <Input
-                      v-model="BillFormData.receiveAddress"
-                      placeholder="请输入接货人地址"
+                v-model="BillFormData.receiveAddress"
+                placeholder="请输入接货人地址"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="接货日期" prop="receiveDate">
               <Input
-                      v-model="BillFormData.receiveDate"
-                      placeholder="请输入接货日期"
-                      type="date"
+                v-model="BillFormData.receiveDate"
+                placeholder="请输入接货日期"
+                type="date"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="目标站点" prop="targetStation">
               <Input
-                      v-model="BillFormData.targetStation"
-                      placeholder="请输入目标站点"
+                v-model="BillFormData.targetStation"
+                placeholder="请输入目标站点"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="目标区域" prop="targetRegion">
               <Input
-                      v-model="BillFormData.targetRegion"
-                      placeholder="请输入目标区域"
+                v-model="BillFormData.targetRegion"
+                placeholder="请输入目标区域"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="运输方式" prop="transportationType">
               <Select
-                      v-model="billSearchForm.transportationType"
-                      placeholder="请选择运输方式"
-                      clearable
+                v-model="BillFormData.transportationType"
+                placeholder="请选择运输方式"
+                clearable
               >
                 <Option
-                        v-for="item in transportationTypes"
-                        :value="item.value"
-                        :key="item.value"
-                        :name="transportationType"
-                >{{ item.label }}
+                  v-for="item in transportationTypes"
+                  :value="item.value"
+                  :key="item.value"
+                  :name="transportationType"
+                  >{{ item.label }}
                 </Option>
               </Select>
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="物流费用" prop="name">
-              <Input v-model="BillFormData.name" placeholder="请输入物流费用" />
-            </FormItem>
-          </i-Col>
-          <i-Col span="6">
-            <FormItem label="运输费用" prop="transportCost">
-              <Input
-                      v-model="BillFormData.transportCost"
-                      placeholder="请输入运输费用"
-              />
-            </FormItem>
-          </i-Col>
-          <i-Col span="6">
             <FormItem label="其他费用" prop="otherCost">
               <Input
-                      v-model="BillFormData.otherCost"
-                      placeholder="请输入其他费用"
+                v-model="BillFormData.otherCost"
+                placeholder="请输入其他费用"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="付款类型" prop="paymentType">
               <Select
-                      v-model="billSearchForm.paymentType"
-                      placeholder="请选择付款类型"
-                      clearable
+                v-model="BillFormData.paymentType"
+                placeholder="请选择付款类型"
+                clearable
               >
                 <Option
-                        v-for="item in paymentTypes"
-                        :value="item.value"
-                        :key="item.value"
-                        :name="paymentType"
-                >{{ item.label }}
+                  v-for="item in paymentTypes"
+                  :value="item.value"
+                  :key="item.value"
+                  :name="paymentType"
+                  >{{ item.label }}
                 </Option>
               </Select>
             </FormItem>
@@ -615,32 +608,32 @@
           <i-Col span="6">
             <FormItem label="应付金额" prop="accountPayable">
               <Input
-                      v-model="BillFormData.accountPayable"
-                      placeholder="请输入应付金额"
+                v-model="BillFormData.accountPayable"
+                placeholder="请输入应付金额"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="实付金额" prop="realityPayable">
               <Input
-                      v-model="BillFormData.realityPayable"
-                      placeholder="请输入实付金额"
+                v-model="BillFormData.realityPayable"
+                placeholder="请输入实付金额"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="未付金额" prop="unReceivedPayable">
               <Input
-                      v-model="BillFormData.unReceivedPayable"
-                      placeholder="请输入未付金额"
+                v-model="BillFormData.unReceivedPayable"
+                placeholder="请输入未付金额"
               />
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="折让金额" prop="allowancePayable">
               <Input
-                      v-model="BillFormData.allowancePayable"
-                      placeholder="请输入折让金额"
+                v-model="BillFormData.allowancePayable"
+                placeholder="请输入折让金额"
               />
             </FormItem>
           </i-Col>
@@ -663,37 +656,51 @@
 
 <script>
 export default {
-  name: "ArticleList",
+  name: "tyBill",
   data: function() {
     return {
       paymentTypes: [
         {
-          value: "支护宝",
-          label: "支护宝"
+          value: "1",
+          label: "到付"
         },
         {
-          value: "微信",
-          label: "微信"
+          value: "2",
+          label: "部分结算"
         },
         {
-          value: "银行卡",
-          label: "银行卡"
+          value: "3",
+          label: "线上付款"
         },
         {
-          value: "现金",
-          label: "现金"
+          value: "4",
+          label: "其他"
         }
       ],
-      transportationTypes: [
-        {
-          value: "卡车陆运",
-          label: "卡车陆运"
-        },
-        {
-          value: "货车陆运",
-          label: "货车陆运"
-        }
-      ],
+        gatherTypes: [
+            {
+                value: "1",
+                label: "体积计价"
+            },
+            {
+                value: "2",
+                label: "重量计价"
+            },
+            {
+                value: "3",
+                label: "其他方式"
+            },
+        ],
+        transportationTypes:[
+            {
+                value: "1",
+                label: "陆运"
+            },
+            {
+                value: "2",
+                label: "其他"
+            },
+        ],
       billColumns: [
         {
           type: "selection",
@@ -817,17 +824,94 @@ export default {
           align: "center",
           sortable: true
         },
+          {
+              title: "运输方式",
+              key: "transportationType",
+              width: 200,
+              align: "center",render: (h, params) => {
+                  const row = params.row;
+                  const color =
+                      row.transportationType === "1"
+                          ? "primary"
+                          :  "warning";
+
+                  const text =
+                      row.transportationType === "1"
+                          ? "陆运"
+                          : "其他";
+                  return h(
+                      "Tag",
+                      {
+                          props: {
+                              type: "dot",
+                              color: color
+                          }
+                      },
+                      text
+                  );
+              },
+
+              },
+          {
+              title: "付款类型",
+              key: "paymentType",
+              sortable: true,
+              render: (h, params) => {
+                  const row = params.row;
+                  const color =
+                      row.paymentType === "1"
+                          ? "primary"
+                          : row.paymentType === "2"
+                          ? "warning"
+                          :row.paymentType === "3"
+                              ?"success":"error";
+                  const text =
+                      row.paymentType === "1"
+                          ? "到付"
+                          : row.paymentType === "2"
+                          ? "部分结算"
+                          :row.paymentType === "3"?"线上付款":"其他";
+
+                  return h(
+                      "Tag",
+                      {
+                          props: {
+                              type: "dot",
+                              color: color
+                          }
+                      },
+                      text
+                  );
+              },
+              width: 200,
+              align: "center"
+          },
         {
-          title: "运输方式",
-          key: "transportationType",
-          width: 200,
-          align: "center",
-          sortable: true
-        },
-        {
-          title: "支付类型",
+          title: "计价方式",
           key: "gatherType",
           width: 200,
+            render: (h, params) => {
+                const row = params.row;
+                const color =
+                    row.gatherType === "1"
+                        ? "primary"
+                        :row.gatherType === "2"?"warning":"error";
+
+                const text =
+                    row.gatherType === "1"
+                        ? "体积计价"
+                        :row.gatherType === "2"?"重量计价":"其他方式";
+                return h(
+                    "Tag",
+                    {
+                        props: {
+                            type: "dot",
+                            color: color
+                        }
+                    },
+                    text
+                );
+            },
           align: "center",
           sortable: true
         },
@@ -897,7 +981,7 @@ export default {
         /*托运单据编号*/
         code: "",
         /*单据类型*/
-        type: "1",
+        type: "4",
         /*业务员*/
         salesMan: "",
         /*服务站点*/
@@ -936,10 +1020,10 @@ export default {
         serviceType: "",
         /*运输方式*/
         transportationType: "",
+        /*物流费用*/
+        logisticsCost: "",
         /*其他费用*/
         otherCost: "",
-        /*物流费用*/
-        logisCost: "",
         /*运输费用*/
         transportCost: "",
         /*付款类型*/
@@ -975,7 +1059,7 @@ export default {
         /*车辆单据编号*/
         vehicleBillCode: "",
         /*车辆单据类型*/
-        vehicelBillType: "",
+        vehicleBillType: "",
         /*车辆单据开具日期*/
         vehicleBillDate: "",
         /*结算单据编号*/
@@ -1134,7 +1218,7 @@ export default {
           }
         ],
         /*物流费用*/
-        logisCost: [
+        logisticsCost: [
           {
             required: true,
             message: "物流费用不能为空",
@@ -1258,6 +1342,7 @@ export default {
           }
         ]
       },
+
       showCreate: false,
       createLoading: false,
 
@@ -1317,6 +1402,7 @@ export default {
           this.deleteLoading = false;
           this.$Message.success("删除成功");
           /*删除成功，回调查询接口*/
+          this.$refs.billSearchForm.resetFields();
           this.handleQuery();
         })
         .catch(() => {
@@ -1325,7 +1411,7 @@ export default {
         });
     },
     handleCreateBill() {
-      this.$refs[""].validate(valid => {
+      this.$refs["createBillForm"].validate(valid => {
         if (valid) {
           this.createLoading = true;
           this.$axios
@@ -1334,7 +1420,7 @@ export default {
               this.createLoading = false;
               this.showCreate = false;
               this.$Message.success("报存单据成功");
-              this.$refs[""].resetFields();
+              this.$refs["createBillForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {
@@ -1347,8 +1433,8 @@ export default {
     /*此处为更新操作 获取到查询的实体数据*/
     showModifyDrawer() {
       this.BillFormData = {
-        id:this.selectBill[0].id,
-        type: this.selectBill[0].type,
+        type: "",
+        code: this.selectBill[0].code,
         vehicleBillCode: this.selectBill[0].vehicleBillCode,
         vehicleBillDate: this.selectBill[0].vehicleBillDate,
         accountBillCode: this.selectBill[0].accountBillCode,
@@ -1390,17 +1476,16 @@ export default {
         incomePayable: this.selectBill[0].incomePayable,
         expendPayable: this.selectBill[0].expendPayable,
         paymentsTotal: this.selectBill[0].paymentsTotal,
-        paymentsDate: this.selectBill[0].paymentsDate,
-        code: this.selectBill[0].code
+        paymentsDate: this.selectBill[0].paymentsDate
       };
       this.showModify = true;
     },
     handleCancelModifyBill() {
       this.showModify = false;
-      this.$refs["modifyBillForm"].resetFields();
+      this.$refs["ModifyBillForm"].resetFields();
     },
     handleModifyBill() {
-      this.$refs["modifyBillForm"].validate(valid => {
+      this.$refs["ModifyBillForm"].validate(valid => {
         if (valid) {
           this.modifyLoading = true;
           this.$axios
@@ -1409,7 +1494,7 @@ export default {
               this.modifyLoading = false;
               this.showModify = false;
               this.$Message.success("报存单据成功");
-              this.$refs["modifyBillForm"].resetFields();
+              this.$refs["ModifyBillForm"].resetFields();
               this.handleQuery();
             })
             .catch(() => {

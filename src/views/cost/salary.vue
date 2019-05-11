@@ -53,8 +53,7 @@
         </FormItem>
       </Form>
     </div>
-
-    <div class="data-table" style="height: 90%">
+    <div class="data-table" style="height: 80%">
       <Table
         border
         :columns="salaryColumns"
@@ -62,20 +61,6 @@
         @on-selection-change="handleSelect"
       >
       </Table>
-    </div>
-
-    <div class="pagination">
-      <Page
-        :total="totalCount"
-        :current="pageIndex"
-        :page-size="pageSize"
-        show-total
-        show-sizer
-        show-elevator
-        @on-change="handlePageChange"
-        @on-page-size-change="handlePageSizeChange"
-      >
-      </Page>
     </div>
   </div>
 </template>

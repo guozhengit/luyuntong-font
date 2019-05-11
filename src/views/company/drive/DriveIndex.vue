@@ -134,14 +134,14 @@
     <Drawer
       title="添加司机信息"
       v-model="showCreate"
-      width="40%"
+      width="50%"
       :mask-closable="false"
     >
       <Form
         ref="createDriverForm"
         :model="DriverFormData"
         :rules="formRules"
-        :label-width="120"
+        :label-width="140"
       >
         <Row>
           <i-Col span="12">
@@ -243,14 +243,14 @@
     <Drawer
             title="修改司机信息"
             v-model="showModify"
-            width="500"
+            width="360"
             :mask-closable="false"
     >
       <Form
               ref="modifyDriverForm"
               :model="emplyeeFormData"
               :rules="formRules"
-              :label-width="120"
+              :label-width="80"
       >
     <Row>
       <i-Col span="12">

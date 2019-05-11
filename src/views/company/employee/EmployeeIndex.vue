@@ -131,14 +131,14 @@
     <Drawer
       title="添加职员信息"
       v-model="showCreate"
-      width="500"
+      width="40%"
       :mask-closable="false"
     >
       <Form
         ref="createEmpForm"
         :model="emplyeeFormData"
         :rules="formRules"
-        :label-width="120"
+        :label-width="140"
       >
         <Row>
           <i-Col span="24">
@@ -208,14 +208,14 @@
     <Drawer
       title="修改职员信息"
       v-model="showModify"
-      width="500"
+      width="40%"
       :mask-closable="false"
     >
       <Form
         ref="modifyEmpForm"
         :model="emplyeeFormData"
         :rules="formRules"
-        :label-width="120"
+        :label-width="140"
       >
         <Row>
           <i-Col span="24">
