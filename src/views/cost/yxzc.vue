@@ -41,16 +41,16 @@
               >导出
             </Button>
           </ButtonGroup>
-          <ButtonGroup>
-            <Button
-              style="margin: 5px;"
-              type="success"
-              icon="md-film"
-              ghost
-              @click="handleQuery"
-              >智能BI展示
-            </Button>
-          </ButtonGroup>
+          <!--<ButtonGroup>-->
+            <!--<Button-->
+              <!--style="margin: 5px;"-->
+              <!--type="success"-->
+              <!--icon="md-film"-->
+              <!--ghost-->
+              <!--@click="handleQuery"-->
+              <!--&gt;智能BI展示-->
+            <!--</Button>-->
+          <!--</ButtonGroup>-->
         </FormItem>
       </Form>
     </div>

@@ -50,6 +50,16 @@
               >查询
             </Button>
           </ButtonGroup>
+          <ButtonGroup>
+            <Button
+                    style="margin: 5px;"
+                    type="error"
+                    icon="md-arrow-down"
+                    ghost
+                    @click="exportReport1()"
+            >导出
+            </Button>
+          </ButtonGroup>
         </FormItem>
       </Form>
     </div>
@@ -159,6 +169,11 @@ export default {
     };
   },
   methods: {
+      exportReport1() {
+          this.$refs.table.exportCsv({
+              filename: "工资成本",
+          });
+      },
     handleQuery() {
       this.$axios
         .post(
