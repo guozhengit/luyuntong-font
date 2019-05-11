@@ -26,9 +26,9 @@
           <div class="ivu-form-item select-ground">
             <span class="select-name">托运时间</span>
             <div class="select-input">
-              <Input
+              <DatePicker
                 v-model="billSearchForm.startDate"
-                type="DATE"
+                type="date"
                 placeholder="请输入托运时间"
                 clearable
               />
@@ -40,16 +40,16 @@
             <span class="select-name">计价方式</span>
             <div class="select-input">
               <Select
-                      v-model="billSearchForm.gatherType"
-                      placeholder="请选择计价方式"
-                      clearable
+                v-model="billSearchForm.gatherType"
+                placeholder="请选择计价方式"
+                clearable
               >
                 <Option
-                        v-for="item in gatherTypes"
-                        :value="item.value"
-                        :key="item.value"
-                        :name="gatherType"
-                >{{ item.label }}
+                  v-for="item in gatherTypes"
+                  :value="item.value"
+                  :key="item.value"
+                  :name="gatherType"
+                  >{{ item.label }}
                 </Option>
               </Select>
             </div>
@@ -249,19 +249,56 @@
               />
             </FormItem>
           </i-Col>
+
           <i-Col span="6">
-            <FormItem label="始发邮编" prop="startPostCode">
-              <Input
-                v-model="BillFormData.startPostCode"
-                placeholder="请输入始发邮编"
-              />
+            <FormItem label="运输方式" prop="transportationType">
+              <Select
+                v-model="BillFormData.transportationType"
+                placeholder="请选择运输方式"
+                clearable
+              >
+                <Option
+                  v-for="item in transportationTypes"
+                  :value="item.value"
+                  :key="item.value"
+                  :name="transportationType"
+                  >{{ item.label }}
+                </Option>
+              </Select>
+            </FormItem>
+          </i-Col>
+
+          <i-Col span="6">
+            <FormItem label="付款类型" prop="paymentType">
+              <Select
+                v-model="BillFormData.paymentType"
+                placeholder="请选择付款类型"
+                clearable
+              >
+                <Option
+                  v-for="item in paymentTypes"
+                  :value="item.value"
+                  :key="item.value"
+                  :name="paymentType"
+                  >{{ item.label }}
+                </Option>
+              </Select>
             </FormItem>
           </i-Col>
           <i-Col span="6">
             <FormItem label="始发日期" prop="startDate">
-              <Input
+              <DatePicker
                 v-model="BillFormData.startDate"
                 placeholder="请输入始发日期"
+                type="date"
+              />
+            </FormItem>
+          </i-Col>
+          <i-Col span="6">
+            <FormItem label="接货日期" prop="receiveDate">
+              <DatePicker
+                v-model="BillFormData.receiveDate"
+                placeholder="请输入接货日期"
                 type="date"
               />
             </FormItem>
@@ -299,11 +336,10 @@
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="接货日期" prop="receiveDate">
+            <FormItem label="始发邮编" prop="startPostCode">
               <Input
-                v-model="BillFormData.receiveDate"
-                placeholder="请输入接货日期"
-                type="date"
+                v-model="BillFormData.startPostCode"
+                placeholder="请输入始发邮编"
               />
             </FormItem>
           </i-Col>
@@ -324,17 +360,17 @@
             </FormItem>
           </i-Col>
           <i-Col span="6">
-            <FormItem label="运输方式" prop="transportationType">
+            <FormItem label="计价方式" prop="gatherType">
               <Select
-                v-model="BillFormData.transportationType"
+                v-model="BillFormData.gatherType"
                 placeholder="请选择运输方式"
                 clearable
               >
                 <Option
-                  v-for="item in transportationTypes"
+                  v-for="item in gatherTypes"
                   :value="item.value"
                   :key="item.value"
-                  :name="transportationType"
+                  :name="gatherType"
                   >{{ item.label }}
                 </Option>
               </Select>
@@ -356,23 +392,7 @@
               />
             </FormItem>
           </i-Col>
-          <i-Col span="6">
-            <FormItem label="付款类型" prop="paymentType">
-              <Select
-                v-model="BillFormData.paymentType"
-                placeholder="请选择付款类型"
-                clearable
-              >
-                <Option
-                  v-for="item in paymentTypes"
-                  :value="item.value"
-                  :key="item.value"
-                  :name="paymentType"
-                  >{{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
-          </i-Col>
+
           <i-Col span="6">
             <FormItem label="应付金额" prop="accountPayable">
               <Input
@@ -659,6 +679,7 @@ export default {
   name: "tyBill",
   data: function() {
     return {
+      PriceType: "",
       paymentTypes: [
         {
           value: "1",
@@ -677,30 +698,30 @@ export default {
           label: "其他"
         }
       ],
-        gatherTypes: [
-            {
-                value: "1",
-                label: "体积计价"
-            },
-            {
-                value: "2",
-                label: "重量计价"
-            },
-            {
-                value: "3",
-                label: "其他方式"
-            },
-        ],
-        transportationTypes:[
-            {
-                value: "1",
-                label: "陆运"
-            },
-            {
-                value: "2",
-                label: "其他"
-            },
-        ],
+      gatherTypes: [
+        {
+          value: "1",
+          label: "体积计价"
+        },
+        {
+          value: "2",
+          label: "重量计价"
+        },
+        {
+          value: "3",
+          label: "其他方式"
+        }
+      ],
+      transportationTypes: [
+        {
+          value: "1",
+          label: "陆运"
+        },
+        {
+          value: "2",
+          label: "其他"
+        }
+      ],
       billColumns: [
         {
           type: "selection",
@@ -824,94 +845,96 @@ export default {
           align: "center",
           sortable: true
         },
-          {
-              title: "运输方式",
-              key: "transportationType",
-              width: 200,
-              align: "center",render: (h, params) => {
-                  const row = params.row;
-                  const color =
-                      row.transportationType === "1"
-                          ? "primary"
-                          :  "warning";
+        {
+          title: "运输方式",
+          key: "transportationType",
+          width: 200,
+          align: "center",
+          render: (h, params) => {
+            const row = params.row;
+            const color =
+              row.transportationType === "1" ? "primary" : "warning";
 
-                  const text =
-                      row.transportationType === "1"
-                          ? "陆运"
-                          : "其他";
-                  return h(
-                      "Tag",
-                      {
-                          props: {
-                              type: "dot",
-                              color: color
-                          }
-                      },
-                      text
-                  );
+            const text = row.transportationType === "1" ? "陆运" : "其他";
+            return h(
+              "Tag",
+              {
+                props: {
+                  type: "dot",
+                  color: color
+                }
               },
+              text
+            );
+          }
+        },
+        {
+          title: "付款类型",
+          key: "paymentType",
+          sortable: true,
+          render: (h, params) => {
+            const row = params.row;
+            const color =
+              row.paymentType === "1"
+                ? "primary"
+                : row.paymentType === "2"
+                ? "warning"
+                : row.paymentType === "3"
+                ? "success"
+                : "error";
+            const text =
+              row.paymentType === "1"
+                ? "到付"
+                : row.paymentType === "2"
+                ? "部分结算"
+                : row.paymentType === "3"
+                ? "线上付款"
+                : "其他";
 
+            return h(
+              "Tag",
+              {
+                props: {
+                  type: "dot",
+                  color: color
+                }
               },
-          {
-              title: "付款类型",
-              key: "paymentType",
-              sortable: true,
-              render: (h, params) => {
-                  const row = params.row;
-                  const color =
-                      row.paymentType === "1"
-                          ? "primary"
-                          : row.paymentType === "2"
-                          ? "warning"
-                          :row.paymentType === "3"
-                              ?"success":"error";
-                  const text =
-                      row.paymentType === "1"
-                          ? "到付"
-                          : row.paymentType === "2"
-                          ? "部分结算"
-                          :row.paymentType === "3"?"线上付款":"其他";
-
-                  return h(
-                      "Tag",
-                      {
-                          props: {
-                              type: "dot",
-                              color: color
-                          }
-                      },
-                      text
-                  );
-              },
-              width: 200,
-              align: "center"
+              text
+            );
           },
+          width: 200,
+          align: "center"
+        },
         {
           title: "计价方式",
           key: "gatherType",
           width: 200,
-            render: (h, params) => {
-                const row = params.row;
-                const color =
-                    row.gatherType === "1"
-                        ? "primary"
-                        :row.gatherType === "2"?"warning":"error";
+          render: (h, params) => {
+            const row = params.row;
+            const color =
+              row.gatherType === "1"
+                ? "primary"
+                : row.gatherType === "2"
+                ? "warning"
+                : "error";
 
-                const text =
-                    row.gatherType === "1"
-                        ? "体积计价"
-                        :row.gatherType === "2"?"重量计价":"其他方式";
-                return h(
-                    "Tag",
-                    {
-                        props: {
-                            type: "dot",
-                            color: color
-                        }
-                    },
-                    text
-                );
-            },
+            const text =
+              row.gatherType === "1"
+                ? "体积计价"
+                : row.gatherType === "2"
+                ? "重量计价"
+                : "其他方式";
+            return h(
+              "Tag",
+              {
+                props: {
+                  type: "dot",
+                  color: color
+                }
+              },
+              text
+            );
+          },
           align: "center",
           sortable: true
         },
@@ -1353,6 +1376,21 @@ export default {
       deleteLoading: false
     };
   },
+  watch: {
+    PriceType(val) {
+      this.gatherType = this.gatherTypes[val].value;
+      if (this.gatherType === "1") {
+          this.transportCost == this.transportCost / 2;
+          this.accountPayable == this.accountPayable * 2;
+      } else if (this.gatherType === "2") {
+          this.transportCost == this.transportCost * 2;
+          this.accountPayable == this.accountPayable / 2;
+      } else {
+          this.transportCost == this.transportCost / 2;
+          this.accountPayable == this.accountPayable / 2;
+      }
+    }
+  },
   methods: {
     handleQuery() {
       this.$axios
@@ -1413,7 +1451,7 @@ export default {
     handleCreateBill() {
       this.$refs["createBillForm"].validate(valid => {
         if (valid) {
-          this.createLoading = true;
+          this.createLoading = false;
           this.$axios
             .post("/bill", this.BillFormData)
             .then(() => {

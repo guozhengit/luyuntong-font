@@ -372,6 +372,7 @@ export default {
                     type: "selection",
                     width: 60,
                     align: "center"
+
                 },
                 {
                     title: "序号",
