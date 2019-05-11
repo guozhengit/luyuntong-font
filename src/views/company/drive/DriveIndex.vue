@@ -36,19 +36,6 @@
             </div>
           </div>
         </FormItem>
-        <FormItem prop="idCard">
-          <div class="ivu-form-item select-ground">
-            <span class="select-name">身份证</span>
-            <div class="select-input">
-              <Input
-                v-model="searchDriverForm.idCard"
-                type="text"
-                placeholder="请输入身份证"
-                clearable
-              />
-            </div>
-          </div>
-        </FormItem>
         <FormItem prop="gender">
         <div class="ivu-form-item select-ground">
         <span class="select-name">性别</span>
@@ -372,7 +359,6 @@ export default {
                     type: "selection",
                     width: 60,
                     align: "center"
-
                 },
                 {
                     title: "序号",

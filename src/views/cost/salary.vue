@@ -8,38 +8,38 @@
         :label-width="5"
         inline
       >
-        <FormItem prop="name">
+        <FormItem prop="idType">
           <div class="ivu-form-item select-ground">
             <span class="select-name">身份类型</span>
             <div class="select-input">
               <Input
-                v-model="searchSalaryData.name"
+                v-model="searchSalaryData.idType"
                 type="text"
-                placeholder="请输入用户名称"
+                placeholder="请输入身份类型"
               />
             </div>
           </div>
         </FormItem>
-        <FormItem prop="name">
+        <FormItem prop="officeCode">
           <div class="ivu-form-item select-ground">
             <span class="select-name">人员编号</span>
             <div class="select-input">
               <Input
-                v-model="searchSalaryData.name"
+                v-model="searchSalaryData.officeCode"
                 type="text"
-                placeholder="请输入用户名称"
+                placeholder="请输入人员编号"
               />
             </div>
           </div>
         </FormItem>
-        <FormItem prop="name">
+        <FormItem prop="balanceDate">
           <div class="ivu-form-item select-ground">
-            <span class="select-name">日期范围</span>
+            <span class="select-name">日期</span>
             <div class="select-input">
-              <Input
-                v-model="searchSalaryData.name"
-                type="text"
-                placeholder="请选择日期范围"
+              <DatePicker
+                v-model="searchSalaryData.balanceDate"
+                type="date" show-week-numbers
+                placeholder="请选择日期"
               />
             </div>
           </div>
@@ -66,6 +66,7 @@
     <div class="data-table" style="height: 80%">
       <Table
         border
+        ref="table"
         :columns="salaryColumns"
         :data="salaryList"
         @on-selection-change="handleSelect"

@@ -12,10 +12,10 @@
           <div class="ivu-form-item select-ground">
             <span class="select-name">盈利时间</span>
             <div class="select-input">
-              <Input
+              <DatePicker
                 v-model="searchYltjData.ProfitTime"
-                type="date"
-                placeholder="请选择日期区间"
+                type="date" show-week-numbers
+                placeholder="请选择日期"
                 clearable
               />
             </div>
@@ -43,6 +43,7 @@
     <div class="data-table" style="height: 90%">
       <Table
         border
+        ref="table"
         :columns="yltjColumns"
         :data="yltjList"
         @on-selection-change="handleSelect"

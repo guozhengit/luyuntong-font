@@ -46,7 +46,7 @@
           <div class="ivu-form-item select-ground">
             <span class="select-name">开具日期</span>
             <div class="select-input">
-              <Input
+              <DatePicker
                       v-model="billSearchForm.vehicleBillDate"
                       type="date"
                       placeholder="请输入业务操作日期"

@@ -34,6 +34,21 @@
             </div>
           </div>
         </FormItem>
+        <FormItem prop="gender">
+          <div class="ivu-form-item select-ground">
+            <span class="select-name">性别</span>
+            <div class="select-input">
+              <Select
+                      v-model="employeeSearchForm.gender"
+                      placeholder="请选择性别"
+                      clearable
+              >
+                <Option v-for="item in genderList" :value="item.value" :key="item.value">{{ item.label }}
+                </Option>
+              </Select>
+            </div>
+          </div>
+        </FormItem>
         <FormItem prop="age">
           <div class="ivu-form-item select-ground">
             <span class="select-name">年龄</span>
@@ -47,21 +62,7 @@
             </div>
           </div>
         </FormItem>
-        <FormItem prop="age">
-          <div class="ivu-form-item select-ground">
-            <span class="select-name"></span>
-            <div class="select-input">
-              <Select v-model="employeeSearchForm.age" placeholder="请选择性别">
-                <Option
-                  v-for="item in types"
-                  :value="item.value"
-                  :key="item.value"
-                  >{{ item.label }}
-                </Option>
-              </Select>
-            </div>
-          </div>
-        </FormItem>
+
         <FormItem style="float: right">
           <ButtonGroup>
             <Button type="primary" icon="md-search" ghost @click="handleQuery"
@@ -282,6 +283,16 @@ export default {
   name: "ArticleList",
   data() {
     return {
+        genderList: [
+            {
+                value: "男",
+                label: "男"
+            },
+            {
+                value: "女",
+                label: "女"
+            }
+        ],
       EmployeeColumns: [
         {
           type: "selection",

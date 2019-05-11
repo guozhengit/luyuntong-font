@@ -36,9 +36,9 @@
           <div class="ivu-form-item select-ground">
             <span class="select-name">结算日期</span>
             <div class="select-input">
-              <Input
+              <DatePicker
                 v-model="searchKhjsData.accountTime"
-                type="date"
+                type="date" show-week-numbers
                 placeholder="请输入结算日期"
               />
             </div>
@@ -68,6 +68,7 @@
     <div class="data-table" style="height: 90%">
       <Table
         border
+        ref="table"
         :columns="khjsColumns"
         :data="khjsList"
         @on-selection-change="handleSelect"

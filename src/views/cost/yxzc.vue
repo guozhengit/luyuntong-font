@@ -10,12 +10,12 @@
       >
         <FormItem prop="name">
           <div class="ivu-form-item select-ground">
-            <span class="select-name">日期范围</span>
+            <span class="select-name">日期</span>
             <div class="select-input">
-              <Input
+              <DatePicker
                 v-model="searchOPEXData.name"
-                type="text"
-                placeholder="请选择日期范围"
+                type="date" show-week-numbers
+                placeholder="请选择日期"
               />
             </div>
           </div>
@@ -58,6 +58,7 @@
     <div class="data-table" style="height: 82%">
       <Table
         border
+
         :columns="OPEXColumns"
         :data="OPEXList"
         ref="table"
