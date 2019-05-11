@@ -68,11 +68,10 @@
                 </i-col>
                 <i-col span="12">
                   <Button
-                    @click="handleShowUpdatePassword(loginForm)"
+                    @click="handleShowResetPassword"
                     style="border-color:#f0f3f7"
                     type="error"
                     long
-                    :loading="loading"
                     >忘记密码</Button
                   >
                 </i-col>
@@ -81,6 +80,44 @@
           </FormItem>
         </Form>
       </div>
+      <Modal
+        title="重置密码"
+        v-model="restPasswordModal"
+        class-name="vertical-center-modal"
+        @on-ok="handleResetPassword"
+      >
+        <p style="display: flex; margin: 15px 0; font-weight: bold">
+          <span style="width: 80px; text-align: right; padding: 0 12px"
+            >密保问题</span
+          >
+          <span v-text="currentSecurityQuestion.question"></span>
+        </p>
+        <Form
+          ref="resetForm"
+          :model="resetForm"
+          :rules="resetRules"
+          :label-width="80"
+        >
+          <FormItem prop="questionPassword" label="问题答案">
+            <i-Input v-model="resetForm.questionPassword"></i-Input>
+          </FormItem>
+          <FormItem prop="userNewPassword" label="新密码">
+            <i-Input
+              type="password"
+              v-model="resetForm.userNewPassword"
+              placeholder="请输入问题答案"
+            >
+            </i-Input>
+          </FormItem>
+        </Form>
+        <div slot="footer">
+          <Button
+                  @click="handleResetPassword"
+                  type="primary"
+                  :loading="resetLoading"
+          >重置</Button>
+        </div>
+      </Modal>
     </vue-particle-line>
   </div>
 </template>
@@ -89,16 +126,6 @@ import qs from "qs";
 export default {
   name: "LoginForm",
   data() {
-    const validatePassword = (rule, value, callback) => {
-      /* //密码强度正则，最少6位，包括至少1个字母，1个数字，1个特殊字符 */
-      let passwordReg = /^.*(?=.{8,})(?=.*[0-9])(?=.*[A-Z|a-z])(?=.*[!@#$%^&*?.]).*$/;
-      if (!passwordReg.test(value)) {
-        callback(
-          new Error("密码长度最少6位，包括字母、数字、特殊字符(!@#$%^&*?.)")
-        );
-      }
-      callback();
-    };
     return {
       loginForm: {
         username: "",
@@ -123,7 +150,38 @@ export default {
         ]
       },
       captchaImg: "",
-      loading: false
+      loading: false,
+
+      restPasswordModal: false,
+
+      securityQuestions: [
+        {
+          question: "初中老师是谁?",
+          password: "张三"
+        },
+        {
+          question: "高中老师是谁?",
+          password: "张三"
+        },
+        {
+          question: "大学老师是谁?",
+          password: "张三"
+        }
+      ],
+      currentSecurityQuestion: "",
+      resetForm: {
+        questionPassword: "",
+        userNewPassword: ""
+      },
+      resetRules: {
+        questionPassword: [
+          { required: true, message: "请输入问题答案", trigger: "blur,change" }
+        ],
+        userNewPassword: [
+          { required: true, message: "请输入新密码", trigger: "blur,change" }
+        ]
+      },
+      resetLoading: false
     };
   },
   methods: {
@@ -137,14 +195,31 @@ export default {
         this.captchaImg = `data:image/gif;base64,${response.data}`;
       });
     },
-    handleShowUpdatePassword(loginForm) {
-      this.showReset = true;
-      this.$refs.loginForm.resetFields();
-      this.resetForm = {
-        username: loginForm.username,
-        captcha: "",
-        password: ""
-      };
+    handleShowResetPassword() {
+      let index = Math.floor(Math.random() * this.securityQuestions.length);
+      this.currentSecurityQuestion = this.securityQuestions[index];
+      this.restPasswordModal = true;
+    },
+    handleResetPassword() {
+      this.resetLoading = true;
+      this.$refs.resetForm.validate(valid => {
+        if (valid) {
+          if (
+            this.resetForm.questionPassword ===
+            this.currentSecurityQuestion.password
+          ) {
+            //TODO 修改用户密码
+            setTimeout(() => {
+              this.$Message.success("密码重置成功");
+              this.restPasswordModal = false;
+              this.resetLoading = false;
+            }, 500);
+          } else {
+            this.$Message.error("密保问题验证失败");
+            this.resetLoading = false;
+          }
+        }
+      });
     },
     handleSubmit() {
       this.$refs.loginForm.validate(valid => {
@@ -204,4 +279,9 @@ export default {
 
 <style lang="less">
 @import "login.less";
+.vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>
