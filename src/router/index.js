@@ -29,6 +29,8 @@ import Department from "../views/bak/department/DepartmentIndex";
 import Payment from "../views/bak/payment/PaymentIndex";
 import Route from "../views/company/route/RouteIndex";
 import Station from "../views/company/station/StationIndex";
+import CarTree from "../views/carmanager/CarTree";
+import CarRent from "../views/carmanager/CarRent";
 
 Vue.use(Router);
 
@@ -181,7 +183,24 @@ export default new Router({
           name: MENU_INDEX.DEPARTMENT,
           meta: { keepAlive: true },
           component: Department
-        }
+        },
+        {
+              path: "/carmanage",
+              name: MENU_INDEX.CARMANAGE,
+              meta: { keepAlive: true },
+         },
+         {
+              path: "/cartree",
+              name: MENU_INDEX.CARTREE,
+              meta: { keepAlive: true },
+              component: CarTree
+          },
+         {
+              path: "/carrent",
+              name: MENU_INDEX.CARRENT  ,
+              meta: { keepAlive: true },
+              component: CarRent
+          }
       ]
     }
   ]

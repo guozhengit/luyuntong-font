@@ -55,7 +55,11 @@ export const MENU_INDEX = {
 
   COMPANY: "company",
 
-  FINANCE: "finance"
+  FINANCE: "finance",
+
+  CARMANAGE: "carmanger",
+  CARTREE: "cartree",
+  CARRENT: "carrent"
 };
 
 export const STORAGE_KEY = {

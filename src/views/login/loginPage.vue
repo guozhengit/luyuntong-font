@@ -96,7 +96,7 @@
           ref="resetForm"
           :model="resetForm"
           :rules="resetRules"
-          :label-width="80"
+          :label-width="120"
         >
           <FormItem prop="questionPassword" label="问题答案">
             <i-Input v-model="resetForm.questionPassword"></i-Input>

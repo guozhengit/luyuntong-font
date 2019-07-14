@@ -120,7 +120,25 @@ const appMenu = {
           icon: "iconfont icon-baobiao3"
         }
       ]
-    }
+    },
+      {
+          index: MENU_INDEX.CARMANAGE,
+          name: "车辆管理",
+          icon: "iconfont icon-setting-fill",
+          main: true,
+          submenu: [
+              {
+                  index: MENU_INDEX.CARTREE,
+                  name: "车辆树结构",
+                  icon: "iconfont icon-wuliufeiguanli"
+              },
+              {
+                  index: MENU_INDEX.CARRENT,
+                  name: "车辆租赁",
+                  icon: "iconfont icon-wuliuguanli1"
+              }
+          ]
+      }
 
     // {
     //     index: MENU_INDEX.AUTHORITY,

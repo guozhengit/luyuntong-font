@@ -87,7 +87,7 @@
         </Button>
       </ButtonGroup>
     </div>
-    <div class="data-table">
+    <div class="data-table" style="overflow-x: scroll">
       <Table
         border
         :columns="vehicleCloumns"
@@ -373,7 +373,8 @@ export default {
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
+           fixed: "left"
         },
         {
           title: "序号",
@@ -383,40 +384,34 @@ export default {
         },
         {
           title: "车牌号",
-          key: "code",
-          width: 200,
+          key: "name",
           align: "center",
           sortable: true
         },
         {
-          width: 200,
           title: "车辆信息编号",
           key: "code",
           align: "center"
         },
         {
-          width: 120,
           title: "车辆归属",
           key: "owner",
           align: "center",
           sortable: true
         },
         {
-          width: 120,
           title: "车辆限高",
-          key: "allowCarryWeight",
-          align: "center",
-          sortable: true
-        },
-        {
-          width: 120,
-          title: "准载重量",
           key: "allowCarryHigh",
           align: "center",
           sortable: true
         },
         {
-          width: 120,
+          title: "准载重量",
+          key: "allowCarryWeight",
+          align: "center",
+          sortable: true
+        },
+        {
           title: "准载体积",
           key: "allowCarryVolume",
           align: "center"
@@ -435,8 +430,9 @@ export default {
         }
       ],
       searchVehicleForm: {
+        name:"",
         code: "",
-        owner: "陆运通",
+        owner: "",
         vehicleCode: "",
         stationCode: "",
         type: "",
@@ -460,6 +456,7 @@ export default {
       pageSize: 10,
 
       vehicleFormData: {
+        name:"",
         code: "",
         owner: "陆运通",
         vehicleCode: "",
@@ -479,6 +476,7 @@ export default {
         DetailGoodCode: ""
       },
       formRules: {
+          name:[],
         vehicleCode: [
           { required: true, message: "车牌号不能为空", trigger: "blur,change" }
         ],
